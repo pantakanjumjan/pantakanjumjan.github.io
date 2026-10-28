@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบลงเวลาและแก้ไขข้อมูล (Auto-Sync)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font (Sarabun) -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Container หลัก -->
+    <div class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-grow">
+        
+        <!-- Header & URL Settings -->
+        <header class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-4 mb-4">
+                <div class="text-center lg:text-left">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">⚡ ระบบลงเวลาและแก้ไขข้อมูล (Self-Correction & Auto-Sync)</h1>
+                    <p class="text-sm text-slate-500">Attendance, Payroll, Leave & Forgotten Log Correction System</p>
+                </div>
+                <!-- ตั้งค่า Google Sheets URL -->
+                <div class="w-full lg:w-96 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <label for="script-url" class="block text-xs font-semibold text-slate-700 mb-1">Google Apps Script Web App URL</label>
+                    <div class="flex gap-2">
+                        <input type="url" id="script-url" placeholder="https://script.google.com/macros/s/.../exec" 
+                            class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                        <button type="button" onclick="saveScriptUrl()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition-colors shrink-0">
+                            บันทึก
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- นาฬิกา Real-time & สถานะ Sync -->
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 rounded-xl p-4 border border-slate-100 gap-2">
+                <div>
+                    <div id="live-clock" class="text-2xl sm:text-3xl font-extrabold text-blue-600 tracking-tight text-center sm:text-left">--:--:--</div>
+                    <div id="live-date" class="text-xs sm:text-sm font-medium text-slate-600 text-center sm:text-left">กำลังโหลดวันที่...</div>
+                </div>
+                <!-- Status Badge -->
+                <div id="sync-status-badge" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1.5">
+                    <span>⏳</span> <span id="sync-status-text">พร้อมใช้งาน (บันทึกในเครื่อง + Auto-Sync)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-200 pb-3">
+            <button onclick="switchTab('checkin')" id="btn-tab-checkin" class="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white shadow-sm transition-all">
+                ⏱️ 1. บันทึกเวลาสด (Check-In/Out)
+            </button>
+            <button onclick="switchTab('correction')" id="btn-tab-correction" class="px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 transition-all">
+                ✏️ 2. แก้ไขเวลาที่ลืมลงข้อมูล
+            </button>
+            <button onclick="switchTab('leave')" id="btn-tab-leave" class="px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 transition-all">
+                🏖️ 3. ระบบบันทึกวันลา
+            </button>
+            <button onclick="switchTab('history')" id="btn-tab-history" class="px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 transition-all">
+                📊 4. สรุปประวัติและ Dashboard
+            </button>
+        </div>
+
+        <!-- ================= TAB 1: REAL-TIME CHECK-IN / CHECK-OUT ================= -->
+        <div id="tab-checkin" class="tab-content space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <span>⏱️</span> บันทึกเวลาเข้างานและออกงานสด (Real-time Attendance)
+                </h2>
+                
+                <div class="space-y-4 max-w-2xl mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <div>
+                        <label for="rt-name" class="block text-sm font-medium text-slate-700 mb-1">ชื่อ-นามสกุล / รหัสพนักงาน</label>
+                        <input type="text" id="rt-name" placeholder="เช่น สมชาย ใจดี (EMP001)" 
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="rt-day-type" class="block text-sm font-medium text-slate-700 mb-1">ประเภทวันทำงาน</label>
+                            <select id="rt-day-type" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                                <option value="normal">วันทำงานปกติ</option>
+                                <option value="holiday">วันหยุด</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="rt-shift" class="block text-sm font-medium text-slate-700 mb-1">กะการทำงาน</label>
+                            <select id="rt-shift" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                                <option value="day">กะกลางวัน (08:00 - 17:00)</option>
+                                <option value="night">กะกลางคืน (20:00 - 05:00)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <button type="button" onclick="handleCheckIn()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 px-4 rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 text-base">
+                            <span>🟢</span> บันทึกเวลาเข้างาน (Check In)
+                        </button>
+                        <button type="button" onclick="handleCheckOut()" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold py-3.5 px-4 rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 text-base">
+                            <span>🔴</span> บันทึกเวลาออกงาน (Check Out)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: SELF-CORRECTION FOR FORGOTTEN LOGS ================= -->
+        <div id="tab-correction" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                    <span>✏️</span> ระบบแก้ไขเวลาด้วยตนเอง กรณีลืมลงข้อมูล (Self-Correction)
+                </h2>
+                <p class="text-xs text-slate-500 mb-6">เลือกชื่อพนักงานและวันที่ต้องการตรวจสอบ ระบบจะดึงข้อมูลเดิมขึ้นมาแสดง หรือให้ท่านกรอกเติมเวลาเข้า-ออกที่ถูกต้องเพื่อคำนวณและอัปเดตใหม่ทันที</p>
+                
+                <div class="space-y-4 max-w-3xl mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="corr-name" class="block text-sm font-medium text-slate-700 mb-1">ชื่อ-นามสกุลพนักงาน</label>
+                            <input type="text" id="corr-name" placeholder="เช่น สมชาย ใจดี (EMP001)" oninput="checkExistingLog()"
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                        </div>
+                        <div>
+                            <label for="corr-date" class="block text-sm font-medium text-slate-700 mb-1">วันที่ต้องการแก้ไข/เติมข้อมูล</label>
+                            <input type="date" id="corr-date" onchange="checkExistingLog()"
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="corr-day-type" class="block text-sm font-medium text-slate-700 mb-1">ประเภทวันทำงาน</label>
+                            <select id="corr-day-type" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                                <option value="normal">วันทำงานปกติ</option>
+                                <option value="holiday">วันหยุด</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="corr-shift" class="block text-sm font-medium text-slate-700 mb-1">กะการทำงาน</label>
+                            <select id="corr-shift" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+                                <option value="day">กะกลางวัน (08:00 - 17:00)</option>
+                                <option value="night">กะกลางคืน (20:00 - 05:00)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
+                        <div>
+                            <label for="corr-in-time" class="block text-sm font-medium text-slate-700 mb-1">เวลาเข้างานจริง (Check-In)</label>
+                            <input type="time" id="corr-in-time" value="08:00"
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-mono">
+                        </div>
+                        <div>
+                            <label for="corr-out-time" class="block text-sm font-medium text-slate-700 mb-1">เวลาออกงานจริง (Check-Out)</label>
+                            <input type="time" id="corr-out-time" value="17:00"
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-mono">
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-100 rounded-xl p-3 text-xs text-blue-800 space-y-1">
+                        <p class="font-semibold">💡 เงื่อนไขระบบแก้ไขข้อมูล:</p>
+                        <p>• หากในระบบมีข้อมูลวันนั้นอยู่แล้ว ระบบจะแสดงเวลาเดิมเพื่อให้ท่านแก้ไขปรับปรุง</p>
+                        <p>• หากไม่มี ระบบจะบันทึกข้อมูลใหม่นี้ทันที พร้อมคำนวณค่าแรง, OT และ Auto-Sync เข้า Google Sheets</p>
+                    </div>
+
+                    <button type="button" onclick="submitCorrection()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <span>💾</span> บันทึกข้อมูลที่ลืมลง / อัปเดตข้อมูลใหม่ (Auto-Sync)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: LEAVE MANAGEMENT ================= -->
+        <div id="tab-leave" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <span>🏖️</span> ระบบบันทึกวันลาพนักงาน
+                </h2>
+                
+                <form id="leave-form" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label for="leave-name" class="block text-sm font-medium text-slate-700 mb-1">ชื่อ-นามสกุลพนักงาน</label>
+                            <input type="text" id="leave-name" required placeholder="เช่น สมชาย ใจดี (EMP001)" 
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                        </div>
+                        <div>
+                            <label for="leave-date" class="block text-sm font-medium text-slate-700 mb-1">วันที่ลาหยุด</label>
+                            <input type="date" id="leave-date" required 
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                        </div>
+                        <div>
+                            <label for="leave-type" class="block text-sm font-medium text-slate-700 mb-1">ประเภทการลา</label>
+                            <select id="leave-type" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
+                                <option value="ลาป่วย">ลาป่วย (ไม่หักเงิน)</option>
+                                <option value="ลากิจ">ลากิจ (ไม่หักเงิน)</option>
+                                <option value="ลาพักร้อน">ลาพักร้อน (ได้รับค่าจ้างปกติ)</option>
+                                <option value="ลาไม่ได้รับค่าจ้าง">ลาไม่ได้รับค่าจ้าง (หักเงิน 400 บาท)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="leave-note" class="block text-sm font-medium text-slate-700 mb-1">หมายเหตุ / เหตุผลการลา</label>
+                            <input type="text" id="leave-note" placeholder="เช่น ไปธุระต่างจังหวัด" 
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-4 rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <span>🚀</span> บันทึกและส่งข้อมูลวันลา (Auto-Sync)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4: HISTORY TABLES & DASHBOARD ================= -->
+        <div id="tab-history" class="tab-content hidden space-y-6">
+            
+            <!-- Cards สรุป -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">บันทึกการทำงานทั้งหมด</p>
+                        <h3 id="stat-total-work" class="text-2xl font-bold text-slate-800 mt-1">0 รายการ</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">🕒</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">ยอดจ่ายค่าแรงสุทธิรวม</p>
+                        <h3 id="stat-total-pay" class="text-2xl font-bold text-emerald-600 mt-1">0 บาท</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">💰</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">วันลาพนักงานทั้งหมด</p>
+                        <h3 id="stat-total-leave" class="text-2xl font-bold text-amber-600 mt-1">0 วัน</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">🏖️</div>
+                </div>
+            </div>
+
+            <!-- ตารางประวัติการทำงาน -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                        <span>📋</span> ประวัติการลงเวลาและสรุปยอดค่าแรง
+                    </h2>
+                    <button onclick="clearPayrollData()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-medium px-3 py-1.5 rounded-xl text-xs transition-colors">
+                        🗑️ ล้างประวัติงาน
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-100">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-100 whitespace-nowrap">
+                                <th class="py-3 px-3 font-semibold">วันที่</th>
+                                <th class="py-3 px-3 font-semibold">ชื่อพนักงาน</th>
+                                <th class="py-3 px-3 font-semibold">กะ / ประเภท</th>
+                                <th class="py-3 px-3 font-semibold">เข้างาน - ออกงาน</th>
+                                <th class="py-3 px-3 font-semibold text-right">ค่าแรงฐาน (บ.)</th>
+                                <th class="py-3 px-3 font-semibold text-right">OT (ชม./บ.)</th>
+                                <th class="py-3 px-3 font-semibold text-right">ค่ากะ (บ.)</th>
+                                <th class="py-3 px-3 font-semibold text-right">ค่าอาหาร (บ.)</th>
+                                <th class="py-3 px-3 font-semibold text-right text-blue-600">รวมสุทธิ (บ.)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payroll-table-body" class="divide-y divide-slate-100">
+                            <!-- ผ่าน JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="payroll-empty-state" class="text-center py-8 text-slate-400 text-sm hidden">
+                    ยังไม่มีประวัติการลงเวลาในระบบ
+                </div>
+            </div>
+
+            <!-- ตารางประวัติการลา -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                        <span>🏖️</span> ประวัติการลาหยุดของพนักงาน
+                    </h2>
+                    <button onclick="clearLeaveData()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-medium px-3 py-1.5 rounded-xl text-xs transition-colors">
+                        🗑️ ล้างประวัติวันลา
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-100">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-100">
+                                <th class="py-3 px-3 font-semibold">วันที่ลา</th>
+                                <th class="py-3 px-3 font-semibold">ชื่อพนักงาน</th>
+                                <th class="py-3 px-3 font-semibold">ประเภทการลา</th>
+                                <th class="py-3 px-3 font-semibold">หมายเหตุ / เหตุผล</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leave-table-body" class="divide-y divide-slate-100">
+                            <!-- ผ่าน JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="leave-empty-state" class="text-center py-8 text-slate-400 text-sm hidden">
+                    ยังไม่มีประวัติการลาหยุดในระบบ
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-100 bg-white mt-6">
+        ระบบลงเวลาและแก้ไขข้อมูลพนักงาน &copy; 2026 - Auto-Sync Google Sheets
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // กำหนดวันที่เริ่มต้น
+        document.getElementById('corr-date').valueAsDate = new Date();
+        document.getElementById('leave-date').valueAsDate = new Date();
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+
+            const tabs = ['checkin', 'correction', 'leave', 'history'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('btn-tab-' + t);
+                if (t === tabName) {
+                    btn.className = "px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white shadow-sm transition-all";
+                } else {
+                    btn.className = "px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 transition-all";
+                }
+            });
+
+            if (tabName === 'history') {
+                loadPayrollData();
+                loadLeaveData();
+                updateDashboardStats();
+            }
+        }
+
+        // นาฬิกา Real-time
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0];
+            document.getElementById('live-date').innerText = now.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUrl = localStorage.getItem('google_script_url');
+            if (savedUrl) {
+                document.getElementById('script-url').value = savedUrl;
+            }
+            loadPayrollData();
+            loadLeaveData();
+            updateDashboardStats();
+        });
+
+        function saveScriptUrl() {
+            const url = document.getElementById('script-url').value.trim();
+            localStorage.setItem('google_script_url', url);
+            alert('บันทึก Google Apps Script Web App URL เรียบร้อยแล้ว');
+        }
+
+        function setSyncStatus(status, message) {
+            const badge = document.getElementById('sync-status-badge');
+            const text = document.getElementById('sync-status-text');
+            text.innerText = message;
+
+            if (status === 'loading') {
+                badge.className = "px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1.5";
+            } else if (status === 'success') {
+                badge.className = "px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5";
+            } else if (status === 'error') {
+                badge.className = "px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1.5";
+            }
+        }
+
+        function timeToMinutes(timeStr) {
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        // ================= ตรวจสอบข้อมูลเดิมใน LocalStorage สำหรับระบบแก้ไข =================
+        function checkExistingLog() {
+            const name = document.getElementById('corr-name').value.trim();
+            const date = document.getElementById('corr-date').value;
+            if (!name || !date) return;
+
+            const records = JSON.parse(localStorage.getItem('payroll_records')) || [];
+            const found = records.find(r => r.name.toLowerCase() === name.toLowerCase() && r.date === date);
+
+            if (found) {
+                document.getElementById('corr-day-type').value = found.dayType === 'วันปกติ' ? 'normal' : 'holiday';
+                document.getElementById('corr-shift').value = found.shift.includes('กลางวัน') ? 'day' : 'night';
+                document.getElementById('corr-in-time').value = found.inTime;
+                document.getElementById('corr-out-time').value = found.outTime;
+            }
+        }
+
+        // ฟังก์ชันคำนวณค่าแรงและกฎเหล็ก Cap Max OT 2 ชม.
+        function calculatePayrollData(name, date, dayType, shiftType, inTimeStr, outTimeStr) {
+            const outMin = timeToMinutes(outTimeStr);
+            let basePay = 400; // ฐานวันละ 400 บาท (8 ชม.)
+            let otHours = 0;
+            let otTypeRate = '-';
+            let otPay = 0;
+            let shiftAllowance = 0;
+            let mealAllowance = 10;
+            let otMealAllowance = 0;
+
+            if (shiftType === 'day') {
+                if (dayType === 'normal') {
+                    const otStartMin = timeToMinutes('17:10');
+                    const otCapMin = timeToMinutes('19:10'); // Cap Max 2 ชม.
+                    if (outMin > otStartMin) {
+                        let actualOtMin = outMin - otStartMin;
+                        let cappedOtMin = Math.min(actualOtMin, otCapMin - otStartMin);
+                        otHours = Number((cappedOtMin / 60).toFixed(2));
+                        otTypeRate = 'OT 1.5 (75บ./ชม.)';
+                        otPay = otHours * 75;
+                        if (otHours > 0) otMealAllowance = 25;
+                    }
+                } else {
+                    otTypeRate = 'OT 2.0 (วันหยุด)';
+                    otHours = 8;
+                    otPay = 8 * 100;
+                    mealAllowance = 10;
+                    otMealAllowance = 50;
+
+                    const otStartMin = timeToMinutes('17:10');
+                    if (outMin > otStartMin) {
+                        let extraMin = outMin - otStartMin;
+                        let extraHours = Number((extraMin / 60).toFixed(2));
+                        otHours += extraHours;
+                        otPay += extraHours * 150; // OT 3.0
+                        otTypeRate = 'OT 2.0 + OT 3.0';
+                        otMealAllowance = 75;
+                    }
+                }
+            } else {
+                shiftAllowance = 180; // ค่ากะดึก +180 บาท
+                if (dayType === 'normal') {
+                    const otStartMin = timeToMinutes('05:10');
+                    const otCapMin = timeToMinutes('07:10');
+                    let adjustedOutMin = outMin;
+                    if (outMin < 12 * 60) adjustedOutMin += 24 * 60;
+                    const adjOtStart = otStartMin + 24 * 60;
+                    const adjOtCap = otCapMin + 24 * 60;
+
+                    if (adjustedOutMin > adjOtStart) {
+                        let actualOtMin = adjustedOutMin - adjOtStart;
+                        let cappedOtMin = Math.min(actualOtMin, adjOtCap - adjOtStart);
+                        otHours = Number((cappedOtMin / 60).toFixed(2));
+                        otTypeRate = 'OT 1.5 (กะดึก)';
+                        otPay = otHours * 75;
+                        if (otHours > 0) otMealAllowance = 25;
+                    }
+                } else {
+                    otTypeRate = 'OT 2.0 (วันหยุดกะดึก)';
+                    otHours = 8;
+                    otPay = 8 * 100;
+                    otMealAllowance = 50;
+                }
+            }
+
+            const totalMeal = mealAllowance + otMealAllowance;
+            const netTotal = basePay + otPay + shiftAllowance + totalMeal;
+
+            return {
+                id: Date.now(),
+                date: date,
+                name: name,
+                shift: shiftType === 'day' ? 'กะกลางวัน' : 'กะกลางคืน',
+                dayType: dayType === 'normal' ? 'วันปกติ' : 'วันหยุด',
+                inTime: inTimeStr,
+                outTime: outTimeStr,
+                basePay: basePay,
+                otHours: otHours,
+                otRate: otTypeRate,
+                otPay: otPay,
+                shiftAllowance: shiftAllowance,
+                totalMeal: totalMeal,
+                netTotal: netTotal
+            };
+        }
+
+        // ================= REAL-TIME CHECK IN / OUT =================
+        let activeCheckIns = JSON.parse(localStorage.getItem('active_checkins')) || {};
+
+        function handleCheckIn() {
+            const name = document.getElementById('rt-name').value.trim();
+            if (!name) { alert('กรุณากรอกชื่อหรือรหัสพนักงานก่อน Check In'); document.getElementById('rt-name').focus(); return; }
+
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0,10);
+            const timeStr = now.toTimeString().slice(0,5);
+
+            activeCheckIns[name] = {
+                inTime: timeStr,
+                date: dateStr,
+                dayType: document.getElementById('rt-day-type').value,
+                shift: document.getElementById('rt-shift').value
+            };
+            localStorage.setItem('active_checkins', JSON.stringify(activeCheckIns));
+            alert(`✅ Check In สำเร็จสำหรับคุณ "${name}" เวลา ${timeStr}`);
+            document.getElementById('rt-name').value = '';
+        }
+
+        function handleCheckOut() {
+            const name = document.getElementById('rt-name').value.trim();
+            if (!name) { alert('กรุณากรอกชื่อหรือรหัสพนักงานเพื่อ Check Out'); document.getElementById('rt-name').focus(); return; }
+
+            const now = new Date();
+            const outTimeStr = now.toTimeString().slice(0,5);
+            const dateStr = now.toISOString().slice(0,10);
+
+            let checkInData = activeCheckIns[name];
+            let inTimeStr = checkInData ? checkInData.inTime : (checkInData?.shift === 'night' ? '20:00' : '08:00');
+            let dayType = checkInData ? checkInData.dayType : document.getElementById('rt-day-type').value;
+            let shift = checkInData ? checkInData.shift : document.getElementById('rt-shift').value;
+
+            const record = calculatePayrollData(name, dateStr, dayType, shift, inTimeStr, outTimeStr);
+
+            let records = JSON.parse(localStorage.getItem('payroll_records')) || [];
+            // ลบรายการเดิมของวันเดียวกันถ้ามี แล้วแทนที่ด้วยรายการใหม่
+            records = records.filter(r => !(r.name.toLowerCase() === name.toLowerCase() && r.date === dateStr));
+            records.unshift(record);
+            localStorage.setItem('payroll_records', JSON.stringify(records));
+
+            if (checkInData) {
+                delete activeCheckIns[name];
+                localStorage.setItem('active_checkins', JSON.stringify(activeCheckIns));
+            }
+
+            document.getElementById('rt-name').value = '';
+            alert(`🔴 Check Out สำเร็จ! กำลัง Auto-Sync ข้อมูลเข้า Google Sheets...`);
+            autoSyncData([record], [], 'payroll');
+            switchTab('history');
+        }
+
+        // ================= SUBMIT CORRECTION / FORGOTTEN LOG =================
+        function submitCorrection() {
+            const name = document.getElementById('corr-name').value.trim();
+            const date = document.getElementById('corr-date').value;
+            const dayType = document.getElementById('corr-day-type').value;
+            const shiftType = document.getElementById('corr-shift').value;
+            const inTime = document.getElementById('corr-in-time').value;
+            const outTime = document.getElementById('corr-out-time').value;
+
+            if (!name || !date) {
+                alert('กรุณากรอกชื่อพนักงานและเลือกวันที่ให้ครบถ้วน');
+                return;
+            }
+
+            const record = calculatePayrollData(name, date, dayType, shiftType, inTime, outTime);
+
+            let records = JSON.parse(localStorage.getItem('payroll_records')) || [];
+            // แทนที่ข้อมูลเดิมของวันนั้นทันทีหากมีอยู่แล้ว
+            records = records.filter(r => !(r.name.toLowerCase() === name.toLowerCase() && r.date === date));
+            records.unshift(record);
+            localStorage.setItem('payroll_records', JSON.stringify(records));
+
+            alert('บันทึกและอัปเดตข้อมูลที่ลืมลงสำเร็จ! กำลัง Auto-Sync...');
+            autoSyncData([record], [], 'payroll');
+            switchTab('history');
+        }
+
+        // ================= LEAVE MANAGEMENT =================
+        document.getElementById('leave-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('leave-name').value.trim();
+            const date = document.getElementById('leave-date').value;
+            const leaveType = document.getElementById('leave-type').value;
+            const note = document.getElementById('leave-note').value.trim() || '-';
+
+            const leaveRecord = {
+                id: Date.now(),
+                date: date,
+                name: name,
+                leaveType: leaveType,
+                note: note
+            };
+
+            let leaveRecords = JSON.parse(localStorage.getItem('leave_records')) || [];
+            leaveRecords.unshift(leaveRecord);
+            localStorage.setItem('leave_records', JSON.stringify(leaveRecords));
+
+            document.getElementById('leave-name').value = '';
+            document.getElementById('leave-note').value = '';
+            alert('บันทึกข้อมูลการลาหยุดสำเร็จ! กำลัง Auto-Sync...');
+
+            autoSyncData([], [leaveRecord], 'leave');
+            switchTab('history');
+        });
+
+        // ================= AUTO-SYNC FETCH API =================
+        async function autoSyncData(payrolls = [], leaves = [], type = 'all') {
+            const scriptUrl = localStorage.getItem('google_script_url');
+            if (!scriptUrl) {
+                setSyncStatus('error', 'ยังไม่ได้ตั้งค่า Google Apps Script URL (บันทึกเฉพาะในเครื่อง)');
+                return;
+            }
+
+            setSyncStatus('loading', 'กำลังส่งข้อมูล Auto-Sync ไปยัง Google Sheets...');
+
+            try {
+                const payload = {
+                    payrolls: type === 'all' || type === 'payroll' ? payrolls : [],
+                    leaves: type === 'all' || type === 'leave' ? leaves : []
+                };
+
+                await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                setSyncStatus('success', 'Auto-Sync สำเร็จเรียบร้อยแล้ว!');
+            } catch (error) {
+                console.error(error);
+                setSyncStatus('error', 'Auto-Sync ล้มเหลว (ตรวจสอบ URL หรืออินเทอร์เน็ต)');
+            }
+        }
+
+        // ================= RENDER & DASHBOARD =================
+        function loadPayrollData() {
+            const tbody = document.getElementById('payroll-table-body');
+            const emptyState = document.getElementById('payroll-empty-state');
+            const records = JSON.parse(localStorage.getItem('payroll_records')) || [];
+
+            tbody.innerHTML = '';
+            if (records.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            records.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/50 transition-colors';
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-slate-600">${item.date}</td>
+                    <td class="py-3 px-3 font-medium text-slate-800">${escapeHtml(item.name)}</td>
+                    <td class="py-3 px-3">
+                        <span class="inline-block px-2 py-0.5 rounded text-xs font-semibold ${item.shift.includes('กลางวัน') ? 'bg-amber-50 text-amber-700' : 'bg-indigo-50 text-indigo-700'}">
+                            ${item.shift} (${item.dayType})
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-slate-600 font-mono">${item.inTime} - ${item.outTime}</td>
+                    <td class="py-3 px-3 text-right text-slate-700">${item.basePay.toLocaleString()}</td>
+                    <td class="py-3 px-3 text-right text-slate-600">${item.otHours} ชม. (${item.otPay.toLocaleString()}บ.)</td>
+                    <td class="py-3 px-3 text-right text-slate-700">${item.shiftAllowance.toLocaleString()}</td>
+                    <td class="py-3 px-3 text-right text-slate-700">${item.totalMeal.toLocaleString()}</td>
+                    <td class="py-3 px-3 text-right font-bold text-blue-600">${item.netTotal.toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function loadLeaveData() {
+            const tbody = document.getElementById('leave-table-body');
+            const emptyState = document.getElementById('leave-empty-state');
+            const records = JSON.parse(localStorage.getItem('leave_records')) || [];
+
+            tbody.innerHTML = '';
+            if (records.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            records.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/50 transition-colors';
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-slate-600">${item.date}</td>
+                    <td class="py-3 px-3 font-medium text-slate-800">${escapeHtml(item.name)}</td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-700">${item.leaveType}</span></td>
+                    <td class="py-3 px-3 text-slate-500">${escapeHtml(item.note)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateDashboardStats() {
+            const payrolls = JSON.parse(localStorage.getItem('payroll_records')) || [];
+            const leaves = JSON.parse(localStorage.getItem('leave_records')) || [];
+
+            document.getElementById('stat-total-work').innerText = payrolls.length + ' รายการ';
+            const totalPay = payrolls.reduce((sum, item) => sum + (item.netTotal || 0), 0);
+            document.getElementById('stat-total-pay').innerText = totalPay.toLocaleString() + ' บาท';
+            document.getElementById('stat-total-leave').innerText = leaves.length + ' วัน';
+        }
+
+        function clearPayrollData() {
+            if (confirm('ต้องการล้างประวัติการทำงานทั้งหมด?')) {
+                localStorage.removeItem('payroll_records');
+                loadPayrollData();
+                updateDashboardStats();
+            }
+        }
+
+        function clearLeaveData() {
+            if (confirm('ต้องการล้างประวัติวันลาทั้งหมด?')) {
+                localStorage.removeItem('leave_records');
+                loadLeaveData();
+                updateDashboardStats();
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>
