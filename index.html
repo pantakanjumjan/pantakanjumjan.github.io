@@ -12,7 +12,7 @@
   <!-- Google Fonts: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -21,14 +21,10 @@
           fontFamily: {
             sans: ['Prompt', 'sans-serif'],
           },
-          colors: {
-            brand: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              500: '#0284c7',
-              600: '#0369a1',
-              700: '#095186',
-            }
+          boxShadow: {
+            'glow-emerald': '0 8px 20px -4px rgba(16, 185, 129, 0.45)',
+            'glow-rose': '0 8px 20px -4px rgba(244, 63, 94, 0.45)',
+            'glow-indigo': '0 8px 20px -4px rgba(99, 102, 241, 0.35)',
           }
         }
       }
@@ -45,27 +41,32 @@
       min-width: 44px;
     }
     .glass-effect {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .dark-glass {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
   </style>
 </head>
-<body class="h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-brand-500 selection:text-white pb-20">
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-purple-500 selection:text-white pb-24">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-30 bg-slate-900 text-white shadow-md">
-    <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <div class="bg-brand-500 p-2 rounded-xl text-white">
-          <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+  <!-- Colorful Gradient Header -->
+  <header class="sticky top-0 z-30 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white shadow-lg">
+    <div class="max-w-md mx-auto px-4 py-3.5 flex justify-between items-center">
+      <div class="flex items-center space-x-2.5">
+        <div class="bg-white/20 backdrop-blur-md p-2 rounded-xl text-white border border-white/20">
+          <i class="fa-solid fa-clock-rotate-left text-xl"></i>
         </div>
         <div>
-          <h1 class="font-bold text-base leading-tight">TimePro Mobile</h1>
-          <p class="text-xs text-slate-400">ระบบลงเวลา & คำนวณค่าแรง</p>
+          <h1 class="font-bold text-base leading-tight tracking-wide">TimePro Mobile</h1>
+          <p class="text-[11px] text-purple-100/80">ระบบลงเวลา & คำนวณค่าแรง</p>
         </div>
       </div>
-      <button onclick="openConfigModal()" class="touch-target p-2 text-slate-300 hover:text-white rounded-lg active:bg-slate-800 transition">
+      <button onclick="openConfigModal()" class="touch-target p-2 text-white/90 hover:text-white bg-white/10 rounded-xl border border-white/20 active:bg-white/20 transition">
         <i class="fa-solid fa-gear text-lg"></i>
       </button>
     </div>
@@ -74,56 +75,73 @@
   <!-- Main Content Container -->
   <main class="flex-1 max-w-md w-full mx-auto p-4 space-y-4">
 
-    <!-- Global Employee Selector -->
+    <!-- Employee Selector Dropdown -->
     <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1">
-      <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">
-        <i class="fa-solid fa-user-tie text-brand-500 mr-1"></i> เลือกรหัส / ชื่อพนักงาน
+      <label class="block text-[11px] font-bold text-indigo-600 uppercase tracking-wider flex items-center">
+        <i class="fa-solid fa-id-badge mr-1.5 text-purple-500"></i> เลือกรหัส / ชื่อพนักงาน
       </label>
-      <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 block p-2.5 font-medium transition">
+      <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 block p-2.5 font-semibold transition">
         <!-- Dynamic Options -->
       </select>
     </div>
 
-    <!-- TAB 1: Live Clock-In/Out -->
+    <!-- TAB 1: Live Punch Record -->
     <section id="tab-1" class="tab-content space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 text-center space-y-3">
-        <div class="inline-block bg-slate-100 px-3 py-1 rounded-full text-slate-600 text-xs font-medium" id="currentDateDisplay">
-          --/--/----
-        </div>
-        <div class="text-4xl font-extrabold text-slate-900 tracking-tight font-mono" id="liveClock">
-          00:00:00
-        </div>
-        
-        <div class="grid grid-cols-2 gap-2 pt-2">
-          <div>
-            <label class="block text-xs font-medium text-slate-500 mb-1">เลือกกะการทำงาน</label>
-            <select id="shiftSelect" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded-xl p-2.5 font-medium">
-              <option value="DAY">กะกลางวัน (08:00-17:00)</option>
-              <option value="NIGHT">กะกลางคืน (20:00-05:00)</option>
-            </select>
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/80 text-center space-y-3 relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-purple-100 rounded-full blur-2xl opacity-60"></div>
+        <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-pink-100 rounded-full blur-2xl opacity-60"></div>
+
+        <div class="relative z-10">
+          <div class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-1" id="currentDateDisplay">
+            --/--/----
           </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-500 mb-1">ประเภทวัน</label>
-            <select id="dayTypeSelect" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded-xl p-2.5 font-medium">
-              <option value="REGULAR">วันทำงานปกติ (OT 1.5)</option>
-              <option value="HOLIDAY">วันหยุด (OT 2.0/3.0)</option>
+          
+          <!-- Live Clock -->
+          <div class="dark-glass text-emerald-400 py-3.5 px-6 rounded-2xl border border-slate-700/50 shadow-inner my-2">
+            <div class="text-4xl font-extrabold tracking-tight font-mono drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]" id="liveClock">
+              00:00:00
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-2 text-left">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 mb-1">เลือกกะการทำงาน</label>
+              <select id="shiftSelect" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded-xl p-2.5 font-medium">
+                <option value="DAY">กะกลางวัน (08:00-17:00)</option>
+                <option value="NIGHT">กะกลางคืน (20:00-05:00)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 mb-1">ประเภทวัน</label>
+              <select id="dayTypeSelect" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded-xl p-2.5 font-medium">
+                <option value="REGULAR">วันทำงานปกติ (OT 1.5)</option>
+                <option value="HOLIDAY">วันหยุด (OT 2.0/3.0)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="text-left pt-2">
+            <label class="block text-[11px] font-bold text-slate-500 mb-1">สถานะการมาทำงาน / การลา</label>
+            <select id="workTypeSelect" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded-xl p-2.5 font-medium">
+              <option value="FULL">ทำงานเต็มวัน (8 ชม.)</option>
+              <option value="HALF">ลาครึ่งวัน (คิดค่าแรง 200฿)</option>
             </select>
           </div>
         </div>
       </div>
 
-      <!-- Live Action Buttons -->
-      <div class="grid grid-cols-2 gap-3">
-        <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="touch-target flex flex-col items-center justify-center p-5 bg-emerald-500 active:bg-emerald-600 text-white rounded-2xl shadow-lg shadow-emerald-500/20 font-bold transition transform active:scale-95">
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-2 gap-3.5">
+        <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="touch-target flex flex-col items-center justify-center p-4 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 active:from-emerald-500 active:to-teal-700 text-white rounded-2xl shadow-glow-emerald font-bold transition transform active:scale-95 border border-emerald-300/30">
           <i class="fa-solid fa-right-to-bracket text-2xl mb-1"></i>
-          <span>Check In</span>
-          <span class="text-[10px] font-normal opacity-80" id="checkInStatusText">ยังไม่ได้ลงเวลาเข้า</span>
+          <span class="text-base">Check In</span>
+          <span class="text-[10px] font-normal opacity-90" id="checkInStatusText">ยังไม่ได้ลงเวลาเข้า</span>
         </button>
 
-        <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="touch-target flex flex-col items-center justify-center p-5 bg-rose-500 active:bg-rose-600 text-white rounded-2xl shadow-lg shadow-rose-500/20 font-bold transition transform active:scale-95">
+        <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="touch-target flex flex-col items-center justify-center p-4 bg-gradient-to-br from-rose-500 via-pink-500 to-red-600 active:from-rose-600 active:to-red-700 text-white rounded-2xl shadow-glow-rose font-bold transition transform active:scale-95 border border-rose-300/30">
           <i class="fa-solid fa-right-from-bracket text-2xl mb-1"></i>
-          <span>Check Out</span>
-          <span class="text-[10px] font-normal opacity-80" id="checkOutStatusText">ยังไม่ได้ลงเวลาออก</span>
+          <span class="text-base">Check Out</span>
+          <span class="text-[10px] font-normal opacity-90" id="checkOutStatusText">ยังไม่ได้ลงเวลาออก</span>
         </button>
       </div>
 
@@ -131,79 +149,97 @@
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 space-y-2">
         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">สถานะบันทึกเวลาวันนี้</h3>
         <div class="grid grid-cols-2 gap-2 text-sm">
-          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-            <span class="text-xs text-slate-400 block">เวลาเข้างาน</span>
-            <span class="font-bold text-slate-700" id="displayCheckInTime">-</span>
+          <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100/80">
+            <span class="text-xs text-emerald-600 font-semibold block">เวลาเข้างาน</span>
+            <span class="font-bold text-slate-800 text-base" id="displayCheckInTime">-</span>
           </div>
-          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-            <span class="text-xs text-slate-400 block">เวลาออกงาน</span>
-            <span class="font-bold text-slate-700" id="displayCheckOutTime">-</span>
+          <div class="bg-rose-50/60 p-2.5 rounded-xl border border-rose-100/80">
+            <span class="text-xs text-rose-600 font-semibold block">เวลาออกงาน</span>
+            <span class="font-bold text-slate-800 text-base" id="displayCheckOutTime">-</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: Manual Edit / Forgot Time -->
+    <!-- TAB 2: Manual Edit Form -->
     <section id="tab-2" class="tab-content hidden space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
-        <div class="border-b border-slate-100 pb-2">
-          <h2 class="font-bold text-slate-800 text-base">ลืมลงเวลา / แก้ไขเวลาย้อนหลัง</h2>
-          <p class="text-xs text-slate-400">กรอกวันที่และเวลาเข้า-ออกย้อนหลังเพื่อคำนวณเงิน</p>
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+        <div class="border-b border-slate-100 pb-2.5 flex items-center space-x-2">
+          <div class="bg-purple-100 p-2 rounded-xl text-purple-600">
+            <i class="fa-solid fa-pen-to-square text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-slate-800 text-base">ลืมลงเวลา / แก้ไขย้อนหลัง</h2>
+            <p class="text-xs text-slate-400">กรอกวันที่และเวลาเข้า-ออกย้อนหลังเพื่อคำนวณเงิน</p>
+          </div>
         </div>
 
         <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">วันที่ต้องการบันทึก</label>
-            <input type="date" id="manualDate" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+            <label class="block text-xs font-bold text-slate-600 mb-1">วันที่ต้องการบันทึก</label>
+            <input type="date" id="manualDate" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5 font-medium">
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">กะการทำงาน</label>
-              <select id="manualShift" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+              <label class="block text-xs font-bold text-slate-600 mb-1">กะการทำงาน</label>
+              <select id="manualShift" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2.5">
                 <option value="DAY">กะกลางวัน (08:00-17:00)</option>
                 <option value="NIGHT">กะกลางคืน (20:00-05:00)</option>
               </select>
             </div>
             <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">ประเภทวัน</label>
-              <select id="manualDayType" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+              <label class="block text-xs font-bold text-slate-600 mb-1">ประเภทวัน</label>
+              <select id="manualDayType" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2.5">
                 <option value="REGULAR">วันปกติ (OT 1.5)</option>
                 <option value="HOLIDAY">วันหยุด (OT 2.0/3.0)</option>
               </select>
             </div>
           </div>
 
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">สถานะการทำงาน / วันลา</label>
+            <select id="manualWorkType" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2.5">
+              <option value="FULL">ทำงานเต็มวัน (8 ชม.)</option>
+              <option value="HALF">ลาครึ่งวัน (คิดค่าแรง 200฿)</option>
+            </select>
+          </div>
+
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">เวลาเข้างาน</label>
-              <input type="time" id="manualCheckIn" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+              <label class="block text-xs font-bold text-slate-600 mb-1">เวลาเข้างาน</label>
+              <input type="time" id="manualCheckIn" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5 font-semibold">
             </div>
             <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">เวลาออกงาน</label>
-              <input type="time" id="manualCheckOut" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+              <label class="block text-xs font-bold text-slate-600 mb-1">เวลาออกงาน</label>
+              <input type="time" id="manualCheckOut" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5 font-semibold">
             </div>
           </div>
 
-          <button type="submit" class="touch-target w-full bg-brand-500 active:bg-brand-600 text-white font-bold rounded-xl p-3 shadow-md transition transform active:scale-98">
+          <button type="submit" class="touch-target w-full bg-gradient-to-r from-indigo-600 to-purple-600 active:from-indigo-700 active:to-purple-700 text-white font-bold rounded-xl p-3.5 shadow-glow-indigo transition transform active:scale-98">
             <i class="fa-solid fa-calculator mr-1"></i> คำนวณค่าแรง & บันทึกข้อมูล
           </button>
         </form>
       </div>
     </section>
 
-    <!-- TAB 3: Leave Management -->
+    <!-- TAB 3: Leave Form -->
     <section id="tab-3" class="tab-content hidden space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
-        <div class="border-b border-slate-100 pb-2">
-          <h2 class="font-bold text-slate-800 text-base">แบบฟอร์มบันทึกวันลา</h2>
-          <p class="text-xs text-slate-400">ยื่นคำขอการลาหยุดงานประเภทต่างๆ</p>
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+        <div class="border-b border-slate-100 pb-2.5 flex items-center space-x-2">
+          <div class="bg-amber-100 p-2 rounded-xl text-amber-600">
+            <i class="fa-solid fa-calendar-minus text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-slate-800 text-base">แบบฟอร์มบันทึกวันลา</h2>
+            <p class="text-xs text-slate-400">ยื่นคำขอการลาหยุดงานประเภทต่างๆ</p>
+          </div>
         </div>
 
         <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">ประเภทการลา</label>
-            <select id="leaveType" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+            <label class="block text-xs font-bold text-slate-600 mb-1">ประเภทการลา</label>
+            <select id="leaveType" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5 font-medium">
               <option value="ลากิจ">ลากิจ (Personal Leave)</option>
               <option value="ลาป่วย">ลาป่วย (Sick Leave)</option>
               <option value="ลาพักร้อน">ลาพักร้อน (Annual Leave)</option>
@@ -213,21 +249,21 @@
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">วันที่เริ่มต้น</label>
-              <input type="date" id="leaveStartDate" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+              <label class="block text-xs font-bold text-slate-600 mb-1">วันที่เริ่มต้น</label>
+              <input type="date" id="leaveStartDate" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2.5">
             </div>
             <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">วันที่สิ้นสุด</label>
-              <input type="date" id="leaveEndDate" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5">
+              <label class="block text-xs font-bold text-slate-600 mb-1">วันที่สิ้นสุด</label>
+              <input type="date" id="leaveEndDate" required class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2.5">
             </div>
           </div>
 
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">เหตุผลการลา</label>
-            <textarea id="leaveReason" rows="2" placeholder="ระบุเหตุผลการลา (ถ้ามี)" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5"></textarea>
+            <label class="block text-xs font-bold text-slate-600 mb-1">เหตุผลการลา</label>
+            <textarea id="leaveReason" rows="2" placeholder="ระบุเหตุผลการลา (ถ้ามี)" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2.5"></textarea>
           </div>
 
-          <button type="submit" class="touch-target w-full bg-amber-500 active:bg-amber-600 text-white font-bold rounded-xl p-3 shadow-md transition transform active:scale-98">
+          <button type="submit" class="touch-target w-full bg-gradient-to-r from-amber-500 to-orange-500 active:from-amber-600 active:to-orange-600 text-white font-bold rounded-xl p-3.5 shadow-lg shadow-amber-500/20 transition transform active:scale-98">
             <i class="fa-solid fa-paper-plane mr-1"></i> ส่งใบบันทึกวันลา
           </button>
         </form>
@@ -242,26 +278,49 @@
       </div>
     </section>
 
-    <!-- TAB 4: Daily Summary & Dashboard -->
+    <!-- TAB 4: Dashboard & Payroll Summary with Cutoff Filter -->
     <section id="tab-4" class="tab-content hidden space-y-4">
-      <!-- Total Summary Card -->
-      <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white p-5 rounded-2xl shadow-lg space-y-3">
-        <span class="text-xs text-slate-400 uppercase font-semibold">สรุปผลยอดเงินรวมบันทึกในเครื่อง</span>
-        <div class="flex justify-between items-baseline">
-          <div class="text-3xl font-extrabold text-amber-400" id="summaryTotalSalary">0 ฿</div>
-          <span class="text-xs text-slate-300" id="summaryTotalRecords">0 รายการ</span>
+      
+      <!-- Bi-Monthly Cutoff Selector -->
+      <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1.5">
+        <label class="block text-[11px] font-bold text-indigo-600 uppercase tracking-wider flex items-center">
+          <i class="fa-solid fa-filter mr-1.5 text-pink-500"></i> รอบตัดยอดเงิน / งวดการจ่ายเงิน
+        </label>
+        <select id="cutoffPeriodSelect" onchange="renderHistories()" class="touch-target w-full bg-indigo-50/60 border border-indigo-200 text-indigo-900 text-xs font-bold rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500">
+          <!-- Dynamic Cutoff Periods -->
+        </select>
+      </div>
+
+      <!-- Vibrant Multi-Color Cards -->
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Net Income -->
+        <div class="col-span-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white p-4.5 rounded-2xl shadow-lg relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+          <span class="text-xs text-purple-200 uppercase font-semibold">ยอดรวมเงินสุทธิในรอบนี้</span>
+          <div class="flex justify-between items-baseline mt-1">
+            <div class="text-3xl font-extrabold text-amber-300 drop-shadow-sm" id="summaryTotalSalary">0 ฿</div>
+            <span class="text-xs bg-white/20 px-2.5 py-1 rounded-full border border-white/20 text-white font-medium" id="summaryTotalRecords">0 รายการ</span>
+          </div>
         </div>
-        <div class="grid grid-cols-2 gap-2 text-xs border-t border-slate-700/60 pt-3 text-slate-300">
-          <div>โอทีรวม: <span class="font-bold text-white" id="summaryTotalOT">0 ชม.</span></div>
-          <div>ค่าอาหารรวม: <span class="font-bold text-white" id="summaryTotalMeals">0 ฿</span></div>
+
+        <!-- OT Hours -->
+        <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80 border-l-4 border-l-pink-500">
+          <span class="text-[10px] text-slate-400 font-bold uppercase block">ชั่วโมง OT รวม</span>
+          <span class="text-lg font-extrabold text-pink-600" id="summaryTotalOT">0 ชม.</span>
+        </div>
+
+        <!-- Meals & Allowance -->
+        <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80 border-l-4 border-l-emerald-500">
+          <span class="text-[10px] text-slate-400 font-bold uppercase block">ค่าอาหารรวม</span>
+          <span class="text-lg font-extrabold text-emerald-600" id="summaryTotalMeals">0 ฿</span>
         </div>
       </div>
 
       <!-- Daily Payroll History Table -->
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 space-y-3">
         <div class="flex justify-between items-center">
-          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">ประวัติคำนวณเงินย้อนหลัง</h3>
-          <button onclick="clearLocalStorageData()" class="text-xs text-rose-500 hover:underline">ล้างประวัติ</button>
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">ประวัติบันทึกในรอบตัดยอด</h3>
+          <button onclick="clearLocalStorageData()" class="text-xs text-rose-500 font-semibold hover:underline">ล้างประวัติ</button>
         </div>
         <div class="overflow-x-auto">
           <div id="payrollHistoryList" class="space-y-2">
@@ -273,38 +332,38 @@
 
   </main>
 
-  <!-- Bottom Navigation Bar -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 glass-effect border-t border-slate-200/80">
-    <div class="max-w-md mx-auto grid grid-cols-4 h-16 px-1">
-      <button onclick="switchTab(1)" id="nav-1" class="touch-target flex flex-col items-center justify-center text-brand-600">
+  <!-- Floating Capsule Navigation Bar -->
+  <nav class="fixed bottom-3 left-4 right-4 z-40 max-w-md mx-auto">
+    <div class="glass-effect rounded-2xl shadow-xl border border-white/60 p-1.5 grid grid-cols-4 gap-1">
+      <button onclick="switchTab(1)" id="nav-1" class="touch-target flex flex-col items-center justify-center rounded-xl transition duration-200 text-indigo-600 font-bold bg-indigo-50">
         <i class="fa-solid fa-clock text-lg"></i>
-        <span class="text-[10px] font-medium mt-1">บันทึกสด</span>
+        <span class="text-[10px] mt-0.5">บันทึกสด</span>
       </button>
 
-      <button onclick="switchTab(2)" id="nav-2" class="touch-target flex flex-col items-center justify-center text-slate-400 hover:text-slate-600">
+      <button onclick="switchTab(2)" id="nav-2" class="touch-target flex flex-col items-center justify-center rounded-xl transition duration-200 text-slate-400 hover:text-slate-600">
         <i class="fa-solid fa-pen-to-square text-lg"></i>
-        <span class="text-[10px] font-medium mt-1">แก้ไขเอง</span>
+        <span class="text-[10px] mt-0.5">แก้ไขเอง</span>
       </button>
 
-      <button onclick="switchTab(3)" id="nav-3" class="touch-target flex flex-col items-center justify-center text-slate-400 hover:text-slate-600">
+      <button onclick="switchTab(3)" id="nav-3" class="touch-target flex flex-col items-center justify-center rounded-xl transition duration-200 text-slate-400 hover:text-slate-600">
         <i class="fa-solid fa-calendar-minus text-lg"></i>
-        <span class="text-[10px] font-medium mt-1">วันลา</span>
+        <span class="text-[10px] mt-0.5">วันลา</span>
       </button>
 
-      <button onclick="switchTab(4)" id="nav-4" class="touch-target flex flex-col items-center justify-center text-slate-400 hover:text-slate-600">
+      <button onclick="switchTab(4)" id="nav-4" class="touch-target flex flex-col items-center justify-center rounded-xl transition duration-200 text-slate-400 hover:text-slate-600">
         <i class="fa-solid fa-chart-pie text-lg"></i>
-        <span class="text-[10px] font-medium mt-1">สรุปผล</span>
+        <span class="text-[10px] mt-0.5">สรุปผล</span>
       </button>
     </div>
   </nav>
 
   <!-- Modal Breakdown -->
   <div id="breakdownModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden space-y-4 p-5 animate-in fade-in zoom-in duration-200">
-      <div class="flex justify-between items-center border-b pb-2">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden space-y-4 p-5 animate-in fade-in zoom-in duration-200">
+      <div class="flex justify-between items-center border-b pb-2.5">
         <h3 class="font-bold text-slate-800 text-sm">รายละเอียดคำนวณเงินเชิงลึก</h3>
-        <button onclick="closeBreakdownModal()" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark text-lg"></i>
+        <button onclick="closeBreakdownModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
@@ -312,7 +371,7 @@
         <!-- Dynamic Breakdown -->
       </div>
 
-      <button onclick="closeBreakdownModal()" class="touch-target w-full bg-slate-800 text-white font-bold rounded-xl p-2.5">
+      <button onclick="closeBreakdownModal()" class="touch-target w-full bg-slate-800 text-white font-bold rounded-xl p-3 shadow-md">
         ปิดหน้าต่าง
       </button>
     </div>
@@ -320,11 +379,11 @@
 
   <!-- Settings Config Modal -->
   <div id="configModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-5 space-y-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-5 space-y-4">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="font-bold text-slate-800 text-sm">การตั้งค่า Google & LINE</h3>
-        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark text-lg"></i>
+        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
@@ -345,14 +404,14 @@
         </div>
       </div>
 
-      <button onclick="saveConfigSettings()" class="touch-target w-full bg-brand-500 text-white font-bold rounded-xl p-3">
+      <button onclick="saveConfigSettings()" class="touch-target w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl p-3 shadow-md">
         บันทึกการตั้งค่า
       </button>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-lg hidden transition duration-300">
+  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-lg hidden transition duration-300 backdrop-blur-md border border-white/10">
     <span id="toastMsg">กำลังดำเนินการ...</span>
   </div>
 
@@ -374,12 +433,14 @@
       renderEmployeeDropdowns();
       startLiveClock();
       loadTodayLiveStatus();
+      buildCutoffOptions();
       renderHistories();
       
-      // Default set date in manual form
-      document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('leaveStartDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('leaveEndDate').value = new Date().toISOString().split('T')[0];
+      // Default set date in forms
+      const todayStr = new Date().toISOString().split('T')[0];
+      document.getElementById('manualDate').value = todayStr;
+      document.getElementById('leaveStartDate').value = todayStr;
+      document.getElementById('leaveEndDate').value = todayStr;
     });
 
     function initSettings() {
@@ -414,9 +475,9 @@
       for (let i = 1; i <= 4; i++) {
         const navBtn = document.getElementById(`nav-${i}`);
         if (i === tabNum) {
-          navBtn.className = "touch-target flex flex-col items-center justify-center text-brand-600 font-bold";
+          navBtn.className = "touch-target flex flex-col items-center justify-center rounded-xl transition duration-200 text-indigo-600 font-bold bg-indigo-50/80 shadow-sm";
         } else {
-          navBtn.className = "touch-target flex flex-col items-center justify-center text-slate-400 hover:text-slate-600";
+          navBtn.className = "touch-target flex flex-col items-center justify-center rounded-xl transition duration-200 text-slate-400 hover:text-slate-600";
         }
       }
     }
@@ -441,8 +502,7 @@
       return h * 60 + m;
     }
 
-    function calculatePayroll(shift, dayType, checkInTime, checkOutTime) {
-      const baseSalary = 400; // ฐานค่าแรงปกติ
+    function calculatePayroll(shift, dayType, checkInTime, checkOutTime, workType = 'FULL') {
       let otHours = 0;
       let otRate = 1.5;
       let otPay = 0;
@@ -453,28 +513,47 @@
       const inMins = timeToMins(checkInTime);
       let outMins = timeToMins(checkOutTime);
 
-      if (shift === 'DAY') {
-        // กะกลางวัน: 08:00 (480) - 17:00 (1020)
-        // Cap OT at 19:10 (1150). OT starts after 17:10 (1030)
-        let cappedOutMins = outMins;
-        if (cappedOutMins > 1150) cappedOutMins = 1150;
+      let totalWorkedMinutes = 0;
 
+      if (shift === 'DAY') {
+        // กะกลางวัน: 08:00 (480) - 17:00 (1020) หักพัก 70 นาที = 8 ชม.
+        let rawDuration = Math.max(0, outMins - inMins);
+        totalWorkedMinutes = Math.max(0, rawDuration - 70);
+
+        let cappedOutMins = outMins > 1150 ? 1150 : outMins; // Max 19:10
         if (cappedOutMins > 1030) {
           otHours = (cappedOutMins - 1030) / 60;
         }
       } else {
-        // กะกลางคืน: 20:00 (1200) - 05:00 (300) ข้ามวัน
+        // กะกลางคืน: 20:00 (1200) - 05:00 (300)
         shiftAllowance = 180;
-        let adjOutMins = outMins < 720 ? outMins + 1440 : outMins; // +24 ชม.
-        let cappedOutMins = adjOutMins;
-        if (cappedOutMins > 1870) cappedOutMins = 1870; // 07:10 (310 + 1440 = 1750... 07:10 = 430+1440=1870)
+        let adjOutMins = outMins < 720 ? outMins + 1440 : outMins;
+        let rawDuration = Math.max(0, adjOutMins - inMins);
+        totalWorkedMinutes = Math.max(0, rawDuration - 70);
 
-        if (cappedOutMins > 1750) { // 05:10 = 310+1440=1750
+        let cappedOutMins = adjOutMins > 1870 ? 1870 : adjOutMins; // Max 07:10
+        if (cappedOutMins > 1750) {
           otHours = (cappedOutMins - 1750) / 60;
         }
       }
 
+      const workedHours = Math.round((totalWorkedMinutes / 60) * 100) / 100;
       otHours = Math.max(0, Math.round(otHours * 100) / 100);
+
+      // 🛑 เงื่อนไขค่าแรงฐาน
+      let baseSalary = 400;
+      let salaryNote = "";
+
+      if (workType === 'HALF') {
+        baseSalary = 200; // ลาครึ่งวัน คิดครึ่งเดียว
+        salaryNote = "ลาครึ่งวัน (200฿)";
+      } else if (dayType === 'REGULAR' && workedHours < 8) {
+        baseSalary = 0; // วันธรรมดา ทำงานไม่ถึง 8 ชม. ไม่คิดเงิน
+        salaryNote = "ทำงานไม่ถึง 8 ชม. (0฿)";
+      } else {
+        baseSalary = 400;
+        salaryNote = "เต็มวัน (400฿)";
+      }
 
       // เรต OT และ ค่าอาหารพิเศษ
       if (dayType === 'REGULAR') {
@@ -498,6 +577,8 @@
 
       return {
         baseSalary,
+        salaryNote,
+        workedHours,
         otHours,
         otRate,
         otPay,
@@ -546,6 +627,7 @@
           date: dateStr,
           shift: document.getElementById('shiftSelect').value,
           dayType: document.getElementById('dayTypeSelect').value,
+          workType: document.getElementById('workTypeSelect').value,
           checkIn: timeStr,
           checkOut: ''
         });
@@ -555,7 +637,6 @@
       showToast("ลงเวลาเข้างานสำเร็จ");
       loadTodayLiveStatus();
 
-      // Send Line CheckIn Notification
       const lineMsg = `⏰ [แจ้งเตือน CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${dateStr}\nเวลาเข้างาน: ${timeStr} น.`;
       syncToGoogleSheets([], lineMsg);
     }
@@ -571,9 +652,10 @@
 
       const shift = document.getElementById('shiftSelect').value;
       const dayType = document.getElementById('dayTypeSelect').value;
+      const workType = document.getElementById('workTypeSelect').value;
 
       let checkInVal = idx >= 0 && records[idx].checkIn ? records[idx].checkIn : '08:00';
-      const calc = calculatePayroll(shift, dayType, checkInVal, timeStr);
+      const calc = calculatePayroll(shift, dayType, checkInVal, timeStr, workType);
 
       const recordObj = {
         id: emp.id,
@@ -581,6 +663,7 @@
         date: dateStr,
         shift: shift,
         dayType: dayType,
+        workType: workType,
         checkIn: checkInVal,
         checkOut: timeStr,
         ...calc
@@ -597,13 +680,12 @@
       loadTodayLiveStatus();
       renderHistories();
 
-      // LINE message format
       const lineMsg = `✅ [แจ้งเตือน CHECK OUT & คำนวณค่าแรง]\n` +
         `พนักงาน: ${emp.name} (${emp.id})\n` +
         `วันที่: ${dateStr} (${shift})\n` +
-        `เวลา: ${checkInVal} - ${timeStr} น.\n` +
+        `เวลา: ${checkInVal} - ${timeStr} น. (${calc.workedHours} ชม.)\n` +
         `--------------------\n` +
-        `ค่าแรงปกติ: ${calc.baseSalary} บาท\n` +
+        `ค่าแรงปกติ: ${calc.baseSalary} บาท [${calc.salaryNote}]\n` +
         `OT (${calc.otHours} ชม.): +${calc.otPay} บาท\n` +
         `ค่ากะ/ค่าอาหาร: +${calc.shiftAllowance + calc.totalMealAllowance} บาท\n` +
         `💰 รวมสุทธิ: ${calc.totalSalary} บาท`;
@@ -618,10 +700,11 @@
       const dateStr = document.getElementById('manualDate').value;
       const shift = document.getElementById('manualShift').value;
       const dayType = document.getElementById('manualDayType').value;
+      const workType = document.getElementById('manualWorkType').value;
       const checkIn = document.getElementById('manualCheckIn').value;
       const checkOut = document.getElementById('manualCheckOut').value;
 
-      const calc = calculatePayroll(shift, dayType, checkIn, checkOut);
+      const calc = calculatePayroll(shift, dayType, checkIn, checkOut, workType);
 
       const recordObj = {
         id: emp.id,
@@ -629,6 +712,7 @@
         date: dateStr,
         shift,
         dayType,
+        workType,
         checkIn,
         checkOut,
         ...calc
@@ -645,7 +729,8 @@
       const lineMsg = `📝 [แจ้งเตือน แก้ไข/เติมเวลาทำงาน]\n` +
         `พนักงาน: ${emp.name} (${emp.id})\n` +
         `วันที่: ${dateStr}\n` +
-        `เวลา: ${checkIn} - ${checkOut} น.\n` +
+        `เวลา: ${checkIn} - ${checkOut} น. (${calc.workedHours} ชม.)\n` +
+        `ค่าแรงปกติ: ${calc.baseSalary} บาท [${calc.salaryNote}]\n` +
         `💰 ยอดรวมสุทธิ: ${calc.totalSalary} บาท`;
 
       syncToGoogleSheets([recordObj], lineMsg);
@@ -703,7 +788,6 @@
         leaves: leaves
       };
 
-      // Use fetch with no-cors / cors mode
       fetch(gasUrl, {
         method: "POST",
         mode: "no-cors",
@@ -717,11 +801,59 @@
       });
     }
 
-    // 9. Render Histories & Dashboards
+    // 9. Bi-Monthly Cutoff Logic (1-15 and 16-30/31)
+    function buildCutoffOptions() {
+      const select = document.getElementById('cutoffPeriodSelect');
+      const now = new Date();
+      const options = [];
+
+      for (let i = 0; i < 6; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const y = d.getFullYear();
+        const m = d.getMonth();
+        const monthName = d.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
+        const lastDay = new Date(y, m + 1, 0).getDate();
+
+        options.push({
+          label: `งวด 16 - ${lastDay} ${monthName}`,
+          start: `${y}-${String(m + 1).padStart(2, '0')}-16`,
+          end: `${y}-${String(m + 1).padStart(2, '0')}-${lastDay}`
+        });
+
+        options.push({
+          label: `งวด 1 - 15 ${monthName}`,
+          start: `${y}-${String(m + 1).padStart(2, '0')}-01`,
+          end: `${y}-${String(m + 1).padStart(2, '0')}-15`
+        });
+      }
+
+      options.unshift({ label: '🌐 แสดงทั้งหมด (ไม่จำกัดงวด)', start: '2000-01-01', end: '2099-12-31' });
+
+      select.innerHTML = options.map(o => `<option value="${o.start}|${o.end}">${o.label}</option>`).join('');
+      
+      // Auto select current cutoff
+      const day = now.getDate();
+      if (day <= 15) {
+        select.selectedIndex = 2; // Period 1-15 of current month
+      } else {
+        select.selectedIndex = 1; // Period 16-End of current month
+      }
+    }
+
+    // 10. Render Histories & Dashboards
     function renderHistories() {
-      // Payroll List
       const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      const empRecords = records.filter(r => r.id === currentEmpId);
+      let empRecords = records.filter(r => r.id === currentEmpId);
+
+      // Filter by Cutoff Period
+      const cutoffVal = document.getElementById('cutoffPeriodSelect').value;
+      if (cutoffVal) {
+        const [start, end] = cutoffVal.split('|');
+        empRecords = empRecords.filter(r => r.date >= start && r.date <= end);
+      }
+
+      // Sort by date desc
+      empRecords.sort((a, b) => b.date.localeCompare(a.date));
 
       const listEl = document.getElementById('payrollHistoryList');
       let totalSalarySum = 0;
@@ -729,22 +861,27 @@
       let totalMealsSum = 0;
 
       if (empRecords.length === 0) {
-        listEl.innerHTML = `<p class="text-center text-xs text-slate-400 py-4">ยังไม่มีประวัติการคำนวณเงิน</p>`;
+        listEl.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">ไม่พบประวัติคำนวณเงินในรอบตัดยอดนี้</p>`;
       } else {
-        listEl.innerHTML = empRecords.map((r, i) => {
+        listEl.innerHTML = empRecords.map((r) => {
           totalSalarySum += (r.totalSalary || 0);
           totalOTSum += (r.otHours || 0);
           totalMealsSum += (r.totalMealAllowance || 0);
 
           return `
-            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80 flex justify-between items-center">
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex justify-between items-center shadow-sm">
               <div>
-                <div class="font-bold text-slate-800 text-xs">${r.date} (${r.shift === 'DAY' ? 'กะวัน' : 'กะคืน'})</div>
-                <div class="text-[11px] text-slate-500">${r.checkIn || '-'} - ${r.checkOut || '-'} น. | OT: ${r.otHours || 0} ชม.</div>
+                <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                  <span>${r.date}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${r.shift === 'DAY' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800'}">
+                    ${r.shift === 'DAY' ? 'กะวัน' : 'กะคืน'}
+                  </span>
+                </div>
+                <div class="text-[11px] text-slate-500 mt-0.5">${r.checkIn || '-'} - ${r.checkOut || '-'} น. | OT: ${r.otHours || 0} ชม.</div>
               </div>
               <div class="text-right">
-                <div class="font-extrabold text-brand-600 text-sm">${r.totalSalary || 0} ฿</div>
-                <button onclick='openBreakdownModal(${JSON.stringify(r)})' class="text-[10px] text-brand-500 hover:underline">ดูรายละเอียด</button>
+                <div class="font-extrabold text-indigo-600 text-sm">${r.totalSalary || 0} ฿</div>
+                <button onclick='openBreakdownModal(${JSON.stringify(r)})' class="text-[10px] text-purple-600 hover:underline font-semibold">รายละเอียด</button>
               </div>
             </div>
           `;
@@ -762,10 +899,10 @@
       const leaveListEl = document.getElementById('leaveHistoryList');
 
       if (empLeaves.length === 0) {
-        leaveListEl.innerHTML = `<p class="text-center text-xs text-slate-400 py-2">ยังไม่มีประวัติการยื่นลา</p>`;
+        leaveListEl.innerHTML = `<p class="text-center text-xs text-slate-400 py-3">ยังไม่มีประวัติการยื่นลา</p>`;
       } else {
         leaveListEl.innerHTML = empLeaves.map(l => `
-          <div class="bg-amber-50/60 p-2.5 rounded-xl border border-amber-100 flex justify-between items-center">
+          <div class="bg-amber-50/70 p-2.5 rounded-xl border border-amber-100 flex justify-between items-center">
             <div>
               <span class="font-bold text-amber-900">${l.leaveType}</span>
               <span class="text-slate-500 block text-[10px]">${l.startDate} ถึง ${l.endDate}</span>
@@ -776,26 +913,29 @@
       }
     }
 
-    // 10. Modals & UI Helpers
+    // 11. Modals & UI Helpers
     function openBreakdownModal(item) {
       const modal = document.getElementById('breakdownModal');
       const content = document.getElementById('modalContent');
 
       content.innerHTML = `
-        <div class="bg-slate-50 p-3 rounded-xl space-y-1">
-          <div class="font-bold text-slate-800">${item.employeeName || ''} (${item.date})</div>
-          <div>กะการทำงาน: <span class="font-medium">${item.shift === 'DAY' ? 'กะกลางวัน (08:00-17:00)' : 'กะกลางคืน (20:00-05:00)'}</span></div>
-          <div>ประเภทวัน: <span class="font-medium">${item.dayType === 'REGULAR' ? 'วันปกติ' : 'วันหยุด'}</span></div>
-          <div>เวลาลงจริง: <span class="font-medium">${item.checkIn} ถึง ${item.checkOut}</span></div>
+        <div class="bg-indigo-50/60 p-3 rounded-2xl space-y-1 border border-indigo-100">
+          <div class="font-bold text-indigo-950">${item.employeeName || ''} (${item.date})</div>
+          <div>กะการทำงาน: <span class="font-semibold text-slate-800">${item.shift === 'DAY' ? 'กะกลางวัน' : 'กะกลางคืน'}</span></div>
+          <div>ประเภทวัน: <span class="font-semibold text-slate-800">${item.dayType === 'REGULAR' ? 'วันปกติ' : 'วันหยุด'}</span></div>
+          <div>เวลาลงจริง: <span class="font-semibold text-slate-800">${item.checkIn} ถึง ${item.checkOut} (${item.workedHours || 0} ชม.)</span></div>
         </div>
 
         <div class="space-y-1.5 pt-2">
-          <div class="flex justify-between"><span>ค่าแรงปกติ (8 ชม.):</span> <span class="font-bold">${item.baseSalary || 400} บาท</span></div>
-          <div class="flex justify-between"><span>OT ${item.otRate || 1.5} (${item.otHours || 0} ชม.):</span> <span class="font-bold text-amber-600">+${item.otPay || 0} บาท</span></div>
+          <div class="flex justify-between">
+            <span>ค่าแรงปกติ:</span>
+            <span class="font-bold">${item.baseSalary || 0} บาท <span class="text-[10px] text-slate-400">(${item.salaryNote || ''})</span></span>
+          </div>
+          <div class="flex justify-between"><span>OT ${item.otRate || 1.5} (${item.otHours || 0} ชม.):</span> <span class="font-bold text-pink-600">+${item.otPay || 0} บาท</span></div>
           <div class="flex justify-between"><span>ค่ากะกลางคืน:</span> <span class="font-bold">+${item.shiftAllowance || 0} บาท</span></div>
           <div class="flex justify-between"><span>ค่าอาหารปกติ:</span> <span class="font-bold">+${item.normalMeal || 10} บาท</span></div>
           <div class="flex justify-between"><span>ค่าอาหารพิเศษ OT:</span> <span class="font-bold">+${item.otMeal || 0} บาท</span></div>
-          <div class="border-t pt-2 flex justify-between text-sm font-extrabold text-brand-600">
+          <div class="border-t pt-2 flex justify-between text-sm font-extrabold text-indigo-600">
             <span>รวมรายได้สุทธิประจำวัน:</span>
             <span>${item.totalSalary || 0} บาท</span>
           </div>
