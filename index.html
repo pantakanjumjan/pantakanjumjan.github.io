@@ -61,31 +61,37 @@
       filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.35));
     }
 
-    /* Print styles for Payslip */
+    /* Official Payslip Printable Styling */
     @media print {
       body * {
-        visibility: hidden;
+        visibility: hidden !important;
       }
-      #printablePayslip, #printablePayslip * {
-        visibility: visible;
+      #printablePayslipArea, #printablePayslipArea * {
+        visibility: visible !important;
       }
-      #printablePayslip {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 20px;
-        box-shadow: none;
-        border: none;
+      #printablePayslipArea {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        box-shadow: none !important;
+        background: #fff !important;
+        color: #000 !important;
       }
       .no-print {
         display: none !important;
       }
     }
+
+    .payslip-table th, .payslip-table td {
+      border: 1px solid #000;
+      padding: 2px 4px;
+    }
   </style>
 </head>
-<body class="h-full flex flex-col bg-slate-100 text-slate-800 antialiased selection:bg-purple-500 selection:text-white pb-24">
+<body class="h-full flex flex-col bg-slate-100 text-slate-800 antialiased selection:bg-purple-500 selection:text-white pb-28">
 
   <!-- Header -->
   <header class="sticky top-0 z-30 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white shadow-md no-print">
@@ -96,7 +102,7 @@
         </div>
         <div>
           <h1 class="font-bold text-xs leading-tight tracking-wide">TimePro Mobile</h1>
-          <p class="text-[9.5px] text-purple-100/80">ลงเวลา & คำนวณค่าแรง & สลิปเงินเดือน</p>
+          <p class="text-[9.5px] text-purple-100/80">ระบบลงเวลา & คำนวณค่าแรง & ออกสลิปเงินเดือน</p>
         </div>
       </div>
       <button onclick="openConfigModal()" class="w-7 h-7 text-white/90 hover:text-white bg-white/10 rounded-lg border border-white/20 active:bg-white/20 transition flex items-center justify-center">
@@ -111,7 +117,7 @@
     <!-- Global Employee Selector -->
     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1">
       <label class="block text-[10px] font-bold text-indigo-600 uppercase tracking-wider flex items-center justify-between">
-        <span class="flex items-center"><i class="fa-solid fa-id-badge mr-1.2 text-purple-500 text-xs"></i> เลือกรหัส / ชื่อพนักงาน</span>
+        <span class="flex items-center"><i class="fa-solid fa-id-badge mr-1.5 text-purple-500 text-xs"></i> เลือกรหัส / ชื่อพนักงาน</span>
         <span class="text-[8.5px] px-1.5 py-0.2 rounded-full bg-indigo-50 text-indigo-700 font-bold border border-indigo-100">พนักงาน</span>
       </label>
       <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl focus:ring-2 focus:ring-purple-500 block p-1.5 font-semibold transition">
@@ -162,7 +168,7 @@
         </div>
       </div>
 
-      <!-- Live Status Card (Prominently placed above action buttons) -->
+      <!-- Live Status Card (Prominently placed directly below Live Clock Card & above Check In/Out) -->
       <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1">
         <h3 class="text-[9.5px] font-extrabold text-indigo-950 uppercase tracking-wider flex items-center justify-between">
           <span class="flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-indigo-500"></i> สถานะบันทึกเวลาวันนี้</span>
@@ -326,7 +332,7 @@
           <label class="block text-[9.5px] font-bold text-indigo-600 uppercase tracking-wider flex items-center">
             <i class="fa-solid fa-filter mr-1 text-pink-500"></i> รอบตัดยอดเงิน / งวดการจ่ายเงิน
           </label>
-          <button onclick="openPayslipModal()" class="text-[9.5px] font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 transition">
+          <button onclick="openPayslipModal()" class="text-[9.5px] font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 transition flex items-center shadow-sm">
             <i class="fa-solid fa-file-invoice-dollar mr-1"></i> ออกสลิปเงินเดือน
           </button>
         </div>
@@ -420,58 +426,138 @@
     </div>
   </div>
 
-  <!-- Payslip Printable Modal -->
-  <div id="payslipModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl space-y-3 p-4 my-auto relative" id="printablePayslip">
-      <!-- Header -->
-      <div class="flex justify-between items-start border-b border-slate-200 pb-2">
+  <!-- Official Payslip Printable Modal (บริษัท โพรเวิลด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด) -->
+  <div id="payslipModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-2 overflow-y-auto">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl space-y-3 p-4 my-auto relative text-slate-900 text-xs font-sans" id="printablePayslipArea">
+      
+      <!-- Action Buttons top (Screen only) -->
+      <div class="flex justify-between items-center border-b border-slate-200 pb-2 no-print">
+        <span class="font-bold text-indigo-900 text-xs flex items-center gap-1">
+          <i class="fa-solid fa-file-invoice-dollar text-purple-600"></i> ตัวอย่างใบจ่ายเงินเดือน (Payslip Preview)
+        </span>
         <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
-            <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
+          <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition flex items-center gap-1 shadow">
+            <i class="fa-solid fa-print"></i> พิมพ์ / บันทึก PDF
+          </button>
+          <button onclick="closePayslipModal()" class="text-slate-400 hover:text-slate-600 p-1">
+            <i class="fa-solid fa-xmark text-base"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Payslip Official Content Structure -->
+      <div class="text-center space-y-0.5">
+        <h2 class="font-bold text-sm tracking-wide">ใบจ่ายเงินเดือน</h2>
+        <h3 class="font-extrabold text-base tracking-wider text-slate-900">บริษัท โพรเวิลด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</h3>
+      </div>
+
+      <!-- Header Info Line -->
+      <div class="flex flex-wrap justify-between items-center text-[11px] border-b border-slate-900 pb-1 font-medium space-y-1 sm:space-y-0" id="payslipHeaderInfo">
+        <!-- Dynamic Info -->
+      </div>
+
+      <!-- 3-Column Official Grid Layout Table -->
+      <div class="grid grid-cols-12 gap-0.5 border border-slate-900 text-[10px] leading-tight">
+        
+        <!-- Left & Center Columns: Earnings & Deductions -->
+        <div class="col-span-9 grid grid-cols-9 border-r border-slate-900">
+          
+          <!-- Earnings Section (Left) -->
+          <div class="col-span-6 border-r border-slate-900 flex flex-col justify-between">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-900 bg-slate-50">
+                  <th class="p-1 font-bold">รายได้</th>
+                  <th class="p-1 font-bold text-center">จำนวน</th>
+                  <th class="p-1 font-bold text-right">จำนวนเงิน</th>
+                </tr>
+              </thead>
+              <tbody id="payslipEarningsBody" class="font-normal">
+                <!-- Dynamic Earnings Rows -->
+              </tbody>
+            </table>
+            <div class="flex justify-between font-bold border-t border-slate-900 p-1 bg-slate-50">
+              <span>รวมเงินได้</span>
+              <span id="payslipTotalEarnings" class="font-mono">0.00</span>
+            </div>
           </div>
-          <div>
-            <h2 class="font-extrabold text-indigo-950 text-sm">ใบแจ้งยอดค่าจ้าง (Payslip)</h2>
-            <p class="text-[9px] text-slate-500">TimePro Attendance & Payroll System</p>
+
+          <!-- Deductions Section (Center) -->
+          <div class="col-span-3 flex flex-col justify-between">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-900 bg-slate-50">
+                  <th class="p-1 font-bold">รายการหัก</th>
+                  <th class="p-1 font-bold text-right">จำนวนเงิน</th>
+                </tr>
+              </thead>
+              <tbody id="payslipDeductionsBody" class="font-normal">
+                <!-- Dynamic Deductions Rows -->
+              </tbody>
+            </table>
+            <div class="flex justify-between font-bold border-t border-slate-900 p-1 bg-slate-50">
+              <span>รวมรายการหัก</span>
+              <span id="payslipTotalDeductions" class="font-mono">0.00</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: YTD Cumulative Summary & Net Pay -->
+        <div class="col-span-3 flex flex-col justify-between text-[10px] bg-slate-50/50">
+          <div class="space-y-1.5 p-1">
+            <div class="border-b border-slate-900 pb-1 text-center">
+              <span class="block font-bold">วันที่จ่าย</span>
+              <span id="payslipPayDate" class="font-mono font-bold text-indigo-900">--/--/----</span>
+            </div>
+
+            <div class="border-b border-slate-400 pb-1 text-center">
+              <span class="block font-bold">เงินได้สะสมต่อปี</span>
+              <span id="payslipYTDEarnings" class="font-mono">36,475.00</span>
+            </div>
+
+            <div class="border-b border-slate-400 pb-1 text-center">
+              <span class="block font-bold">ภาษีสะสมต่อปี</span>
+              <span id="payslipYTDTax" class="font-mono">0.00</span>
+            </div>
+
+            <div class="border-b border-slate-400 pb-1 text-center">
+              <span class="block font-bold">เงินสะสมกองทุนต่อปี</span>
+              <span id="payslipYTDFund" class="font-mono">0.00</span>
+            </div>
+
+            <div class="border-b border-slate-400 pb-1 text-center">
+              <span class="block font-bold">ค่าลดหย่อนอื่นๆ</span>
+              <span id="payslipOtherDeductions" class="font-mono">0.00</span>
+            </div>
+
+            <div class="text-center">
+              <span class="block font-bold">เงินประกันสังคมต่อปี</span>
+              <span id="payslipYTDSocial" class="font-mono">1,000.00</span>
+            </div>
+          </div>
+
+          <!-- Net Salary Box -->
+          <div class="border-t border-slate-900 p-1.5 text-center bg-slate-200/80">
+            <span class="block font-extrabold text-[11px] uppercase tracking-wide">เงินรับสุทธิ</span>
+            <span id="payslipNetPay" class="font-extrabold text-sm font-mono text-indigo-950">0.00</span>
           </div>
         </div>
-        <button onclick="closePayslipModal()" class="text-slate-400 hover:text-slate-600 no-print">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
+
       </div>
 
-      <!-- Employee & Period Details -->
-      <div id="payslipInfo" class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 text-[10.5px] space-y-1 text-slate-700">
-        <!-- Dynamic Payslip Info -->
-      </div>
-
-      <!-- Itemized Salary Breakdown Table -->
-      <div class="space-y-1">
-        <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">รายการเงินได้ (Earnings Breakdown)</h4>
-        <div id="payslipItems" class="text-[10.5px] space-y-1 text-slate-700 border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
-          <!-- Dynamic Payslip Items -->
+      <!-- Payslip Footer -->
+      <div class="pt-2 text-[9px] flex justify-between items-end">
+        <div class="font-mono text-slate-500" id="payslipRefID">
+          E_PaySlip ID: 202610211555{A8DFD0FC-2316-4DFD-B78D-8D0A1F13F079}
+        </div>
+        <div class="text-right space-y-4">
+          <div class="font-bold text-slate-800">
+            ลงชื่อพนักงาน ___________________________________
+          </div>
         </div>
       </div>
 
-      <!-- Total Amount -->
-      <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-3 rounded-xl flex justify-between items-center">
-        <div>
-          <span class="text-[9.5px] text-indigo-200 font-semibold block">ยอดรับสุทธิ (NET SALARY)</span>
-          <span class="text-xs text-slate-300" id="payslipDaysCount">0 วันทำงาน</span>
-        </div>
-        <div class="text-right">
-          <span class="text-lg font-extrabold text-amber-300 font-mono" id="payslipNetTotal">0 ฿</span>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex gap-2 pt-1 no-print">
-        <button onclick="window.print()" class="touch-target flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl p-2 text-xs transition">
-          <i class="fa-solid fa-print mr-1"></i> พิมพ์ / บันทึก PDF
-        </button>
-        <button onclick="closePayslipModal()" class="touch-target flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl p-2 text-xs transition">
-          ปิด
-        </button>
-      </div>
     </div>
   </div>
 
@@ -514,14 +600,26 @@
   </div>
 
   <script>
-    // Initial Setup
+    // Initial Setup & Master Data
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzIC7PtGt_PeyQ7Co1GTiC0Ev6dPfDSiGhhyHClbKL1yMzUCTmeju8JKOYAtNGJZaB7/exec";
     const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
 
     const employeeList = [
-      { id: "50001024", name: "นาย พันธกานต์ จูมจันทร์" },
-      { id: "50001025", name: "พนักงาน คนที่ 2" }
+      { 
+        id: "50001024", 
+        name: "นาย พันธกานต์ จูมจันทร์", 
+        dept: "MAT", 
+        startDate: "2026-08-03", 
+        bankAcc: "5052911817" 
+      },
+      { 
+        id: "50001025", 
+        name: "พนักงาน คนที่ 2", 
+        dept: "Production", 
+        startDate: "2026-01-01", 
+        bankAcc: "1234567890" 
+      }
     ];
 
     let currentEmpId = employeeList[0].id;
@@ -604,6 +702,7 @@
       return h * 60 + m;
     }
 
+    // Calculation Engine
     function calculatePayroll(shift, dayType, checkInTime, checkOutTime, workType = 'FULL') {
       let otHours = 0;
       let otRate = 1.5;
@@ -621,7 +720,7 @@
         let rawDuration = Math.max(0, outMins - inMins);
         totalWorkedMinutes = Math.max(0, rawDuration - 70);
 
-        let cappedOutMins = outMins > 1150 ? 1150 : outMins;
+        let cappedOutMins = outMins > 1150 ? 1150 : outMins; // Max 19:10
         if (cappedOutMins > 1030) {
           otHours = (cappedOutMins - 1030) / 60;
         }
@@ -631,7 +730,7 @@
         let rawDuration = Math.max(0, adjOutMins - inMins);
         totalWorkedMinutes = Math.max(0, rawDuration - 70);
 
-        let cappedOutMins = adjOutMins > 1870 ? 1870 : adjOutMins;
+        let cappedOutMins = adjOutMins > 1870 ? 1870 : adjOutMins; // Max 07:10
         if (cappedOutMins > 1750) {
           otHours = (cappedOutMins - 1750) / 60;
         }
@@ -975,7 +1074,7 @@
                   <div class="text-[9.5px] text-slate-500 font-mono">${r.checkIn || '-'} - ${r.checkOut || '-'} น. | OT: ${r.otHours || 0} ชม.</div>
                 </div>
                 <div class="text-right">
-                  <div class="font-extrabold text-indigo-600 text-xs font-mono">${(r.totalSalary || 0).toLocaleString()} ฿</div>
+                  <div class="font-extrabold text-indigo-600 text-xs font-mono">${(r.totalSalary || 0).toLocaleString('th-TH', {minimumFractionDigits:2})} ฿</div>
                   <button onclick='openBreakdownModal(${JSON.stringify(r)})' class="text-[8.5px] text-purple-600 hover:underline font-semibold">รายละเอียด</button>
                 </div>
               </div>
@@ -984,10 +1083,10 @@
         }
       }
 
-      if (document.getElementById('summaryTotalSalary')) document.getElementById('summaryTotalSalary').textContent = `${totalSalarySum.toLocaleString()} ฿`;
+      if (document.getElementById('summaryTotalSalary')) document.getElementById('summaryTotalSalary').textContent = `${totalSalarySum.toLocaleString('th-TH', {minimumFractionDigits:2})} ฿`;
       if (document.getElementById('summaryTotalRecords')) document.getElementById('summaryTotalRecords').textContent = `${empRecords.length} รายการ`;
       if (document.getElementById('summaryTotalOT')) document.getElementById('summaryTotalOT').textContent = `${totalOTSum.toFixed(1)} ชม.`;
-      if (document.getElementById('summaryTotalMeals')) document.getElementById('summaryTotalMeals').textContent = `${totalMealsSum.toLocaleString()} ฿`;
+      if (document.getElementById('summaryTotalMeals')) document.getElementById('summaryTotalMeals').textContent = `${totalMealsSum.toLocaleString('th-TH', {minimumFractionDigits:2})} ฿`;
 
       const leaves = JSON.parse(localStorage.getItem("leave_records") || "[]");
       const empLeaves = leaves.filter(l => l.id === currentEmpId);
@@ -1027,15 +1126,15 @@
         <div class="space-y-1 pt-1 text-[11px]">
           <div class="flex justify-between">
             <span>ค่าแรงปกติ:</span>
-            <span class="font-bold font-mono">${item.baseSalary || 0} บาท <span class="text-[8.5px] text-slate-400">(${item.salaryNote || ''})</span></span>
+            <span class="font-bold font-mono">${(item.baseSalary || 0).toFixed(2)} บาท <span class="text-[8.5px] text-slate-400">(${item.salaryNote || ''})</span></span>
           </div>
-          <div class="flex justify-between"><span>OT ${item.otRate || 1.5} (${item.otHours || 0} ชม.):</span> <span class="font-bold font-mono text-pink-600">+${item.otPay || 0} บาท</span></div>
-          <div class="flex justify-between"><span>ค่ากะกลางคืน:</span> <span class="font-bold font-mono">+${item.shiftAllowance || 0} บาท</span></div>
-          <div class="flex justify-between"><span>ค่าอาหารปกติ:</span> <span class="font-bold font-mono">+${item.normalMeal || 10} บาท</span></div>
-          <div class="flex justify-between"><span>ค่าอาหารพิเศษ OT:</span> <span class="font-bold font-mono">+${item.otMeal || 0} บาท</span></div>
+          <div class="flex justify-between"><span>OT ${item.otRate || 1.5} (${item.otHours || 0} ชม.):</span> <span class="font-bold font-mono text-pink-600">+${(item.otPay || 0).toFixed(2)} บาท</span></div>
+          <div class="flex justify-between"><span>ค่ากะกลางคืน:</span> <span class="font-bold font-mono">+${(item.shiftAllowance || 0).toFixed(2)} บาท</span></div>
+          <div class="flex justify-between"><span>ค่าอาหารปกติ:</span> <span class="font-bold font-mono">+${(item.normalMeal || 10).toFixed(2)} บาท</span></div>
+          <div class="flex justify-between"><span>ค่าอาหารพิเศษ OT:</span> <span class="font-bold font-mono">+${(item.otMeal || 0).toFixed(2)} บาท</span></div>
           <div class="border-t pt-1 flex justify-between text-xs font-extrabold text-indigo-600">
             <span>รวมรายได้สุทธิประจำวัน:</span>
-            <span class="font-mono">${(item.totalSalary || 0).toLocaleString()} บาท</span>
+            <span class="font-mono">${(item.totalSalary || 0).toLocaleString('th-TH', {minimumFractionDigits:2})} บาท</span>
           </div>
         </div>
       `;
@@ -1048,74 +1147,115 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    // Payslip Modal Generator Function
+    // Official Payslip Modal Generator (บริษัท โพรเวิลด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด)
     function openPayslipModal() {
       const emp = getCurrentEmpObj();
       const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
       let empRecords = records.filter(r => r.id === currentEmpId);
 
       const cutoffSelect = document.getElementById('cutoffPeriodSelect');
-      let periodLabel = "งวดปัจจุบัน";
+      let endDateStr = new Date().toISOString().split('T')[0];
+
       if (cutoffSelect && cutoffSelect.value) {
-        periodLabel = cutoffSelect.options[cutoffSelect.selectedIndex].text;
         const [start, end] = cutoffSelect.value.split('|');
         empRecords = empRecords.filter(r => r.date >= start && r.date <= end);
+        endDateStr = end;
       }
 
       // Aggregate earnings breakdown
+      let workDaysCount = empRecords.length;
       let sumBaseSalary = 0;
+      let sumOT10 = 0;
       let sumOT15 = 0;
       let sumOT20 = 0;
       let sumOT30 = 0;
       let sumNightShift = 0;
-      let sumMealAllowance = 0;
-      let sumNetTotal = 0;
+      let sumOTMeal = 0;
+      let sumNormalMeal = 0;
+      let sumHolidayPay = 0;
 
       empRecords.forEach(r => {
         sumBaseSalary += (r.baseSalary || 0);
-        if (r.otRate === 1.5) sumOT15 += (r.otPay || 0);
+        if (r.otRate === 1.0) sumOT10 += (r.otPay || 0);
+        else if (r.otRate === 1.5) sumOT15 += (r.otPay || 0);
         else if (r.otRate === 2.0) sumOT20 += (r.otPay || 0);
         else if (r.otRate === 3.0) sumOT30 += (r.otPay || 0);
 
         sumNightShift += (r.shiftAllowance || 0);
-        sumMealAllowance += (r.totalMealAllowance || 0);
-        sumNetTotal += (r.totalSalary || 0);
+        sumNormalMeal += (r.normalMeal || 10);
+        sumOTMeal += (r.otMeal || 0);
       });
 
-      // Render Info
-      document.getElementById('payslipInfo').innerHTML = `
-        <div class="flex justify-between"><span>ชื่อ-นามสกุล:</span> <span class="font-bold text-indigo-950">${emp.name}</span></div>
-        <div class="flex justify-between"><span>รหัสพนักงาน:</span> <span class="font-mono font-semibold">${emp.id}</span></div>
-        <div class="flex justify-between"><span>รอบตัดยอด:</span> <span class="font-bold text-purple-700">${periodLabel}</span></div>
-        <div class="flex justify-between"><span>วันที่ออกสลิป:</span> <span class="font-mono">${new Date().toLocaleDateString('th-TH')}</span></div>
+      const totalEarningsSum = sumBaseSalary + sumOT10 + sumOT15 + sumOT20 + sumOT30 + sumNightShift + sumNormalMeal + sumOTMeal + sumHolidayPay;
+      
+      // Deductions (คำนวณหักประกันสังคม 5% อัตโนมัติ เพดาน 375 ฿/งวดครึ่งเดือน หรือ 750 ฿/เดือน)
+      const isAllPeriod = cutoffSelect && (cutoffSelect.value.includes('2000-01-01') || cutoffSelect.value.includes('2099-12-31'));
+      const maxSSCap = isAllPeriod ? 750.00 : 375.00;
+      let socialSecurityDeduction = totalEarningsSum > 0 ? Math.min(totalEarningsSum * 0.05, maxSSCap) : 0.00;
+      socialSecurityDeduction = Math.round(socialSecurityDeduction * 100) / 100;
+
+      const totalDeductionsSum = socialSecurityDeduction;
+      const netPaySum = totalEarningsSum - totalDeductionsSum;
+
+      // Render Header info
+      document.getElementById('payslipHeaderInfo').innerHTML = `
+        <div>รหัส <span class="font-bold">${emp.id}</span></div>
+        <div>ชื่อสกุล <span class="font-bold">${emp.name}</span></div>
+        <div>แผนก <span class="font-bold">${emp.dept || 'MAT'}</span></div>
+        <div>วันเริ่มงาน <span class="font-bold">${emp.startDate || '2026-08-03'}</span></div>
+        <div>เลขที่บัญชี <span class="font-bold font-mono">${emp.bankAcc || '5052911817'}</span></div>
       `;
 
-      // Render Items
-      document.getElementById('payslipItems').innerHTML = `
-        <div class="flex justify-between border-b border-slate-200/60 pb-1">
-          <span>ค่าแรงงานปกติ (Base Salary):</span>
-          <span class="font-bold font-mono">${sumBaseSalary.toLocaleString()} ฿</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-200/60 pb-1">
-          <span>ค่าล่วงเวลา OT 1.5 (75฿/ชม.):</span>
-          <span class="font-bold font-mono text-pink-600">${sumOT15.toLocaleString()} ฿</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-200/60 pb-1">
-          <span>ค่าล่วงเวลา OT 2.0 / 3.0:</span>
-          <span class="font-bold font-mono text-pink-600">${(sumOT20 + sumOT30).toLocaleString()} ฿</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-200/60 pb-1">
-          <span>ค่ากะกลางคืน (+180฿/วัน):</span>
-          <span class="font-bold font-mono">${sumNightShift.toLocaleString()} ฿</span>
-        </div>
-        <div class="flex justify-between">
-          <span>ค่าอาหารปกติ & ค่าอาหารพิเศษ OT:</span>
-          <span class="font-bold font-mono text-emerald-600">${sumMealAllowance.toLocaleString()} ฿</span>
-        </div>
+      // Render Earnings Table Body
+      document.getElementById('payslipEarningsBody').innerHTML = `
+        <tr><td>อัตราเงินเดือน</td><td class="text-center"></td><td class="text-right font-mono">400.00</td></tr>
+        <tr><td>เงินเดือน</td><td class="text-center font-mono">${workDaysCount}.00</td><td class="text-right font-mono">${sumBaseSalary.toFixed(2)}</td></tr>
+        <tr><td>ค่าล่วงเวลา1เท่า</td><td class="text-center font-mono">0.00</td><td class="text-right font-mono">${sumOT10.toFixed(2)}</td></tr>
+        <tr><td>ค่าล่วงเวลา 1.5เท่า</td><td class="text-center font-mono">0.00</td><td class="text-right font-mono">${sumOT15.toFixed(2)}</td></tr>
+        <tr><td>ค่าล่วงเวลา 2 เท่า</td><td class="text-center font-mono">0.00</td><td class="text-right font-mono">${sumOT20.toFixed(2)}</td></tr>
+        <tr><td>ค่าล่วงเวลา 3 เท่า</td><td class="text-center font-mono">0.00</td><td class="text-right font-mono">${sumOT30.toFixed(2)}</td></tr>
+        <tr><td>ค่ากะ</td><td class="text-center font-mono"></td><td class="text-right font-mono">${sumNightShift.toFixed(2)}</td></tr>
+        <tr><td>ค่าอาหารโอที</td><td class="text-center font-mono"></td><td class="text-right font-mono">${sumOTMeal.toFixed(2)}</td></tr>
+        <tr><td>เบี้ยขยัน</td><td class="text-center font-mono"></td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>ลาป่วย/พักร้อน/ลากิจ</td><td class="text-center font-mono"></td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>วันหยุดประเพณี</td><td class="text-center font-mono"></td><td class="text-right font-mono">${sumHolidayPay.toFixed(2)}</td></tr>
+        <tr><td>ค่าแรงตกจ่าย</td><td class="text-center font-mono"></td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>ค่าแรง 75%/อื่นๆ</td><td class="text-center font-mono"></td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>ค่าอาหารกลางวัน</td><td class="text-center font-mono"></td><td class="text-right font-mono">${sumNormalMeal.toFixed(2)}</td></tr>
+        <tr><td>Bonus/ค่ารถ</td><td class="text-center font-mono"></td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>ค่าเสี่ยงภัย</td><td class="text-center font-mono"></td><td class="text-right font-mono">0.00</td></tr>
       `;
 
-      document.getElementById('payslipDaysCount').textContent = `${empRecords.length} วันทำงานในงวดนี้`;
-      document.getElementById('payslipNetTotal').textContent = `${sumNetTotal.toLocaleString()} ฿`;
+      // Render Deductions Table Body
+      document.getElementById('payslipDeductionsBody').innerHTML = `
+        <tr><td>หักค่าชุดฟอร์ม</td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>หักสมทบประกันสังคม</td><td class="text-right font-mono">${socialSecurityDeduction.toFixed(2)}</td></tr>
+        <tr><td>ค่าตรวจร่างกาย</td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>หักอื่นๆ</td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>หักกยศ./กรอ</td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td>หักอายัดตามกรมบังคับคดี</td><td class="text-right font-mono">0.00</td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+        <tr><td class="py-2"></td><td></td></tr>
+      `;
+
+      // Set Totals & Dates
+      document.getElementById('payslipTotalEarnings').textContent = totalEarningsSum.toLocaleString('th-TH', {minimumFractionDigits: 2});
+      document.getElementById('payslipTotalDeductions').textContent = totalDeductionsSum.toLocaleString('th-TH', {minimumFractionDigits: 2});
+      
+      const payDateFormatted = endDateStr.split('-').reverse().join('/');
+      document.getElementById('payslipPayDate').textContent = payDateFormatted;
+      document.getElementById('payslipNetPay').textContent = netPaySum.toLocaleString('th-TH', {minimumFractionDigits: 2});
+
+      // Reference ID
+      document.getElementById('payslipRefID').textContent = `E_PaySlip ID: 202610211555{A8DFD0FC-2316-4DFD-B78D-8D0A1F13F079}{6D3B7ED2-0628-41B0-871E-D946D5B993EF}`;
 
       document.getElementById('payslipModal').classList.remove('hidden');
     }
