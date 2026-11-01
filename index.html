@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TimePro Mobile - ระบบลงเวลาทำงาน</title>
+  <title>TimePro Mobile - ระบบลงเวลาทำงาน & สลิปเงินเดือน</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -60,12 +60,35 @@
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.35));
     }
+
+    /* Print styles for Payslip */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printablePayslip, #printablePayslip * {
+        visibility: visible;
+      }
+      #printablePayslip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none;
+        border: none;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body class="h-full flex flex-col bg-slate-100 text-slate-800 antialiased selection:bg-purple-500 selection:text-white pb-24">
 
-  <!-- Header (Compact 90%) -->
-  <header class="sticky top-0 z-30 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white shadow-md">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white shadow-md no-print">
     <div class="max-w-md mx-auto px-3.5 py-2.5 flex justify-between items-center">
       <div class="flex items-center space-x-2">
         <div class="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
@@ -73,7 +96,7 @@
         </div>
         <div>
           <h1 class="font-bold text-xs leading-tight tracking-wide">TimePro Mobile</h1>
-          <p class="text-[9.5px] text-purple-100/80">ระบบลงเวลา & คำนวณค่าแรง</p>
+          <p class="text-[9.5px] text-purple-100/80">ลงเวลา & คำนวณค่าแรง & สลิปเงินเดือน</p>
         </div>
       </div>
       <button onclick="openConfigModal()" class="w-7 h-7 text-white/90 hover:text-white bg-white/10 rounded-lg border border-white/20 active:bg-white/20 transition flex items-center justify-center">
@@ -82,10 +105,10 @@
     </div>
   </header>
 
-  <!-- Main Content Container (Compact 90%) -->
-  <main class="flex-1 max-w-md w-full mx-auto p-3 space-y-2.5">
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-md w-full mx-auto p-3 space-y-2.5 no-print">
 
-    <!-- Employee Selector Dropdown -->
+    <!-- Global Employee Selector -->
     <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1">
       <label class="block text-[10px] font-bold text-indigo-600 uppercase tracking-wider flex items-center justify-between">
         <span class="flex items-center"><i class="fa-solid fa-id-badge mr-1.2 text-purple-500 text-xs"></i> เลือกรหัส / ชื่อพนักงาน</span>
@@ -96,7 +119,7 @@
       </select>
     </div>
 
-    <!-- TAB 1: Live Punch Record (90% Scaled) -->
+    <!-- TAB 1: Live Punch Record -->
     <section id="tab-1" class="tab-content space-y-2.5">
       <!-- Live Clock Card -->
       <div class="dark-glass text-white p-3.5 rounded-2xl shadow-md border border-slate-800 text-center space-y-1.5 relative overflow-hidden">
@@ -117,8 +140,8 @@
           <div>
             <label class="block text-[9.5px] font-semibold text-slate-400 mb-0.5">กะการทำงาน</label>
             <select id="shiftSelect" class="touch-target w-full bg-slate-900/80 border border-slate-700 text-slate-200 text-[11px] rounded-lg p-1.5 font-medium outline-none">
-              <option value="DAY">☀️ กะกลางวัน (08:00-16:50)</option>
-              <option value="NIGHT">🌙 กะกลางคืน (20:00-04:50)</option>
+              <option value="DAY">☀️ กะกลางวัน (08:00-17:00)</option>
+              <option value="NIGHT">🌙 กะกลางคืน (20:00-05:00)</option>
             </select>
           </div>
           <div>
@@ -139,7 +162,7 @@
         </div>
       </div>
 
-      <!-- Live Status Card (Placed prominently above action buttons) -->
+      <!-- Live Status Card (Prominently placed above action buttons) -->
       <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1">
         <h3 class="text-[9.5px] font-extrabold text-indigo-950 uppercase tracking-wider flex items-center justify-between">
           <span class="flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-indigo-500"></i> สถานะบันทึกเวลาวันนี้</span>
@@ -200,8 +223,8 @@
             <div>
               <label class="block text-[9.5px] font-bold text-slate-600 mb-0.5">กะการทำงาน</label>
               <select id="manualShift" class="touch-target w-full bg-slate-50 border border-slate-300 text-slate-800 text-[11px] rounded-xl p-1.5 outline-none">
-                <option value="DAY">กะกลางวัน (08:00-16:50)</option>
-                <option value="NIGHT">กะกลางคืน (20:00-04:50)</option>
+                <option value="DAY">กะกลางวัน (08:00-17:00)</option>
+                <option value="NIGHT">กะกลางคืน (20:00-05:00)</option>
               </select>
             </div>
             <div>
@@ -294,14 +317,19 @@
       </div>
     </section>
 
-    <!-- TAB 4: Dashboard & Payroll Summary -->
+    <!-- TAB 4: Dashboard & Payroll Summary & Payslip Generator -->
     <section id="tab-4" class="tab-content hidden space-y-2.5">
       
       <!-- Bi-Monthly Cutoff Selector -->
       <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1">
-        <label class="block text-[9.5px] font-bold text-indigo-600 uppercase tracking-wider flex items-center">
-          <i class="fa-solid fa-filter mr-1 text-pink-500"></i> รอบตัดยอดเงิน / งวดการจ่ายเงิน
-        </label>
+        <div class="flex justify-between items-center">
+          <label class="block text-[9.5px] font-bold text-indigo-600 uppercase tracking-wider flex items-center">
+            <i class="fa-solid fa-filter mr-1 text-pink-500"></i> รอบตัดยอดเงิน / งวดการจ่ายเงิน
+          </label>
+          <button onclick="openPayslipModal()" class="text-[9.5px] font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-2 py-0.5 rounded-lg border border-purple-200 transition">
+            <i class="fa-solid fa-file-invoice-dollar mr-1"></i> ออกสลิปเงินเดือน
+          </button>
+        </div>
         <select id="cutoffPeriodSelect" onchange="renderHistories()" class="touch-target w-full bg-indigo-50/60 border border-indigo-200 text-indigo-900 text-xs font-bold rounded-xl p-1.5 focus:ring-2 focus:ring-indigo-500 outline-none">
           <!-- Dynamic Cutoff Periods -->
         </select>
@@ -348,7 +376,7 @@
   </main>
 
   <!-- Proportional 90% Scaled Capsule Bottom Navigation Bar -->
-  <nav class="fixed bottom-2.5 left-0 right-0 z-40 px-4">
+  <nav class="fixed bottom-2.5 left-0 right-0 z-40 px-4 no-print">
     <div class="max-w-[300px] mx-auto glass-effect rounded-2xl shadow-nav-float border border-white/80 p-1 grid grid-cols-4 gap-0.5">
       <button onclick="switchTab(1)" id="nav-1" class="touch-target flex flex-col items-center justify-center rounded-xl py-1 px-1 text-indigo-600 font-bold bg-indigo-100/80 transition">
         <i class="fa-solid fa-clock text-xs"></i>
@@ -373,7 +401,7 @@
   </nav>
 
   <!-- Modal Breakdown -->
-  <div id="breakdownModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div id="breakdownModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white w-full max-w-xs rounded-2xl shadow-2xl overflow-hidden space-y-2.5 p-3.5 animate-in fade-in zoom-in duration-150">
       <div class="flex justify-between items-center border-b pb-1.5">
         <h3 class="font-bold text-slate-800 text-xs">รายละเอียดคำนวณเงินเชิงลึก</h3>
@@ -392,8 +420,63 @@
     </div>
   </div>
 
+  <!-- Payslip Printable Modal -->
+  <div id="payslipModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl space-y-3 p-4 my-auto relative" id="printablePayslip">
+      <!-- Header -->
+      <div class="flex justify-between items-start border-b border-slate-200 pb-2">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
+            <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
+          </div>
+          <div>
+            <h2 class="font-extrabold text-indigo-950 text-sm">ใบแจ้งยอดค่าจ้าง (Payslip)</h2>
+            <p class="text-[9px] text-slate-500">TimePro Attendance & Payroll System</p>
+          </div>
+        </div>
+        <button onclick="closePayslipModal()" class="text-slate-400 hover:text-slate-600 no-print">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Employee & Period Details -->
+      <div id="payslipInfo" class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 text-[10.5px] space-y-1 text-slate-700">
+        <!-- Dynamic Payslip Info -->
+      </div>
+
+      <!-- Itemized Salary Breakdown Table -->
+      <div class="space-y-1">
+        <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">รายการเงินได้ (Earnings Breakdown)</h4>
+        <div id="payslipItems" class="text-[10.5px] space-y-1 text-slate-700 border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+          <!-- Dynamic Payslip Items -->
+        </div>
+      </div>
+
+      <!-- Total Amount -->
+      <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-3 rounded-xl flex justify-between items-center">
+        <div>
+          <span class="text-[9.5px] text-indigo-200 font-semibold block">ยอดรับสุทธิ (NET SALARY)</span>
+          <span class="text-xs text-slate-300" id="payslipDaysCount">0 วันทำงาน</span>
+        </div>
+        <div class="text-right">
+          <span class="text-lg font-extrabold text-amber-300 font-mono" id="payslipNetTotal">0 ฿</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-2 pt-1 no-print">
+        <button onclick="window.print()" class="touch-target flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl p-2 text-xs transition">
+          <i class="fa-solid fa-print mr-1"></i> พิมพ์ / บันทึก PDF
+        </button>
+        <button onclick="closePayslipModal()" class="touch-target flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl p-2 text-xs transition">
+          ปิด
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Settings Config Modal -->
-  <div id="configModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div id="configModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white w-full max-w-xs rounded-2xl shadow-2xl p-3.5 space-y-2.5">
       <div class="flex justify-between items-center border-b pb-1.5">
         <h3 class="font-bold text-slate-800 text-xs">การตั้งค่า Google & LINE</h3>
@@ -426,7 +509,7 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-[10.5px] font-medium px-3 py-1.5 rounded-full shadow-lg hidden transition duration-200 backdrop-blur-md border border-white/10">
+  <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-[10.5px] font-medium px-3 py-1.5 rounded-full shadow-lg hidden transition duration-200 backdrop-blur-md border border-white/10 no-print">
     <span id="toastMsg">กำลังดำเนินการ...</span>
   </div>
 
@@ -438,7 +521,7 @@
 
     const employeeList = [
       { id: "50001024", name: "นาย พันธกานต์ จูมจันทร์" },
-      { id: "TEST 001", name: "ทดสอบสถานะทำงานระบบ" }
+      { id: "50001025", name: "พนักงาน คนที่ 2" }
     ];
 
     let currentEmpId = employeeList[0].id;
@@ -963,6 +1046,82 @@
     function closeBreakdownModal() {
       const modal = document.getElementById('breakdownModal');
       if (modal) modal.classList.add('hidden');
+    }
+
+    // Payslip Modal Generator Function
+    function openPayslipModal() {
+      const emp = getCurrentEmpObj();
+      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      let empRecords = records.filter(r => r.id === currentEmpId);
+
+      const cutoffSelect = document.getElementById('cutoffPeriodSelect');
+      let periodLabel = "งวดปัจจุบัน";
+      if (cutoffSelect && cutoffSelect.value) {
+        periodLabel = cutoffSelect.options[cutoffSelect.selectedIndex].text;
+        const [start, end] = cutoffSelect.value.split('|');
+        empRecords = empRecords.filter(r => r.date >= start && r.date <= end);
+      }
+
+      // Aggregate earnings breakdown
+      let sumBaseSalary = 0;
+      let sumOT15 = 0;
+      let sumOT20 = 0;
+      let sumOT30 = 0;
+      let sumNightShift = 0;
+      let sumMealAllowance = 0;
+      let sumNetTotal = 0;
+
+      empRecords.forEach(r => {
+        sumBaseSalary += (r.baseSalary || 0);
+        if (r.otRate === 1.5) sumOT15 += (r.otPay || 0);
+        else if (r.otRate === 2.0) sumOT20 += (r.otPay || 0);
+        else if (r.otRate === 3.0) sumOT30 += (r.otPay || 0);
+
+        sumNightShift += (r.shiftAllowance || 0);
+        sumMealAllowance += (r.totalMealAllowance || 0);
+        sumNetTotal += (r.totalSalary || 0);
+      });
+
+      // Render Info
+      document.getElementById('payslipInfo').innerHTML = `
+        <div class="flex justify-between"><span>ชื่อ-นามสกุล:</span> <span class="font-bold text-indigo-950">${emp.name}</span></div>
+        <div class="flex justify-between"><span>รหัสพนักงาน:</span> <span class="font-mono font-semibold">${emp.id}</span></div>
+        <div class="flex justify-between"><span>รอบตัดยอด:</span> <span class="font-bold text-purple-700">${periodLabel}</span></div>
+        <div class="flex justify-between"><span>วันที่ออกสลิป:</span> <span class="font-mono">${new Date().toLocaleDateString('th-TH')}</span></div>
+      `;
+
+      // Render Items
+      document.getElementById('payslipItems').innerHTML = `
+        <div class="flex justify-between border-b border-slate-200/60 pb-1">
+          <span>ค่าแรงงานปกติ (Base Salary):</span>
+          <span class="font-bold font-mono">${sumBaseSalary.toLocaleString()} ฿</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-200/60 pb-1">
+          <span>ค่าล่วงเวลา OT 1.5 (75฿/ชม.):</span>
+          <span class="font-bold font-mono text-pink-600">${sumOT15.toLocaleString()} ฿</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-200/60 pb-1">
+          <span>ค่าล่วงเวลา OT 2.0 / 3.0:</span>
+          <span class="font-bold font-mono text-pink-600">${(sumOT20 + sumOT30).toLocaleString()} ฿</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-200/60 pb-1">
+          <span>ค่ากะกลางคืน (+180฿/วัน):</span>
+          <span class="font-bold font-mono">${sumNightShift.toLocaleString()} ฿</span>
+        </div>
+        <div class="flex justify-between">
+          <span>ค่าอาหารปกติ & ค่าอาหารพิเศษ OT:</span>
+          <span class="font-bold font-mono text-emerald-600">${sumMealAllowance.toLocaleString()} ฿</span>
+        </div>
+      `;
+
+      document.getElementById('payslipDaysCount').textContent = `${empRecords.length} วันทำงานในงวดนี้`;
+      document.getElementById('payslipNetTotal').textContent = `${sumNetTotal.toLocaleString()} ฿`;
+
+      document.getElementById('payslipModal').classList.remove('hidden');
+    }
+
+    function closePayslipModal() {
+      document.getElementById('payslipModal').classList.add('hidden');
     }
 
     function openConfigModal() {
