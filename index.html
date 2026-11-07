@@ -145,14 +145,14 @@
         <div class="grid grid-cols-2 gap-2 pt-1 text-left border-t border-slate-800/80 mt-1.5">
           <div>
             <label class="block text-[9.5px] font-semibold text-slate-400 mb-0.5">กะการทำงาน</label>
-            <select id="shiftSelect" class="touch-target w-full bg-slate-900/80 border border-slate-700 text-slate-200 text-[11px] rounded-lg p-1.5 font-medium outline-none">
+            <select id="shiftSelect" onchange="saveShiftPreference()" class="touch-target w-full bg-slate-900/80 border border-slate-700 text-slate-200 text-[11px] rounded-lg p-1.5 font-medium outline-none">
               <option value="DAY">☀️ กะกลางวัน (08:00-16:50)</option>
               <option value="NIGHT">🌙 กะกลางคืน (20:00-04:50)</option>
             </select>
           </div>
           <div>
             <label class="block text-[9.5px] font-semibold text-slate-400 mb-0.5">ประเภทวัน</label>
-            <select id="dayTypeSelect" class="touch-target w-full bg-slate-900/80 border border-slate-700 text-slate-200 text-[11px] rounded-lg p-1.5 font-medium outline-none">
+            <select id="dayTypeSelect" onchange="saveShiftPreference()" class="touch-target w-full bg-slate-900/80 border border-slate-700 text-slate-200 text-[11px] rounded-lg p-1.5 font-medium outline-none">
               <option value="REGULAR">💼 วันธรรมดา (OT 1.5)</option>
               <option value="HOLIDAY">🎉 วันหยุด (OT 2.0/3.0)</option>
             </select>
@@ -168,7 +168,7 @@
         </div>
       </div>
 
-      <!-- Live Status Card (Prominently placed directly below Live Clock Card & above Check In/Out) -->
+      <!-- Live Status Card -->
       <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/80 space-y-1">
         <h3 class="text-[9.5px] font-extrabold text-indigo-950 uppercase tracking-wider flex items-center justify-between">
           <span class="flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-indigo-500"></i> สถานะบันทึกเวลาวันนี้</span>
@@ -614,11 +614,11 @@
         bankAcc: "5052911817" 
       },
       { 
-        id: " test system ", 
-        name: " TEST ระบบ ", 
-        dept: "Production", 
+        id: "TEST SYSTEM", 
+        name: "TEST SYSTEM", 
+        dept: "TEST", 
         startDate: "2026-01-01", 
-        bankAcc: "1234567890" 
+        bankAcc: "0000000000" 
       }
     ];
 
@@ -628,6 +628,7 @@
       initSettings();
       renderEmployeeDropdowns();
       startLiveClock();
+      loadShiftPreference();
       loadTodayLiveStatus();
       buildCutoffOptions();
       renderHistories();
@@ -655,6 +656,7 @@
 
     function onEmployeeChange(id) {
       currentEmpId = id;
+      loadShiftPreference();
       loadTodayLiveStatus();
       renderHistories();
     }
@@ -696,13 +698,31 @@
       setInterval(update, 1000);
     }
 
+    function saveShiftPreference() {
+      const shift = document.getElementById('shiftSelect').value;
+      const dayType = document.getElementById('dayTypeSelect').value;
+      localStorage.setItem(`pref_shift_${currentEmpId}`, shift);
+      localStorage.setItem(`pref_daytype_${currentEmpId}`, dayType);
+    }
+
+    function loadShiftPreference() {
+      const savedShift = localStorage.getItem(`pref_shift_${currentEmpId}`);
+      const savedDayType = localStorage.getItem(`pref_daytype_${currentEmpId}`);
+      
+      if (savedShift && document.getElementById('shiftSelect')) {
+        document.getElementById('shiftSelect').value = savedShift;
+      }
+      if (savedDayType && document.getElementById('dayTypeSelect')) {
+        document.getElementById('dayTypeSelect').value = savedDayType;
+      }
+    }
+
     function timeToMins(tStr) {
       if (!tStr) return 0;
       const [h, m] = tStr.split(':').map(Number);
       return h * 60 + m;
     }
 
-    // Calculation Engine
     function calculatePayroll(shift, dayType, checkInTime, checkOutTime, workType = 'FULL') {
       let otHours = 0;
       let otRate = 1.5;
@@ -720,7 +740,7 @@
         let rawDuration = Math.max(0, outMins - inMins);
         totalWorkedMinutes = Math.max(0, rawDuration - 70);
 
-        let cappedOutMins = outMins > 1150 ? 1150 : outMins; // Max 19:10
+        let cappedOutMins = outMins > 1150 ? 1150 : outMins;
         if (cappedOutMins > 1030) {
           otHours = (cappedOutMins - 1030) / 60;
         }
@@ -730,7 +750,7 @@
         let rawDuration = Math.max(0, adjOutMins - inMins);
         totalWorkedMinutes = Math.max(0, rawDuration - 70);
 
-        let cappedOutMins = adjOutMins > 1870 ? 1870 : adjOutMins; // Max 07:10
+        let cappedOutMins = adjOutMins > 1870 ? 1870 : adjOutMins;
         if (cappedOutMins > 1750) {
           otHours = (cappedOutMins - 1750) / 60;
         }
@@ -790,23 +810,48 @@
     function loadTodayLiveStatus() {
       const today = new Date().toISOString().split('T')[0];
       const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      const activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
+      
       const todayRecord = records.find(r => r.id === currentEmpId && r.date === today);
+      const activeIn = activeCheckins[currentEmpId];
 
       const inEl = document.getElementById('displayCheckInTime');
       const outEl = document.getElementById('displayCheckOutTime');
       const inText = document.getElementById('checkInStatusText');
       const outText = document.getElementById('checkOutStatusText');
+      const btnIn = document.getElementById('btnCheckIn');
+      const btnOut = document.getElementById('btnCheckOut');
 
       if (todayRecord) {
         if (inEl) inEl.textContent = todayRecord.checkIn || '-';
         if (outEl) outEl.textContent = todayRecord.checkOut || '-';
-        if (inText) inText.textContent = todayRecord.checkIn ? `เข้าแล้ว (${todayRecord.checkIn})` : 'ยังไม่ได้ลงเวลาเข้า';
-        if (outText) outText.textContent = todayRecord.checkOut ? `ออกแล้ว (${todayRecord.checkOut})` : 'ยังไม่ได้ลงเวลาออก';
+        if (inText) inText.textContent = `เข้าแล้ว (${todayRecord.checkIn})`;
+        if (outText) outText.textContent = `ออกแล้ว (${todayRecord.checkOut})`;
+        
+        if (btnIn) {
+          btnIn.disabled = false;
+          btnIn.className = "touch-target flex flex-col items-center justify-center p-2.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 active:scale-95 text-white rounded-xl shadow-glow-emerald font-bold transition border border-emerald-300/30";
+        }
+      } else if (activeIn) {
+        if (inEl) inEl.textContent = activeIn.time;
+        if (outEl) outEl.textContent = '-';
+        if (inText) inText.textContent = `กำลังปฏิบัติงาน (${activeIn.time})`;
+        if (outText) outText.textContent = 'รอลงเวลาออก';
+
+        if (btnIn) {
+          btnIn.disabled = true;
+          btnIn.className = "touch-target flex flex-col items-center justify-center p-2.5 bg-slate-300 text-slate-500 rounded-xl font-bold cursor-not-allowed border border-slate-200";
+        }
       } else {
         if (inEl) inEl.textContent = '-';
         if (outEl) outEl.textContent = '-';
         if (inText) inText.textContent = 'ยังไม่ได้ลงเวลาเข้า';
         if (outText) outText.textContent = 'ยังไม่ได้ลงเวลาออก';
+
+        if (btnIn) {
+          btnIn.disabled = false;
+          btnIn.className = "touch-target flex flex-col items-center justify-center p-2.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 active:scale-95 text-white rounded-xl shadow-glow-emerald font-bold transition border border-emerald-300/30";
+        }
       }
     }
 
@@ -816,46 +861,47 @@
       const dateStr = now.toISOString().split('T')[0];
       const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
 
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      let idx = records.findIndex(r => r.id === emp.id && r.date === dateStr);
-
-      if (idx >= 0) {
-        records[idx].checkIn = timeStr;
-      } else {
-        records.push({
-          id: emp.id,
-          employeeName: emp.name,
-          date: dateStr,
-          shift: document.getElementById('shiftSelect').value,
-          dayType: document.getElementById('dayTypeSelect').value,
-          workType: document.getElementById('workTypeSelect').value,
-          checkIn: timeStr,
-          checkOut: ''
-        });
+      let activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
+      if (activeCheckins[emp.id]) {
+        showToast("พนักงานท่านนี้ได้ลงเวลาเข้าค้างไว้แล้ว กรุณากด CHECK OUT ก่อน");
+        return;
       }
 
-      localStorage.setItem("payroll_records", JSON.stringify(records));
-      showToast("ลงเวลาเข้างานสำเร็จ");
+      activeCheckins[emp.id] = {
+        date: dateStr,
+        time: timeStr,
+        shift: document.getElementById('shiftSelect').value,
+        dayType: document.getElementById('dayTypeSelect').value,
+        workType: document.getElementById('workTypeSelect').value
+      };
+
+      localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
+      showToast("ลงเวลาเข้างาน (บันทึกค้างไว้) สำเร็จ");
       loadTodayLiveStatus();
 
-      const lineMsg = `⏰ [แจ้งเตือน CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${dateStr}\nเวลาเข้างาน: ${timeStr} น.`;
+      const lineMsg = `⏰ [แจ้งเตือน CHECK IN (ค้างไว้)]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${dateStr}\nเวลาเข้างาน: ${timeStr} น.`;
       syncToGoogleSheets([], lineMsg);
     }
 
     function handleLiveCheckOut() {
       const emp = getCurrentEmpObj();
+      let activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
+      const activeIn = activeCheckins[emp.id];
+
+      if (!activeIn) {
+        showToast("ยังไม่มีประวัติการกด CHECK IN ค้างไว้ กรุณากด CHECK IN ก่อน");
+        return;
+      }
+
       const now = new Date();
-      const dateStr = now.toISOString().split('T')[0];
+      const dateStr = activeIn.date || now.toISOString().split('T')[0];
       const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
 
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      let idx = records.findIndex(r => r.id === emp.id && r.date === dateStr);
+      const shift = activeIn.shift;
+      const dayType = activeIn.dayType;
+      const workType = activeIn.workType;
+      const checkInVal = activeIn.time;
 
-      const shift = document.getElementById('shiftSelect').value;
-      const dayType = document.getElementById('dayTypeSelect').value;
-      const workType = document.getElementById('workTypeSelect').value;
-
-      let checkInVal = idx >= 0 && records[idx].checkIn ? records[idx].checkIn : '08:00';
       const calc = calculatePayroll(shift, dayType, checkInVal, timeStr, workType);
 
       const recordObj = {
@@ -870,13 +916,15 @@
         ...calc
       };
 
-      if (idx >= 0) {
-        records[idx] = recordObj;
-      } else {
-        records.push(recordObj);
-      }
+      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      records = records.filter(r => !(r.id === emp.id && r.date === dateStr));
+      records.push(recordObj);
 
       localStorage.setItem("payroll_records", JSON.stringify(records));
+
+      delete activeCheckins[emp.id];
+      localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
+
       showToast("ลงเวลาออกงานและคำนวณเงินสำเร็จ");
       loadTodayLiveStatus();
       renderHistories();
@@ -1147,7 +1195,6 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    // Official Payslip Modal Generator (บริษัท โพรเวิลด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด)
     function openPayslipModal() {
       const emp = getCurrentEmpObj();
       const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
@@ -1162,7 +1209,6 @@
         endDateStr = end;
       }
 
-      // Aggregate earnings breakdown
       let workDaysCount = empRecords.length;
       let sumBaseSalary = 0;
       let sumOT10 = 0;
@@ -1188,7 +1234,6 @@
 
       const totalEarningsSum = sumBaseSalary + sumOT10 + sumOT15 + sumOT20 + sumOT30 + sumNightShift + sumNormalMeal + sumOTMeal + sumHolidayPay;
       
-      // Deductions (คำนวณหักประกันสังคม 5% อัตโนมัติ เพดาน 375 ฿/งวดครึ่งเดือน หรือ 750 ฿/เดือน)
       const isAllPeriod = cutoffSelect && (cutoffSelect.value.includes('2000-01-01') || cutoffSelect.value.includes('2099-12-31'));
       const maxSSCap = isAllPeriod ? 750.00 : 375.00;
       let socialSecurityDeduction = totalEarningsSum > 0 ? Math.min(totalEarningsSum * 0.05, maxSSCap) : 0.00;
@@ -1197,7 +1242,6 @@
       const totalDeductionsSum = socialSecurityDeduction;
       const netPaySum = totalEarningsSum - totalDeductionsSum;
 
-      // Render Header info
       document.getElementById('payslipHeaderInfo').innerHTML = `
         <div>รหัส <span class="font-bold">${emp.id}</span></div>
         <div>ชื่อสกุล <span class="font-bold">${emp.name}</span></div>
@@ -1206,7 +1250,6 @@
         <div>เลขที่บัญชี <span class="font-bold font-mono">${emp.bankAcc || '5052911817'}</span></div>
       `;
 
-      // Render Earnings Table Body
       document.getElementById('payslipEarningsBody').innerHTML = `
         <tr><td>อัตราเงินเดือน</td><td class="text-center"></td><td class="text-right font-mono">400.00</td></tr>
         <tr><td>เงินเดือน</td><td class="text-center font-mono">${workDaysCount}.00</td><td class="text-right font-mono">${sumBaseSalary.toFixed(2)}</td></tr>
@@ -1226,7 +1269,6 @@
         <tr><td>ค่าเสี่ยงภัย</td><td class="text-center font-mono"></td><td class="text-right font-mono">0.00</td></tr>
       `;
 
-      // Render Deductions Table Body
       document.getElementById('payslipDeductionsBody').innerHTML = `
         <tr><td>หักค่าชุดฟอร์ม</td><td class="text-right font-mono">0.00</td></tr>
         <tr><td>หักสมทบประกันสังคม</td><td class="text-right font-mono">${socialSecurityDeduction.toFixed(2)}</td></tr>
@@ -1246,7 +1288,6 @@
         <tr><td class="py-2"></td><td></td></tr>
       `;
 
-      // Set Totals & Dates
       document.getElementById('payslipTotalEarnings').textContent = totalEarningsSum.toLocaleString('th-TH', {minimumFractionDigits: 2});
       document.getElementById('payslipTotalDeductions').textContent = totalDeductionsSum.toLocaleString('th-TH', {minimumFractionDigits: 2});
       
@@ -1254,7 +1295,6 @@
       document.getElementById('payslipPayDate').textContent = payDateFormatted;
       document.getElementById('payslipNetPay').textContent = netPaySum.toLocaleString('th-TH', {minimumFractionDigits: 2});
 
-      // Reference ID
       document.getElementById('payslipRefID').textContent = `E_PaySlip ID: 202610211555{A8DFD0FC-2316-4DFD-B78D-8D0A1F13F079}{6D3B7ED2-0628-41B0-871E-D946D5B993EF}`;
 
       document.getElementById('payslipModal').classList.remove('hidden');
@@ -1306,6 +1346,7 @@
       if (confirm("คุณต้องการล้างประวัติบันทึกเวลาทั้งหมดในเครื่องนี้ใช่หรือไม่?")) {
         localStorage.removeItem("payroll_records");
         localStorage.removeItem("leave_records");
+        localStorage.removeItem("active_checkins");
         loadTodayLiveStatus();
         renderHistories();
         showToast("ล้างประวัติเรียบร้อยแล้ว");
