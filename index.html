@@ -546,7 +546,7 @@
           <div class="border-[1.5px] border-black text-center flex-1 flex flex-col justify-between bg-white">
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">เงินได้สะสมต่อปี</div>
-              <div id="payslipYTDEarnings" class="py-1 font-medium">36,475.00</div>
+              <div id="payslipYTDEarnings" class="py-1 font-medium">43,625.00</div>
             </div>
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">ภาษีสะสมต่อปี</div>
@@ -562,7 +562,7 @@
             </div>
             <div>
               <div class="py-0.5 font-bold border-b border-black">เงินประกันสังคมต่อปี</div>
-              <div id="payslipYTDSocial" class="py-1 font-medium">1,000.00</div>
+              <div id="payslipYTDSocial" class="py-1 font-medium">1,200.00</div>
             </div>
           </div>
 
@@ -577,7 +577,7 @@
 
       <!-- ท้ายกระดาษ -->
       <div class="pt-1 text-[9px] space-y-2">
-        <div class="text-slate-600 font-mono" id="payslipRefID">E_PaySlip ID : PROWORLD-TACTILE-UNIT</div>
+        <div class="text-slate-600 font-mono" id="payslipRefID">E_PaySlip ID : PROVIDE POWER OUTSOURCING CO., LTD.</div>
         <div class="pl-8 font-bold text-xs text-black italic">ลงชื่อพนักงาน ___________________________________</div>
       </div>
     </div>
@@ -1570,7 +1570,7 @@
       document.getElementById('payslipNetPay').textContent = fmtNum(netPay);
 
       const stamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 12);
-      document.getElementById('payslipRefID').textContent = `E_PaySlip ID : ${stamp}(PROWORLD-TACTILE-UNIT)`;
+      document.getElementById('payslipRefID').textContent = `E_PaySlip ID : ${stamp}(PROVIDE POWER OUTSOURCING CO., LTD.)`;
     }
 
     function sendPayslipToLine() {
