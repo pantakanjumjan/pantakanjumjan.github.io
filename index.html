@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Sarabun:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
 
   <!-- Generate Custom High-Res App Icon & Dynamic PWA Manifest Inline -->
   <script>
@@ -31,14 +31,12 @@
         canvas.height = 512;
         const ctx = canvas.getContext('2d');
 
-        // Background Gradient
         const bgGrad = ctx.createLinearGradient(0, 0, 512, 512);
         bgGrad.addColorStop(0, '#1C1917');
         bgGrad.addColorStop(1, '#09090B');
         ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, 512, 512);
 
-        // Subtle Industrial Grid Lines
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         ctx.lineWidth = 2;
         for (let i = 64; i < 512; i += 64) {
@@ -46,28 +44,24 @@
           ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
         }
 
-        // Warm Orange Accent Glow
         const glow = ctx.createRadialGradient(256, 210, 20, 256, 210, 220);
         glow.addColorStop(0, 'rgba(234, 88, 12, 0.35)');
         glow.addColorStop(1, 'rgba(234, 88, 12, 0)');
         ctx.fillStyle = glow;
         ctx.fillRect(0, 0, 512, 512);
 
-        // Outer Precision Ring
         ctx.strokeStyle = '#EA580C';
         ctx.lineWidth = 14;
         ctx.beginPath();
         ctx.arc(256, 225, 118, 0, Math.PI * 2);
         ctx.stroke();
 
-        // Inner White Ring
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
         ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.arc(256, 225, 94, 0, Math.PI * 2);
         ctx.stroke();
 
-        // Chronograph Hands
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 14;
         ctx.lineCap = 'round';
@@ -78,13 +72,11 @@
         ctx.lineTo(312, 255);
         ctx.stroke();
 
-        // Center Pin
         ctx.fillStyle = '#EA580C';
         ctx.beginPath();
         ctx.arc(256, 225, 14, 0, Math.PI * 2);
         ctx.fill();
 
-        // Brand Label at Bottom
         ctx.fillStyle = '#FFFFFF';
         ctx.font = '800 44px sans-serif';
         ctx.textAlign = 'center';
@@ -123,6 +115,7 @@
           fontFamily: {
             sans: ['IBM Plex Sans Thai', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
+            slip: ['Sarabun', 'IBM Plex Sans Thai', 'sans-serif'],
           },
           colors: {
             brand: {
@@ -221,7 +214,54 @@
       animation: pulse-ring 2s infinite ease-in-out;
     }
 
+    /* Official Payslip Sheet Styling (Matches IMG_7014 Landscape Form) */
+    .official-slip-sheet {
+      font-family: 'Sarabun', 'IBM Plex Sans Thai', sans-serif;
+      color: #000000;
+      background: #FFFFFF;
+    }
+
+    /* Landscape PNG Export Layout Override (Exact 920px A5 Landscape Form) */
+    .png-landscape-mode {
+      width: 920px !important;
+      max-width: 920px !important;
+      min-width: 920px !important;
+      padding: 28px 34px 32px 34px !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      background: #FFFFFF !important;
+    }
+    .png-landscape-mode #slipHeaderRow {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      font-size: 13.5px !important;
+      margin-bottom: 6px !important;
+    }
+    .png-landscape-mode #slipMainGrid {
+      display: grid !important;
+      grid-template-columns: 1fr 165px !important;
+      gap: 12px !important;
+      align-items: stretch !important;
+    }
+    .png-landscape-mode #slipLeftCol {
+      grid-column: span 1 !important;
+    }
+    .png-landscape-mode #slipRightCol {
+      grid-column: span 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+    }
+    .png-landscape-mode td,
+    .png-landscape-mode th {
+      white-space: nowrap !important;
+    }
+
     @media print {
+      @page { size: landscape; margin: 10mm; }
       body { background: #fff !important; color: #000 !important; }
       body * { visibility: hidden !important; }
       #printablePayslipArea, #printablePayslipArea * { visibility: visible !important; }
@@ -673,12 +713,12 @@
     </div>
   </div>
 
-  <!-- Payslip Printable & PNG Export Modal -->
+  <!-- Payslip Printable & Landscape PNG Export Modal (Exact Official Layout IMG_7014) -->
   <div id="payslipModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-start sm:items-center justify-center p-2 overflow-y-auto">
-    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl space-y-2.5 p-5 my-auto relative text-slate-900 text-xs" id="printablePayslipArea">
+    <div class="official-slip-sheet w-full max-w-4xl rounded-2xl shadow-2xl space-y-2 p-4 sm:p-6 my-auto relative text-black text-xs" id="printablePayslipArea">
       
       <!-- Action Toolbar (Excluded during PNG Capture & Print) -->
-      <div data-html2canvas-ignore="true" class="flex flex-wrap justify-between items-center border-b border-slate-200 pb-2.5 gap-2 no-print">
+      <div data-html2canvas-ignore="true" class="flex flex-wrap justify-between items-center border-b border-slate-200 pb-2.5 gap-2 no-print font-sans">
         <div class="flex flex-wrap items-center gap-2">
           <span class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
             <i class="fa-solid fa-file-invoice-dollar text-orange-600"></i> ใบจ่ายเงินเดือน
@@ -691,7 +731,7 @@
             <i class="fa-solid fa-sliders text-orange-600"></i> ปรับยอด
           </button>
           <button id="btnSaveSlipPng" onclick="savePayslipAsPNG()" class="bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
-            <i class="fa-solid fa-image text-orange-400"></i> บันทึกรูป PNG
+            <i class="fa-solid fa-image text-orange-400"></i> บันทึกรูป PNG (แนวนอน)
           </button>
           <button id="btnSendSlipLine" onclick="sendPayslipToLine()" class="bg-[#06C755] hover:bg-[#05B34C] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
             <i class="fa-brands fa-line text-sm"></i> ส่ง LINE
@@ -704,7 +744,7 @@
       </div>
 
       <!-- Slip Editor Panel (Excluded during PNG Capture & Print) -->
-      <div id="slipEditorPanel" data-html2canvas-ignore="true" class="hidden bg-slate-50 border border-slate-300 rounded-xl p-3 space-y-2.5 text-[11px] no-print">
+      <div id="slipEditorPanel" data-html2canvas-ignore="true" class="hidden bg-slate-50 border border-slate-300 rounded-xl p-3 space-y-2.5 text-[11px] no-print font-sans">
         <div class="flex justify-between items-center font-bold text-slate-700 border-b border-slate-200 pb-1">
           <span>ปรับปรุงรายการเพิ่ม / รายการหัก / ยอดสะสมยกมา (บวกเพิ่มให้อัตโนมัติ)</span>
           <button onclick="resetSlipAdjustments()" class="text-rose-600 hover:underline text-[10px]">รีเซ็ตงวดนี้</button>
@@ -779,35 +819,42 @@
         </div>
       </div>
 
-      <!-- Actual Payslip Document Body -->
-      <div class="text-center space-y-0.5 pt-1">
-        <h2 class="font-bold text-base italic">ใบจ่ายเงินเดือน</h2>
-        <h3 class="font-extrabold text-base sm:text-lg text-slate-900 italic">บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</h3>
+      <!-- Official Document Header -->
+      <div class="text-center space-y-0.5 pt-1 italic text-black">
+        <h2 class="font-bold text-[17px] leading-tight">ใบจ่ายเงินเดือน</h2>
+        <h3 class="font-bold text-[18px] leading-tight">บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</h3>
       </div>
 
-      <div class="flex flex-wrap justify-between items-center text-[11px] pb-1 font-medium gap-2 italic" id="payslipHeaderInfo"></div>
+      <!-- Employee Metadata Strip -->
+      <div id="slipHeaderRow" class="flex flex-wrap justify-between items-center text-[13px] pt-1 pb-0.5 font-normal gap-3 italic text-black"></div>
 
-      <div class="grid grid-cols-12 gap-2.5 text-[10px] leading-snug italic text-black">
-        <div class="col-span-12 sm:col-span-9 border-[1.5px] border-black flex flex-col justify-between bg-white">
-          <div class="grid grid-cols-12">
-            <div class="col-span-7 border-r border-black">
-              <table class="w-full text-left border-collapse">
+      <!-- Main Payslip Grid (Left 5-Col Ledger + Right Summary Boxes) -->
+      <div id="slipMainGrid" class="grid grid-cols-12 gap-3 text-[12px] leading-[1.38] italic text-black">
+        
+        <!-- Left Ledger Box -->
+        <div id="slipLeftCol" class="col-span-12 sm:col-span-9 border-[1.5px] border-black flex flex-col justify-between bg-white">
+          <div class="grid grid-cols-12 flex-1">
+            <!-- Earnings Columns (7/12) -->
+            <div class="col-span-7 border-r-[1.5px] border-black flex flex-col">
+              <table class="w-full text-left border-collapse flex-1">
                 <thead>
-                  <tr class="border-b border-black">
-                    <th class="py-1 px-1.5 font-bold text-center border-r border-black">รายได้</th>
-                    <th class="py-1 px-1 font-bold text-center border-r border-black w-14">จำนวน</th>
-                    <th class="py-1 px-1.5 font-bold text-center w-20">จำนวนเงิน</th>
+                  <tr class="border-b-[1.5px] border-black font-bold text-[12.5px]">
+                    <th class="py-1 px-2 text-center border-r border-black">รายได้</th>
+                    <th class="py-1 px-1.5 text-center border-r border-black w-[76px]">จำนวน</th>
+                    <th class="py-1 px-2 text-center w-[92px]">จำนวนเงิน</th>
                   </tr>
                 </thead>
                 <tbody id="payslipEarningsBody"></tbody>
               </table>
             </div>
-            <div class="col-span-5">
-              <table class="w-full text-left border-collapse">
+
+            <!-- Deductions Columns (5/12) -->
+            <div class="col-span-5 flex flex-col">
+              <table class="w-full text-left border-collapse flex-1">
                 <thead>
-                  <tr class="border-b border-black">
-                    <th class="py-1 px-1.5 font-bold text-center border-r border-black">รายการหัก</th>
-                    <th class="py-1 px-1.5 font-bold text-center w-20">จำนวนเงิน</th>
+                  <tr class="border-b-[1.5px] border-black font-bold text-[12.5px]">
+                    <th class="py-1 px-2 text-center border-r border-black">รายการหัก</th>
+                    <th class="py-1 px-2 text-center w-[92px]">จำนวนเงิน</th>
                   </tr>
                 </thead>
                 <tbody id="payslipDeductionsBody"></tbody>
@@ -815,57 +862,64 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-12 border-t-[1.5px] border-black font-bold text-[11px]">
-            <div class="col-span-7 border-r border-black flex justify-between items-center py-1 px-2">
-              <span class="mx-auto">รวมเงินได้</span>
-              <span id="payslipTotalEarnings">0.00</span>
+          <!-- Totals Footer Bar (Matches IMG_7014 split cell borders) -->
+          <div class="grid grid-cols-12 border-t-[1.5px] border-black font-bold text-[13px]">
+            <div class="col-span-7 border-r-[1.5px] border-black flex items-stretch">
+              <div class="flex-1 py-1.5 px-2 text-center border-r border-black">รวมเงินได้</div>
+              <div class="w-[92px] py-1.5 px-2 text-right" id="payslipTotalEarnings">0.00</div>
             </div>
-            <div class="col-span-5 flex justify-between items-center py-1 px-2">
-              <span class="mx-auto">รวมรายการหัก</span>
-              <span id="payslipTotalDeductions">0.00</span>
+            <div class="col-span-5 flex items-stretch">
+              <div class="flex-1 py-1.5 px-2 text-center border-r border-black">รวมรายการหัก</div>
+              <div class="w-[92px] py-1.5 px-2 text-right" id="payslipTotalDeductions">0.00</div>
             </div>
           </div>
         </div>
 
-        <div class="col-span-12 sm:col-span-3 flex flex-col justify-between space-y-2 text-[10px] italic text-black bg-white">
+        <!-- Right Summary Column (3 Separate Boxes: Pay Date, YTD Accumulations, Net Pay) -->
+        <div id="slipRightCol" class="col-span-12 sm:col-span-3 flex flex-col justify-between space-y-2.5 text-[12px] italic text-black bg-white">
+          
+          <!-- Box 1: Pay Date -->
           <div class="border-[1.5px] border-black text-center bg-white">
-            <div class="border-b border-black py-1 font-bold">วันที่จ่าย</div>
-            <div id="payslipPayDate" class="py-1 font-medium text-black">--/--/----</div>
+            <div class="border-b border-black py-1 font-bold text-[12.5px]">วันที่จ่าย</div>
+            <div id="payslipPayDate" class="py-1 font-normal text-[12.5px]">--/--/----</div>
           </div>
 
+          <!-- Box 2: Annual YTD Accumulations -->
           <div class="border-[1.5px] border-black text-center flex-1 flex flex-col justify-between bg-white">
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">เงินได้สะสมต่อปี</div>
-              <div id="payslipYTDEarnings" class="py-1 font-medium">0.00</div>
+              <div id="payslipYTDEarnings" class="py-1 font-normal">0.00</div>
             </div>
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">ภาษีสะสมต่อปี</div>
-              <div id="payslipYTDTax" class="py-1 font-medium">0.00</div>
+              <div id="payslipYTDTax" class="py-1 font-normal">0.00</div>
             </div>
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">เงินสะสมกองทุนต่อปี</div>
-              <div id="payslipYTDFund" class="py-1 font-medium">0.00</div>
+              <div id="payslipYTDFund" class="py-1 font-normal">0.00</div>
             </div>
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">ค่าลดหย่อนอื่นๆ</div>
-              <div id="payslipOtherDeductions" class="py-1 font-medium">0.00</div>
+              <div id="payslipOtherDeductions" class="py-1 font-normal">0.00</div>
             </div>
             <div>
               <div class="py-0.5 font-bold border-b border-black">เงินประกันสังคมต่อปี</div>
-              <div id="payslipYTDSocial" class="py-1 font-medium">0.00</div>
+              <div id="payslipYTDSocial" class="py-1 font-normal">0.00</div>
             </div>
           </div>
 
+          <!-- Box 3: Net Pay -->
           <div class="border-[1.5px] border-black text-center bg-white">
-            <div class="border-b border-black py-1 font-bold text-[10.5px]">เงินรับสุทธิ</div>
-            <div id="payslipNetPay" class="py-1.5 font-bold text-xs text-black">0.00</div>
+            <div class="border-b border-black py-1 font-bold text-[12.5px]">เงินรับสุทธิ</div>
+            <div id="payslipNetPay" class="py-1.5 font-bold text-[13.5px]">0.00</div>
           </div>
         </div>
       </div>
 
-      <div class="pt-1 text-[9px] space-y-2">
-        <div class="text-slate-600 font-mono" id="payslipRefID">E_PaySlip ID : PROVIDE POWER OUTSOURCING CO., LTD.</div>
-        <div class="pl-8 font-bold text-xs text-black italic">ลงชื่อพนักงาน ___________________________________</div>
+      <!-- Footer E_PaySlip ID & Employee Signature (Exact IMG_7014 Position) -->
+      <div class="pt-0.5 space-y-2.5 text-black">
+        <div class="text-[9.5px] tracking-tight font-sans text-zinc-800" id="payslipRefID">E_PaySlip : ID:20261117000000(PROVIDE POWER OUTSOURCING CO., LTD.)</div>
+        <div class="pl-12 font-bold text-[13.5px] italic text-black">ลงชื่อพนักงาน</div>
       </div>
     </div>
   </div>
@@ -2514,26 +2568,26 @@
         ytdSocialTotal
       };
 
-      document.getElementById('payslipHeaderInfo').innerHTML = `
-        <div>รหัส <span class="font-bold ml-1">${emp.id}</span></div>
-        <div>ชื่อสกุล <span class="font-bold ml-1">${emp.name}</span></div>
-        <div>แผนก <span class="font-bold ml-1">${emp.dept}</span></div>
-        <div>วันเริ่มงาน <span class="font-bold ml-1">${emp.startDate}</span></div>
-        <div>เลขที่บัญชี <span class="font-bold ml-1">${emp.bankAcc}</span></div>
+      document.getElementById('slipHeaderRow').innerHTML = `
+        <div>รหัส <span class="font-bold ml-1.5">${emp.id}</span></div>
+        <div>ชื่อสกุล <span class="font-bold ml-1.5">${emp.name}</span></div>
+        <div>แผนก <span class="font-bold ml-1.5">${emp.dept}</span></div>
+        <div>วันเริ่มงาน <span class="font-bold ml-1.5">${emp.startDate}</span></div>
+        <div>เลขที่บัญชี <span class="font-bold ml-1.5">${emp.bankAcc}</span></div>
       `;
 
       const genEarnRow = (title, qty, amt) => `
         <tr>
-          <td class="py-0.5 px-1.5 border-r border-black">${title}</td>
-          <td class="py-0.5 px-1 text-right border-r border-black">${qty}</td>
-          <td class="py-0.5 px-1.5 text-right">${fmtNum(amt)}</td>
+          <td class="py-[2.5px] px-2 border-r border-black font-semibold">${title}</td>
+          <td class="py-[2.5px] px-1.5 text-right border-r border-black">${qty}</td>
+          <td class="py-[2.5px] px-2 text-right">${fmtNum(amt)}</td>
         </tr>
       `;
 
       const genDedRow = (title, amt) => `
         <tr>
-          <td class="py-0.5 px-1.5 border-r border-black">${title}</td>
-          <td class="py-0.5 px-1.5 text-right">${fmtNum(amt)}</td>
+          <td class="py-[2.5px] px-2 border-r border-black font-semibold">${title}</td>
+          <td class="py-[2.5px] px-2 text-right">${fmtNum(amt)}</td>
         </tr>
       `;
 
@@ -2571,11 +2625,11 @@
       document.getElementById('payslipYTDSocial').textContent = fmtNum(ytdSocialTotal);
       document.getElementById('payslipNetPay').textContent = fmtNum(netPay);
 
-      const stamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 12);
-      document.getElementById('payslipRefID').textContent = `E_PaySlip ID : ${stamp}(PROVIDE POWER OUTSOURCING CO., LTD.)`;
+      const stamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+      document.getElementById('payslipRefID').textContent = `E_PaySlip : ID:${stamp}(PROVIDE POWER OUTSOURCING CO., LTD.)`;
     }
 
-    // Export Payslip directly to high-resolution PNG (Supports iOS Share Sheet & Direct Download)
+    // Export Payslip as Crisp Landscape PNG Matching IMG_7014
     async function savePayslipAsPNG() {
       if (isSavingPng) return;
       if (typeof html2canvas === 'undefined') {
@@ -2587,16 +2641,24 @@
       const btn = document.getElementById('btnSaveSlipPng');
       const originalHtml = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-orange-400"></i> กำลังสร้างรูป...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-orange-400"></i> กำลังสร้างรูปแนวนอน...`;
       playClick('confirm');
 
       try {
         const slipArea = document.getElementById('printablePayslipArea');
         const canvas = await html2canvas(slipArea, {
-          scale: 3, // Crisp Retina quality
+          scale: 3, // Ultra-crisp Retina print resolution
+          width: 920,
+          windowWidth: 1120,
           backgroundColor: '#FFFFFF',
           useCORS: true,
-          logging: false
+          logging: false,
+          onclone: (clonedDoc) => {
+            const clonedSlip = clonedDoc.getElementById('printablePayslipArea');
+            if (clonedSlip) {
+              clonedSlip.classList.add('png-landscape-mode');
+            }
+          }
         });
 
         const fileName = `PaySlip_${currentEmpId}_${getLocalDateStr()}.png`;
@@ -2609,13 +2671,12 @@
 
           const file = new File([blob], fileName, { type: 'image/png' });
 
-          // Use native iOS Share Sheet if supported so user can tap "Save Image" directly to Photos
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
               await navigator.share({
                 files: [file],
                 title: 'ใบจ่ายเงินเดือน',
-                text: `สลิปเงินเดือน ${latestRenderedSlipSnapshot?.emp?.name || ''}`
+                text: `ใบจ่ายเงินเดือน ${latestRenderedSlipSnapshot?.emp?.name || ''}`
               });
               showToast("เลือกรายการ 'บันทึกรูปภาพ' เพื่อเก็บลงอัลบั้มได้เลย");
               return;
@@ -2624,7 +2685,6 @@
             }
           }
 
-          // Fallback standard file download
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
@@ -2633,7 +2693,7 @@
           link.click();
           document.body.removeChild(link);
           setTimeout(() => URL.revokeObjectURL(url), 1500);
-          showToast("ดาวน์โหลดรูปภาพสลิป PNG สำเร็จ");
+          showToast("ดาวน์โหลดรูปภาพสลิปแนวนอนสำเร็จ");
         }, 'image/png');
       } catch (err) {
         console.error(err);
