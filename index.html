@@ -537,8 +537,6 @@
               <label class="text-slate-500">เบี้ยขยัน (งวด 2)</label>
               <div class="flex gap-0.5">
                 <button type="button" onclick="setQuickDiligence(0)" class="px-1 bg-slate-200 hover:bg-slate-300 rounded text-[9px] font-mono">0</button>
-                <button type="button" onclick="setQuickDiligence(300)" class="px-1 bg-slate-200 hover:bg-slate-300 rounded text-[9px] font-mono">300</button>
-                <button type="button" onclick="setQuickDiligence(400)" class="px-1 bg-slate-200 hover:bg-slate-300 rounded text-[9px] font-mono">400</button>
                 <button type="button" onclick="setQuickDiligence(500)" class="px-1 bg-emerald-200 hover:bg-emerald-300 text-emerald-900 font-bold rounded text-[9px] font-mono">500</button>
               </div>
             </div>
@@ -1927,7 +1925,7 @@
 
       const diligenceCheck = checkMonthlyDiligenceEligibility(allEmpRecords, payDateInfo.refYear, payDateInfo.refMonth);
       const autoDiligence = payDateInfo.isSecondHalf
-        ? (diligenceCheck.isEligible ? 500 : 300)
+        ? (diligenceCheck.isEligible ? 500 : 0.00)
         : 0;
 
       const autoHazard = Math.round(actualWorkedDays * 20 * 100) / 100;
@@ -1961,7 +1959,7 @@
           dilHintEl.textContent = `✓ ผ่านเกณฑ์เบี้ยขยัน (มาทำงานวันธรรมดา+เสาร์ทำงานครบ ${diligenceCheck.workedWeekdays}/${diligenceCheck.requiredWeekdays} วันทั้งเดือน → 500.00 บาท)`;
         } else {
           dilHintEl.className = "text-[10px] font-semibold px-2 py-1 rounded bg-amber-100 text-amber-900 border border-amber-300";
-          dilHintEl.textContent = `⚠ ไม่ผ่านเกณฑ์เบี้ยขยัน (มาทำงานวันธรรมดา+เสาร์ทำงาน ${diligenceCheck.workedWeekdays}/${diligenceCheck.requiredWeekdays} วัน — ขาด/ลา ${diligenceCheck.missingDates.length} วัน → คำนวณเบี้ยขยัน 300.00 บาท)`;
+          dilHintEl.textContent = `⚠ ไม่ผ่านเกณฑ์เบี้ยขยัน (มาทำงานวันธรรมดา+เสาร์ทำงาน ${diligenceCheck.workedWeekdays}/${diligenceCheck.requiredWeekdays} วัน — ขาด/ลา ${diligenceCheck.missingDates.length} วัน → คำนวณเบี้ยขยัน 0.00 บาท)`;
         }
       }
 
