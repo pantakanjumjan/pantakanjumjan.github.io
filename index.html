@@ -146,6 +146,8 @@
       -webkit-font-smoothing: antialiased;
       user-select: none;
       padding-bottom: env(safe-area-inset-bottom);
+      position: relative;
+      overflow-x: hidden;
     }
     .safe-top-header {
       padding-top: calc(0.75rem + env(safe-area-inset-top));
@@ -159,7 +161,6 @@
       min-width: 0;
     }
 
-    /* Prevent iOS Safari auto-zoom on input focus */
     @media screen and (max-width: 768px) {
       input[type="text"],
       input[type="number"],
@@ -188,16 +189,64 @@
       min-width: 0;
     }
 
+    /* Ambient Industrial Tech Wallpaper Layer */
+    .ambient-wallpaper {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .ambient-grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(234, 88, 12, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(234, 88, 12, 0.06) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 35%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 35%, transparent 100%);
+    }
+    html.dark .ambient-grid-pattern {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    }
+
+    @keyframes slow-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes reverse-slow-spin {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+    .gear-spin {
+      transform-origin: center;
+      animation: slow-spin 48s linear infinite;
+    }
+    .gear-spin-reverse {
+      transform-origin: center;
+      animation: reverse-slow-spin 36s linear infinite;
+    }
+
+    /* Frosted Glass Cards so wallpaper peeks through cleanly */
     .soft-card {
+      background-color: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 4px 20px -2px rgba(24, 24, 27, 0.06), 0 1px 3px rgba(24, 24, 27, 0.04);
     }
     html.dark .soft-card {
-      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      background-color: rgba(21, 23, 27, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     .hero-deck {
-      background: linear-gradient(145deg, #16191E 0%, #0E1013 100%);
-      box-shadow: 0 14px 30px -8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      background: linear-gradient(145deg, rgba(24, 27, 33, 0.96) 0%, rgba(12, 14, 18, 0.98) 100%);
+      box-shadow: 0 16px 34px -8px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .tactile-press {
@@ -288,8 +337,54 @@
 </head>
 <body class="min-h-screen flex flex-col bg-brand-bg dark:bg-brand-darkBg text-brand-ink dark:text-zinc-100 transition-colors duration-300">
 
+  <!-- Cool Ambient Industrial Cyber-Grid & Circuit Wallpaper -->
+  <div class="ambient-wallpaper no-print" aria-hidden="true">
+    <div class="ambient-grid-pattern"></div>
+
+    <!-- Ambient Orange & Emerald Glow Orbs -->
+    <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-orange-500/15 dark:bg-orange-600/15 blur-3xl"></div>
+    <div class="absolute top-1/2 -left-28 w-72 h-72 rounded-full bg-amber-500/10 dark:bg-orange-500/10 blur-3xl"></div>
+    <div class="absolute -bottom-24 right-10 w-80 h-80 rounded-full bg-emerald-500/10 dark:bg-emerald-500/10 blur-3xl"></div>
+
+    <!-- Precision Industrial Circuit & Gear Artwork -->
+    <svg class="w-full h-full opacity-[0.14] dark:opacity-[0.18]" viewBox="0 0 430 932" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Top-Right Precision Mechanical Ring -->
+      <g class="gear-spin" style="transform-origin: 370px 130px;">
+        <circle cx="370" cy="130" r="115" stroke="#EA580C" stroke-width="1.5" stroke-dasharray="10 8"/>
+        <circle cx="370" cy="130" r="88" stroke="#EA580C" stroke-width="1" stroke-dasharray="3 6"/>
+        <circle cx="370" cy="130" r="60" stroke="currentColor" stroke-width="0.8"/>
+      </g>
+
+      <!-- Bottom-Left Counter-Rotating Ring -->
+      <g class="gear-spin-reverse" style="transform-origin: 55px 770px;">
+        <circle cx="55" cy="770" r="130" stroke="#EA580C" stroke-width="1.5" stroke-dasharray="14 10"/>
+        <circle cx="55" cy="770" r="95" stroke="currentColor" stroke-width="1" stroke-dasharray="4 8"/>
+      </g>
+
+      <!-- PCB Circuit Traces & Nodes -->
+      <g stroke="#EA580C" stroke-width="1.2">
+        <path d="M-10 260 H 65 L 95 290 H 165"/>
+        <circle cx="165" cy="290" r="3.5" fill="#EA580C"/>
+        <path d="M440 420 H 355 L 325 450 H 255"/>
+        <circle cx="255" cy="450" r="3.5" fill="#EA580C"/>
+        <path d="M-10 610 H 80 L 110 580 H 185"/>
+        <circle cx="185" cy="580" r="3.5" fill="#EA580C"/>
+        <path d="M440 810 H 340 L 310 780 H 235"/>
+        <circle cx="235" cy="780" r="3.5" fill="#EA580C"/>
+      </g>
+
+      <!-- Tech Crosshairs & Coordinate Marks -->
+      <g stroke="currentColor" stroke-width="1" opacity="0.6">
+        <path d="M32 150 v12 M26 156 h12"/>
+        <path d="M392 540 v12 M386 546 h12"/>
+        <path d="M45 430 v12 M39 436 h12"/>
+        <path d="M360 280 v12 M354 286 h12"/>
+      </g>
+    </svg>
+  </div>
+
   <!-- Top Navigation Bar -->
-  <header class="sticky top-0 z-30 bg-brand-bg/90 dark:bg-brand-darkBg/90 backdrop-blur-lg border-b border-zinc-200/80 dark:border-zinc-800/80 px-4 pb-3 safe-top-header no-print">
+  <header class="sticky top-0 z-30 bg-brand-bg/80 dark:bg-brand-darkBg/80 backdrop-blur-xl border-b border-zinc-200/80 dark:border-zinc-800/80 px-4 pb-3 safe-top-header no-print">
     <div class="max-w-md mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2.5">
         <div class="w-9 h-9 rounded-xl bg-zinc-900 dark:bg-orange-600 flex items-center justify-center shadow-sm relative overflow-hidden">
@@ -309,17 +404,17 @@
       </div>
 
       <div class="flex items-center gap-1.5">
-        <button onclick="pullFromGoogleSheets(false)" id="btnTopSync" title="ซิงค์ข้อมูล" aria-label="ซิงค์ข้อมูล" class="tactile-press w-8 h-8 rounded-xl bg-white dark:bg-brand-darkCard border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 shadow-xs">
+        <button onclick="pullFromGoogleSheets(false)" id="btnTopSync" title="ซิงค์ข้อมูล" aria-label="ซิงค์ข้อมูล" class="tactile-press w-8 h-8 rounded-xl bg-white/90 dark:bg-brand-darkCard/90 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 shadow-xs">
           <i class="fa-solid fa-arrows-rotate text-xs text-orange-600 dark:text-orange-400" id="topSyncIcon"></i>
         </button>
-        <button onclick="toggleAudio()" id="audioToggleBtn" aria-label="สลับเสียง" class="tactile-press w-8 h-8 rounded-xl bg-white dark:bg-brand-darkCard border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 shadow-xs">
+        <button onclick="toggleAudio()" id="audioToggleBtn" aria-label="สลับเสียง" class="tactile-press w-8 h-8 rounded-xl bg-white/90 dark:bg-brand-darkCard/90 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 shadow-xs">
           <i class="fa-solid fa-volume-high text-xs" id="audioIcon"></i>
         </button>
-        <button onclick="cycleThemeMode()" id="themeToggleBtn" title="สลับโหมดธีม (อัตโนมัติตามเวลา / กลางวัน / กลางคืน)" aria-label="สลับโหมดธีม" class="tactile-press h-8 px-2 rounded-xl bg-white dark:bg-brand-darkCard border border-zinc-200 dark:border-zinc-800 flex items-center justify-center gap-1 text-zinc-700 dark:text-zinc-200 shadow-xs">
+        <button onclick="cycleThemeMode()" id="themeToggleBtn" title="สลับโหมดธีม (อัตโนมัติตามเวลา / กลางวัน / กลางคืน)" aria-label="สลับโหมดธีม" class="tactile-press h-8 px-2 rounded-xl bg-white/90 dark:bg-brand-darkCard/90 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center gap-1 text-zinc-700 dark:text-zinc-200 shadow-xs">
           <i class="fa-solid fa-clock text-[11px] text-orange-600 dark:text-amber-400" id="themeIcon"></i>
           <span class="text-[9.5px] font-mono font-bold" id="themeLabel">AUTO</span>
         </button>
-        <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="tactile-press w-8 h-8 rounded-xl bg-white dark:bg-brand-darkCard border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 shadow-xs">
+        <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="tactile-press w-8 h-8 rounded-xl bg-white/90 dark:bg-brand-darkCard/90 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 shadow-xs">
           <i class="fa-solid fa-gear text-xs"></i>
         </button>
       </div>
@@ -327,11 +422,11 @@
   </header>
 
   <!-- Main Workspace -->
-  <main class="flex-1 max-w-md w-full mx-auto px-4 py-3.5 space-y-3.5 pb-28 no-print">
+  <main class="relative z-10 flex-1 max-w-md w-full mx-auto px-4 py-3.5 space-y-3.5 pb-28 no-print">
 
     <!-- Employee Digital ID Banner Card -->
-    <div class="relative overflow-hidden rounded-2xl bg-white dark:bg-brand-darkCard border border-zinc-200/90 dark:border-zinc-800 p-3.5 soft-card">
-      <svg class="absolute right-0 top-0 h-full w-44 opacity-[0.07] dark:opacity-[0.09] pointer-events-none" viewBox="0 0 200 120" fill="none">
+    <div class="relative overflow-hidden rounded-2xl border border-zinc-200/90 dark:border-zinc-800 p-3.5 soft-card">
+      <svg class="absolute right-0 top-0 h-full w-44 opacity-[0.09] dark:opacity-[0.12] pointer-events-none" viewBox="0 0 200 120" fill="none">
         <circle cx="155" cy="25" r="55" stroke="#EA580C" stroke-width="14"/>
         <circle cx="155" cy="25" r="28" stroke="#EA580C" stroke-width="4" stroke-dasharray="6 6"/>
         <path d="M60 110L120 10M90 110L150 10M120 110L180 10" stroke="currentColor" stroke-width="2"/>
@@ -345,7 +440,7 @@
           </span>
           <span class="text-[10.5px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">บัตรประจำตัวพนักงาน</span>
         </div>
-        <span id="dutyBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">พร้อมปฏิบัติงาน</span>
+        <span id="dutyBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-zinc-100/90 dark:bg-zinc-800/90 text-zinc-700 dark:text-zinc-300">พร้อมปฏิบัติงาน</span>
       </div>
 
       <div class="relative flex items-center gap-2.5">
@@ -358,7 +453,7 @@
             <line x1="14" y1="13" x2="17" y2="13"/>
           </svg>
         </div>
-        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="custom-select w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200/90 dark:border-zinc-700/80 text-xs font-bold py-2.5 px-3 rounded-xl outline-none cursor-pointer text-zinc-900 dark:text-white">
+        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="custom-select w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/80 border border-zinc-200/90 dark:border-zinc-700/80 text-xs font-bold py-2.5 px-3 rounded-xl outline-none cursor-pointer text-zinc-900 dark:text-white">
         </select>
       </div>
     </div>
@@ -367,20 +462,32 @@
     <section id="tab-1" class="tab-content space-y-3.5">
       
       <div class="hero-deck rounded-3xl p-4 text-white relative overflow-hidden border border-zinc-800">
-        <svg class="absolute inset-0 w-full h-full opacity-15 pointer-events-none" viewBox="0 0 400 260" fill="none">
+        <!-- Detailed Chronograph Radar & Gear Wallpaper Inside Hero Card -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid slice" fill="none">
           <defs>
             <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#ffffff" stroke-width="0.5"/>
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#ffffff" stroke-width="0.45" opacity="0.14"/>
             </pattern>
-          </defs>
-          <rect width="400" height="260" fill="url(#smallGrid)"/>
-          <circle cx="340" cy="40" r="95" fill="url(#glowGrad)"/>
-          <defs>
             <radialGradient id="glowGrad" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0%" stop-color="#EA580C" stop-opacity="0.6"/>
+              <stop offset="0%" stop-color="#EA580C" stop-opacity="0.42"/>
               <stop offset="100%" stop-color="#EA580C" stop-opacity="0"/>
             </radialGradient>
+            <radialGradient id="emeraldGlow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stop-color="#10B981" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+            </radialGradient>
           </defs>
+          <rect width="400" height="280" fill="url(#smallGrid)"/>
+          <circle cx="345" cy="35" r="125" fill="url(#glowGrad)"/>
+          <circle cx="55" cy="245" r="110" fill="url(#emeraldGlow)"/>
+
+          <!-- Chronograph Dial Rings -->
+          <g opacity="0.22" stroke="#EA580C">
+            <circle cx="200" cy="115" r="88" stroke-width="1" stroke-dasharray="4 6"/>
+            <circle cx="200" cy="115" r="118" stroke-width="0.8" stroke-dasharray="14 10"/>
+          </g>
+          <!-- Horizon Tech Line -->
+          <path d="M0 115 H 70 M 330 115 H 400" stroke="#EA580C" stroke-width="1" opacity="0.3"/>
         </svg>
 
         <div class="relative flex justify-between items-center text-[11px] text-zinc-400 pb-2.5 border-b border-white/10">
@@ -389,7 +496,7 @@
         </div>
 
         <div class="relative text-center py-3">
-          <div class="font-mono text-[44px] font-extrabold tracking-tight leading-none text-white" id="liveClock">
+          <div class="font-mono text-[44px] font-extrabold tracking-tight leading-none text-white drop-shadow-[0_2px_12px_rgba(234,88,12,0.28)]" id="liveClock">
             00:00:00<span class="text-xl text-orange-400 font-bold">.0</span>
           </div>
 
@@ -406,14 +513,14 @@
           <div class="grid grid-cols-2 gap-2">
             <div class="min-w-0">
               <span class="block text-zinc-400 text-[9.5px] mb-1 font-medium">กะการทำงาน</span>
-              <div class="grid grid-cols-2 bg-black/50 p-1 rounded-xl border border-white/10">
+              <div class="grid grid-cols-2 bg-black/55 p-1 rounded-xl border border-white/10">
                 <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 rounded-lg font-bold text-[10.5px] transition">กลางวัน</button>
                 <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 rounded-lg font-bold text-[10.5px] transition">กลางคืน</button>
               </div>
             </div>
             <div class="min-w-0">
               <span class="block text-zinc-400 text-[9.5px] mb-1 font-medium">ประเภทวัน</span>
-              <div class="grid grid-cols-2 bg-black/50 p-1 rounded-xl border border-white/10">
+              <div class="grid grid-cols-2 bg-black/55 p-1 rounded-xl border border-white/10">
                 <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 rounded-lg font-bold text-[10.5px] transition">ปกติ 1.5</button>
                 <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 rounded-lg font-bold text-[10.5px] transition">หยุด 2/3</button>
               </div>
@@ -422,7 +529,7 @@
 
           <div>
             <span class="block text-zinc-400 text-[9.5px] mb-1 font-medium">รูปแบบเวลา</span>
-            <div class="grid grid-cols-2 bg-black/50 p-1 rounded-xl border border-white/10">
+            <div class="grid grid-cols-2 bg-black/55 p-1 rounded-xl border border-white/10">
               <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 rounded-lg font-bold text-[10.5px] transition">เต็มวัน (8 ชม.)</button>
               <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 rounded-lg font-bold text-[10.5px] transition">ลาครึ่งวัน (200฿)</button>
             </div>
@@ -431,7 +538,7 @@
       </div>
 
       <!-- Daily Rate Preview Card -->
-      <div class="bg-white dark:bg-brand-darkCard border border-zinc-200/90 dark:border-zinc-800 p-3.5 rounded-2xl soft-card space-y-2.5">
+      <div class="border border-zinc-200/90 dark:border-zinc-800 p-3.5 rounded-2xl soft-card space-y-2.5">
         <div class="flex justify-between items-center text-[10.5px] font-semibold text-zinc-500 dark:text-zinc-400">
           <span id="shiftScheduleHint" class="flex items-center gap-1.5">
             <i class="fa-regular fa-clock text-orange-500"></i> กะปกติ 08:00 - 16:50
@@ -439,15 +546,15 @@
           <span class="text-orange-600 dark:text-orange-400 font-bold" id="estHeaderTag">ประมาณการขั้นต่ำ</span>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center">
-          <div class="bg-brand-subtle/60 dark:bg-brand-darkSubtle p-2.5 rounded-xl">
+          <div class="bg-brand-subtle/70 dark:bg-brand-darkSubtle/85 p-2.5 rounded-xl">
             <span class="block text-[9.5px] text-zinc-500 dark:text-zinc-400" id="estBaseLabel">ค่าแรงฐาน</span>
             <span id="estBasePay" class="font-mono text-xs font-extrabold mt-0.5 block">400 ฿</span>
           </div>
-          <div class="bg-brand-subtle/60 dark:bg-brand-darkSubtle p-2.5 rounded-xl">
+          <div class="bg-brand-subtle/70 dark:bg-brand-darkSubtle/85 p-2.5 rounded-xl">
             <span class="block text-[9.5px] text-zinc-500 dark:text-zinc-400">ค่าอาหาร/กะ</span>
             <span id="estAllowance" class="font-mono text-xs font-extrabold mt-0.5 block">10 ฿</span>
           </div>
-          <div class="bg-orange-50 dark:bg-orange-500/10 border border-orange-200/60 dark:border-orange-500/20 p-2.5 rounded-xl">
+          <div class="bg-orange-50/90 dark:bg-orange-500/15 border border-orange-200/70 dark:border-orange-500/25 p-2.5 rounded-xl">
             <span class="block text-[9.5px] text-orange-700 dark:text-orange-300 font-semibold">รวมขั้นต่ำ</span>
             <span id="estTotal" class="font-mono text-xs font-extrabold text-orange-600 dark:text-orange-400 mt-0.5 block">410 ฿</span>
           </div>
@@ -456,7 +563,7 @@
 
       <!-- Check In / Check Out Time Stamps -->
       <div class="grid grid-cols-2 gap-2.5">
-        <div class="bg-white dark:bg-brand-darkCard p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card flex items-center justify-between">
+        <div class="p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card flex items-center justify-between">
           <div>
             <span class="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold block">เวลาเข้างาน</span>
             <span class="font-mono text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white" id="displayCheckInTime">--:--</span>
@@ -465,7 +572,7 @@
             <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
           </div>
         </div>
-        <div class="bg-white dark:bg-brand-darkCard p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card flex items-center justify-between">
+        <div class="p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card flex items-center justify-between">
           <div>
             <span class="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold block">เวลาออกงาน</span>
             <span class="font-mono text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white" id="displayCheckOutTime">--:--</span>
@@ -478,7 +585,7 @@
 
       <!-- Primary Punch Action Buttons -->
       <div class="grid grid-cols-2 gap-3 pt-0.5">
-        <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="tactile-press py-3.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-emerald-600/20 flex flex-col items-center justify-center gap-0.5">
+        <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="tactile-press py-3.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-emerald-600/25 flex flex-col items-center justify-center gap-0.5">
           <div class="flex items-center gap-1.5">
             <i class="fa-solid fa-fingerprint text-sm"></i>
             <span>ลงเวลาเข้างาน</span>
@@ -486,7 +593,7 @@
           <span class="text-[10px] font-normal opacity-90" id="checkInStatusText">กดเพื่อเริ่มนับเวลา</span>
         </button>
 
-        <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="tactile-press py-3.5 px-3 bg-orange-600 hover:bg-orange-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-orange-600/20 flex flex-col items-center justify-center gap-0.5">
+        <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="tactile-press py-3.5 px-3 bg-orange-600 hover:bg-orange-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-orange-600/25 flex flex-col items-center justify-center gap-0.5">
           <div class="flex items-center gap-1.5">
             <i class="fa-solid fa-check-circle text-sm"></i>
             <span>ลงเวลาออกงาน</span>
@@ -498,7 +605,7 @@
 
     <!-- TAB 2: Manual Edit -->
     <section id="tab-2" class="tab-content hidden space-y-3">
-      <div class="bg-white dark:bg-brand-darkCard border border-zinc-200/90 dark:border-zinc-800 rounded-2xl soft-card overflow-hidden">
+      <div class="border border-zinc-200/90 dark:border-zinc-800 rounded-2xl soft-card overflow-hidden">
         <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 dark:from-zinc-900 dark:to-zinc-950 px-4 py-3 text-white flex items-center justify-between relative overflow-hidden">
           <div class="relative z-10 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center shrink-0">
@@ -523,11 +630,11 @@
           <div class="grid grid-cols-2 gap-2.5">
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">วันที่ต้องการบันทึก</label>
-              <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
+              <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
             </div>
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">สถานะการทำงาน</label>
-              <select id="manualWorkType" onchange="updateManualPreview()" class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-2 rounded-xl text-[11px] font-medium outline-none">
+              <select id="manualWorkType" onchange="updateManualPreview()" class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-2 rounded-xl text-[11px] font-medium outline-none">
                 <option value="FULL">เต็มวัน (8 ชม.)</option>
                 <option value="HALF">ลาครึ่งวัน (200฿)</option>
               </select>
@@ -537,14 +644,14 @@
           <div class="grid grid-cols-2 gap-2.5">
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">กะการทำงาน</label>
-              <select id="manualShift" onchange="updateManualPreview()" class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-2 rounded-xl text-[11px] font-medium outline-none">
+              <select id="manualShift" onchange="updateManualPreview()" class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-2 rounded-xl text-[11px] font-medium outline-none">
                 <option value="DAY">กลางวัน (08:00)</option>
                 <option value="NIGHT">กลางคืน (20:00)</option>
               </select>
             </div>
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">ประเภทวัน</label>
-              <select id="manualDayType" onchange="updateManualPreview()" class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-2 rounded-xl text-[11px] font-medium outline-none">
+              <select id="manualDayType" onchange="updateManualPreview()" class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-2 rounded-xl text-[11px] font-medium outline-none">
                 <option value="REGULAR">วันปกติ (OT 1.5)</option>
                 <option value="HOLIDAY">วันหยุด (OT 2.0/3.0)</option>
               </select>
@@ -554,11 +661,11 @@
           <div class="grid grid-cols-2 gap-2.5">
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">เวลาเข้า</label>
-              <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
+              <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
             </div>
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">เวลาออก</label>
-              <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
+              <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
             </div>
           </div>
 
@@ -576,7 +683,7 @@
 
     <!-- TAB 3: Leave Form -->
     <section id="tab-3" class="tab-content hidden space-y-4">
-      <div class="bg-white dark:bg-brand-darkCard border border-zinc-200/90 dark:border-zinc-800 rounded-2xl soft-card overflow-hidden">
+      <div class="border border-zinc-200/90 dark:border-zinc-800 rounded-2xl soft-card overflow-hidden">
         <div class="bg-gradient-to-r from-amber-600 to-orange-600 px-4 py-3 text-white flex items-center justify-between relative overflow-hidden">
           <div class="relative z-10 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-xs flex items-center justify-center shrink-0">
@@ -601,7 +708,7 @@
         <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="p-4 space-y-3 text-xs">
           <div>
             <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1">ประเภทการลา</label>
-            <select id="leaveType" required class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 p-2.5 rounded-xl font-medium outline-none">
+            <select id="leaveType" required class="custom-select w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 p-2.5 rounded-xl font-medium outline-none">
               <option value="ลากิจ">ลากิจ (Personal Leave)</option>
               <option value="ลาป่วย">ลาป่วย (Sick Leave)</option>
               <option value="ลาพักร้อน">ลาพักร้อน (Annual Leave)</option>
@@ -611,16 +718,16 @@
           <div class="grid grid-cols-2 gap-2.5">
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">ตั้งแต่วันที่</label>
-              <input type="date" id="leaveStartDate" required class="w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
+              <input type="date" id="leaveStartDate" required class="w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
             </div>
             <div class="min-w-0">
               <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">ถึงวันที่</label>
-              <input type="date" id="leaveEndDate" required class="w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
+              <input type="date" id="leaveEndDate" required class="w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 px-2.5 py-1.5 rounded-xl font-mono text-[11px] outline-none">
             </div>
           </div>
           <div>
             <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1">เหตุผลการลา</label>
-            <textarea id="leaveReason" rows="2" placeholder="ระบุเหตุผลสั้น ๆ..." class="w-full min-w-0 max-w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 p-2.5 rounded-xl outline-none resize-none"></textarea>
+            <textarea id="leaveReason" rows="2" placeholder="ระบุเหตุผลสั้น ๆ..." class="w-full min-w-0 max-w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 p-2.5 rounded-xl outline-none resize-none"></textarea>
           </div>
           <button type="submit" class="tactile-press w-full py-3 bg-zinc-900 dark:bg-amber-600 hover:opacity-95 text-white rounded-xl font-bold text-xs shadow-md mt-1">
             ส่งใบลางาน
@@ -636,7 +743,7 @@
 
     <!-- TAB 4: Dashboard & Summary -->
     <section id="tab-4" class="tab-content hidden space-y-3.5">
-      <div class="bg-white dark:bg-brand-darkCard border border-zinc-200/90 dark:border-zinc-800 p-3.5 rounded-2xl soft-card space-y-2.5">
+      <div class="border border-zinc-200/90 dark:border-zinc-800 p-3.5 rounded-2xl soft-card space-y-2.5">
         <div class="flex flex-wrap justify-between items-center gap-1.5">
           <label class="text-[11px] font-bold text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
             <i class="fa-solid fa-calendar-check text-orange-600"></i> รอบตัดยอด
@@ -653,13 +760,13 @@
             </button>
           </div>
         </div>
-        <select id="cutoffPeriodSelect" onchange="renderHistories()" class="custom-select w-full bg-brand-subtle/70 dark:bg-brand-darkSubtle border border-zinc-200 dark:border-zinc-700 text-xs font-bold p-2.5 rounded-xl outline-none">
+        <select id="cutoffPeriodSelect" onchange="renderHistories()" class="custom-select w-full bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 border border-zinc-200 dark:border-zinc-700 text-xs font-bold p-2.5 rounded-xl outline-none">
         </select>
       </div>
 
       <div class="grid grid-cols-2 gap-2.5">
         <div class="col-span-2 hero-deck text-white p-4 rounded-3xl relative overflow-hidden border border-zinc-800">
-          <svg class="absolute right-0 bottom-0 w-36 h-36 opacity-15 pointer-events-none" viewBox="0 0 140 140" fill="none">
+          <svg class="absolute right-0 bottom-0 w-36 h-36 opacity-20 pointer-events-none" viewBox="0 0 140 140" fill="none">
             <path d="M10 120 Q 50 40, 90 80 T 140 20" stroke="#EA580C" stroke-width="6" fill="none"/>
             <path d="M10 135 Q 50 55, 90 95 T 140 35" stroke="#10B981" stroke-width="3" fill="none"/>
           </svg>
@@ -670,17 +777,17 @@
           </div>
         </div>
 
-        <div class="bg-white dark:bg-brand-darkCard p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card">
+        <div class="p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card">
           <span class="text-[10.5px] text-zinc-500 dark:text-zinc-400 block font-semibold">ชั่วโมง OT รวม</span>
           <span class="font-mono text-lg font-extrabold text-zinc-900 dark:text-white mt-0.5 block" id="summaryTotalOT">0.0 ชม.</span>
         </div>
-        <div class="bg-white dark:bg-brand-darkCard p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card">
+        <div class="p-3.5 rounded-2xl border border-zinc-200/90 dark:border-zinc-800 soft-card">
           <span class="text-[10.5px] text-zinc-500 dark:text-zinc-400 block font-semibold">ค่าอาหารรวม</span>
           <span class="font-mono text-lg font-extrabold text-zinc-900 dark:text-white mt-0.5 block" id="summaryTotalMeals">0.00 ฿</span>
         </div>
       </div>
 
-      <div class="bg-white dark:bg-brand-darkCard border border-zinc-200/90 dark:border-zinc-800 p-4 rounded-2xl soft-card space-y-3">
+      <div class="border border-zinc-200/90 dark:border-zinc-800 p-4 rounded-2xl soft-card space-y-3">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-zinc-700 dark:text-zinc-300">ประวัติบันทึกเวลา</h3>
           <button onclick="clearLocalStorageData()" class="text-[11px] text-rose-600 hover:underline font-semibold">ล้างประวัติในเครื่อง</button>
@@ -693,7 +800,7 @@
 
   <!-- Floating Bottom Pill Navigation -->
   <nav class="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-40 safe-bottom-nav no-print">
-    <div class="bg-zinc-900/95 dark:bg-zinc-900/95 backdrop-blur-md border border-zinc-800 rounded-2xl p-1.5 flex justify-between shadow-2xl">
+    <div class="bg-zinc-900/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-1.5 flex justify-between shadow-2xl">
       <button onclick="switchTab(1)" id="nav-1" class="flex-1 flex flex-col items-center justify-center py-2 rounded-xl text-white bg-orange-600 font-bold transition-all">
         <i class="fa-solid fa-clock text-xs"></i>
         <span class="text-[10px] mt-0.5">บันทึกสด</span>
@@ -1774,7 +1881,7 @@
         inText.textContent = 'กดเพื่อเริ่มนับเวลา';
         outText.textContent = 'คำนวณค่าแรงวันนี้';
         badge.textContent = "พร้อมปฏิบัติงาน";
-        badge.className = "text-[10px] px-2.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded-full font-bold text-zinc-700 dark:text-zinc-300";
+        badge.className = "text-[10px] px-2.5 py-0.5 bg-zinc-100/90 dark:bg-zinc-800/90 rounded-full font-bold text-zinc-700 dark:text-zinc-300";
         led.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500";
         ledPing.className = "status-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
       }
@@ -2195,7 +2302,7 @@
           const encDate = encodeURIComponent(r.date);
 
           return `
-            <div class="bg-brand-subtle/65 dark:bg-brand-darkSubtle p-3 rounded-xl border border-zinc-200/70 dark:border-zinc-800 flex justify-between items-center text-xs">
+            <div class="bg-brand-subtle/75 dark:bg-brand-darkSubtle/85 p-3 rounded-xl border border-zinc-200/70 dark:border-zinc-800 flex justify-between items-center text-xs">
               <div onclick="openBreakdownByDate('${encId}', '${encDate}')" class="cursor-pointer flex-1">
                 <div class="font-bold flex items-center gap-1.5 flex-wrap">
                   <span>${formatThaiBE(r.date)}</span>
@@ -2233,7 +2340,7 @@
 
       const leaveListEl = document.getElementById('leaveHistoryList');
       leaveListEl.innerHTML = leaves.length ? leaves.map((l, idx) => `
-        <div class="bg-white dark:bg-brand-darkCard p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800 soft-card text-xs flex justify-between items-start gap-2">
+        <div class="p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800 soft-card text-xs flex justify-between items-start gap-2">
           <div class="flex-1">
             <div class="flex justify-between font-bold">
               <span>${escapeHTML(l.leaveType)}</span>
