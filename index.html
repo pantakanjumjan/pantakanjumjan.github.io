@@ -508,9 +508,13 @@
     <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl space-y-2.5 p-5 my-auto relative text-slate-900 text-xs" id="printablePayslipArea">
       
       <div class="flex flex-wrap justify-between items-center border-b border-slate-200 pb-2.5 gap-2 no-print">
-        <span class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
-          <i class="fa-solid fa-file-invoice-dollar text-unit-signal"></i> ใบจ่ายเงินเดือน (ตามแบบฟอร์มบริษัท)
-        </span>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-file-invoice-dollar text-unit-signal"></i> ใบจ่ายเงินเดือน
+          </span>
+          <select id="modalPeriodSelect" onchange="onModalPeriodChange(this.value)" class="bg-slate-100 border border-slate-300 text-slate-800 text-[11px] font-bold px-2 py-1 rounded-lg outline-none">
+          </select>
+        </div>
         <div class="flex flex-wrap items-center gap-1.5">
           <button onclick="toggleSlipEditor()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1">
             <i class="fa-solid fa-sliders text-unit-signal"></i> ปรับยอดเพิ่ม/หัก
@@ -571,12 +575,20 @@
             <input type="number" step="0.01" id="adjStudentLoan" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
           </div>
           <div class="col-span-2">
-            <label class="block text-indigo-700 font-semibold">เงินได้สะสมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDEarnings" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
+            <div class="flex justify-between items-center">
+              <label class="text-indigo-700 font-semibold">เงินได้สะสมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
+              <button type="button" onclick="syncAutoYTDNow()" class="text-[9.5px] bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-1.5 py-0.5 rounded font-bold">ดึงจากงวดก่อนอัตโนมัติ</button>
+            </div>
+            <input type="number" step="0.01" id="baseYTDEarnings" oninput="saveAndRefreshPayslip(false, false, true, false)" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white mt-0.5">
+            <div id="ytdEarnSourceHint" class="text-[9.5px] text-indigo-600 mt-0.5 font-medium"></div>
           </div>
           <div class="col-span-2">
-            <label class="block text-indigo-700 font-semibold">เงินประกันสังคมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDSocial" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
+            <div class="flex justify-between items-center">
+              <label class="text-indigo-700 font-semibold">เงินประกันสังคมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
+              <button type="button" onclick="syncAutoYTDNow()" class="text-[9.5px] bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-1.5 py-0.5 rounded font-bold">ดึงจากงวดก่อนอัตโนมัติ</button>
+            </div>
+            <input type="number" step="0.01" id="baseYTDSocial" oninput="saveAndRefreshPayslip(false, false, false, true)" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white mt-0.5">
+            <div id="ytdSocSourceHint" class="text-[9.5px] text-indigo-600 mt-0.5 font-medium"></div>
           </div>
           <div class="col-span-2 sm:col-span-2">
             <label class="block text-slate-600 font-semibold">วันเสาร์ที่บริษัทกำหนดให้ทำงาน (คั่นด้วยลูกน้ำ)</label>
@@ -648,7 +660,7 @@
           <div class="border-[1.5px] border-black text-center flex-1 flex flex-col justify-between bg-white">
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">เงินได้สะสมต่อปี</div>
-              <div id="payslipYTDEarnings" class="py-1 font-medium">43,625.00</div>
+              <div id="payslipYTDEarnings" class="py-1 font-medium">0.00</div>
             </div>
             <div class="border-b border-black">
               <div class="py-0.5 font-bold border-b border-black">ภาษีสะสมต่อปี</div>
@@ -664,7 +676,7 @@
             </div>
             <div>
               <div class="py-0.5 font-bold border-b border-black">เงินประกันสังคมต่อปี</div>
-              <div id="payslipYTDSocial" class="py-1 font-medium">1,200.00</div>
+              <div id="payslipYTDSocial" class="py-1 font-medium">0.00</div>
             </div>
           </div>
 
@@ -720,8 +732,27 @@
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
 
     const employeeList = [
-      { id: "50001024", name: "นาย พันธกานต์ จูมจันทร์", dept: "MAT", startDate: "2026-08-03", bankAcc: "5052911817" },
-      { id: "TEST SYSTEM", name: "TEST SYSTEM", dept: "TEST", startDate: "2026-01-01", bankAcc: "0000000000" }
+      {
+        id: "50001024",
+        name: "นาย พันธกานต์ จูมจันทร์",
+        dept: "MAT",
+        startDate: "2026-08-03",
+        bankAcc: "5052911817",
+        // ยอดสะสมสุทธิ ณ สิ้นงวด 16-31 ต.ค. 2569 (สำหรับส่งต่อให้ งวด 1-15 พ.ย. 2569 และงวดถัด ๆ ไป)
+        anchorPeriodStart: "2026-10-16",
+        anchorYtdEarnings: 43625.00,
+        anchorYtdSocial: 1200.00
+      },
+      {
+        id: "TEST SYSTEM",
+        name: "TEST SYSTEM",
+        dept: "TEST",
+        startDate: "2026-01-01",
+        bankAcc: "0000000000",
+        anchorPeriodStart: "",
+        anchorYtdEarnings: 0.00,
+        anchorYtdSocial: 0.00
+      }
     ];
 
     const THAI_PUBLIC_HOLIDAYS = new Set([
@@ -769,11 +800,45 @@
       if (!rawDate) return "";
       const str = String(rawDate).trim();
       if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+      if (/^\d{4}-\d{2}-\d{2}T/.test(str)) {
+        const parsed = new Date(str);
+        if (!isNaN(parsed.getTime())) return getLocalDateStr(parsed);
+        return str.slice(0, 10);
+      }
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(str)) {
+        const [dd, mm, yy] = str.split('/').map(Number);
+        const yearAD = yy > 2400 ? yy - 543 : yy;
+        return `${yearAD}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+      }
       const parsed = new Date(str);
       if (!isNaN(parsed.getTime())) {
         return getLocalDateStr(parsed);
       }
       return str;
+    }
+
+    function getNormalizedPayrollRecords() {
+      const raw = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      return raw.map(r => ({
+        ...r,
+        id: String(r.id || '').trim(),
+        date: normalizeDateFromSheet(r.date),
+        baseSalary: Number(r.baseSalary) || 0,
+        workedHours: Number(r.workedHours) || 0,
+        otHours: Number(r.otHours) || 0,
+        otPay: Number(r.otPay) || 0,
+        ot15Hours: Number(r.ot15Hours) || 0,
+        ot15Pay: Number(r.ot15Pay) || 0,
+        ot20Hours: Number(r.ot20Hours) || 0,
+        ot20Pay: Number(r.ot20Pay) || 0,
+        ot30Hours: Number(r.ot30Hours) || 0,
+        ot30Pay: Number(r.ot30Pay) || 0,
+        shiftAllowance: Number(r.shiftAllowance) || 0,
+        normalMeal: Number(r.normalMeal ?? 10),
+        otMeal: Number(r.otMeal) || 0,
+        totalMealAllowance: Number(r.totalMealAllowance) || 0,
+        totalSalary: Number(r.totalSalary) || 0
+      })).filter(r => r.id && r.date);
     }
 
     function getCustomHolidaysSet() {
@@ -962,6 +1027,11 @@
       if (!dateStr || !dateStr.includes('-')) return '-';
       const [y, m, d] = dateStr.split('-');
       return `${d}/${m}/${Number(y) + 543}`;
+    }
+
+    function formatThaiShortMonthYear(year, month) {
+      const d = new Date(year, month - 1, 1);
+      return d.toLocaleDateString('th-TH', { month: 'short', year: 'numeric' });
     }
 
     function fmtNum(val) {
@@ -1270,10 +1340,10 @@
 
     function loadTodayLiveStatus() {
       const today = getLocalDateStr();
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      const records = getNormalizedPayrollRecords();
       const activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
       
-      const todayRecord = records.find(r => r.id === currentEmpId && r.date === today);
+      const todayRecord = records.find(r => r.id === String(currentEmpId).trim() && r.date === today);
       const activeIn = activeCheckins[currentEmpId];
 
       const inEl = document.getElementById('displayCheckInTime');
@@ -1364,7 +1434,7 @@
       const calc = calculatePayroll(activeIn.shift, activeIn.dayType, activeIn.time, timeStr, activeIn.workType);
       const recordObj = { id: emp.id, employeeName: emp.name, date: dateStr, shift: activeIn.shift, dayType: activeIn.dayType, workType: activeIn.workType, checkIn: activeIn.time, checkOut: timeStr, ...calc };
 
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      let records = getNormalizedPayrollRecords();
       records = records.filter(r => !(r.id === emp.id && r.date === dateStr));
       records.push(recordObj);
       localStorage.setItem("payroll_records", JSON.stringify(records));
@@ -1386,8 +1456,8 @@
       const badge = document.getElementById('manualExistingBadge');
       if (!dateStr) return;
 
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      const existing = records.find(r => r.id === currentEmpId && r.date === dateStr);
+      const records = getNormalizedPayrollRecords();
+      const existing = records.find(r => r.id === String(currentEmpId).trim() && r.date === dateStr);
       if (existing) {
         document.getElementById('manualShift').value = existing.shift || 'DAY';
         document.getElementById('manualDayType').value = existing.dayType || 'REGULAR';
@@ -1442,7 +1512,7 @@
       const calc = calculatePayroll(shift, dayType, checkIn, checkOut, workType);
       const recordObj = { id: emp.id, employeeName: emp.name, date: dateStr, shift, dayType, workType, checkIn, checkOut, ...calc };
 
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      let records = getNormalizedPayrollRecords();
       records = records.filter(r => !(r.id === emp.id && r.date === dateStr));
       records.push(recordObj);
       localStorage.setItem("payroll_records", JSON.stringify(records));
@@ -1494,7 +1564,7 @@
     function deleteRecord(empId, recordDate) {
       if (!confirm(`ยืนยันการลบข้อมูลวันที่ ${formatThaiBE(recordDate)} ใช่หรือไม่?`)) return;
 
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
+      let records = getNormalizedPayrollRecords();
       records = records.filter(r => !(r.id === empId && r.date === recordDate));
       localStorage.setItem("payroll_records", JSON.stringify(records));
 
@@ -1601,6 +1671,9 @@
             loadTodayLiveStatus();
             renderHistories();
             prefillManualByDate();
+            if (!document.getElementById('payslipModal').classList.contains('hidden')) {
+              renderPayslipContent(true);
+            }
             if (pill) pill.textContent = "CLOUD OK";
             if (!silent) {
               playClick('confirm');
@@ -1623,10 +1696,11 @@
 
     function buildCutoffOptions() {
       const select = document.getElementById('cutoffPeriodSelect');
+      const modalSelect = document.getElementById('modalPeriodSelect');
       const now = new Date();
       const options = [];
 
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 8; i++) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const y = d.getFullYear(), m = d.getMonth();
         const monthName = d.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
@@ -1637,13 +1711,25 @@
       }
 
       options.unshift({ label: 'แสดงทั้งหมด (All Records)', start: '2000-01-01', end: '2099-12-31' });
-      select.innerHTML = options.map(o => `<option value="${o.start}|${o.end}">${o.label}</option>`).join('');
+      const html = options.map(o => `<option value="${o.start}|${o.end}">${o.label}</option>`).join('');
+      select.innerHTML = html;
       select.selectedIndex = now.getDate() <= 15 ? 2 : 1;
+      if (modalSelect) {
+        modalSelect.innerHTML = html;
+        modalSelect.value = select.value;
+      }
+    }
+
+    function onModalPeriodChange(val) {
+      const mainSelect = document.getElementById('cutoffPeriodSelect');
+      if (mainSelect) mainSelect.value = val;
+      renderHistories();
+      renderPayslipContent(true);
     }
 
     function renderHistories() {
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      let empRecords = records.filter(r => r.id === currentEmpId);
+      const records = getNormalizedPayrollRecords();
+      let empRecords = records.filter(r => r.id === String(currentEmpId).trim());
 
       const cutoffSelect = document.getElementById('cutoffPeriodSelect');
       if (cutoffSelect && cutoffSelect.value) {
@@ -1697,7 +1783,7 @@
       document.getElementById('summaryTotalMeals').textContent = `${fmtNum(totalMealsSum)} ฿`;
 
       const leaves = JSON.parse(localStorage.getItem("leave_records") || "[]")
-        .filter(l => l.id === currentEmpId)
+        .filter(l => String(l.id || '').trim() === String(currentEmpId).trim())
         .sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''));
       const leaveListEl = document.getElementById('leaveHistoryList');
       leaveListEl.innerHTML = leaves.length ? leaves.map(l => `
@@ -1712,7 +1798,7 @@
     }
 
     function exportCSV() {
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]").filter(r => r.id === currentEmpId);
+      const records = getNormalizedPayrollRecords().filter(r => r.id === String(currentEmpId).trim());
       if (records.length === 0) {
         showToast("ไม่มีข้อมูลสำหรับ Export CSV");
         return;
@@ -1744,8 +1830,8 @@
     }
 
     function openBreakdownByDate(empId, dateStr) {
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      const item = records.find(r => r.id === empId && r.date === dateStr);
+      const records = getNormalizedPayrollRecords();
+      const item = records.find(r => r.id === String(empId).trim() && r.date === dateStr);
       if (!item) return;
 
       const isHol = item.dayType === 'HOLIDAY';
@@ -1796,94 +1882,19 @@
 
     function closeBreakdownModal() { document.getElementById('breakdownModal').classList.add('hidden'); }
 
+    function getSlipAdjKeyForPeriod(periodKey) {
+      return `slip_adj_v5_${String(currentEmpId).trim()}_${periodKey}`;
+    }
+
     function getSlipAdjKey() {
       const period = document.getElementById('cutoffPeriodSelect')?.value || 'ALL';
-      return `slip_adj_${currentEmpId}_${period}`;
+      return getSlipAdjKeyForPeriod(period);
     }
 
-    function getDefaultSlipAdj(autoSocSec = 0, autoDiligence = 0, autoHazard = 0) {
-      const saved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null");
-      const resolvedDiligence = (saved && saved.manualDiligence) ? Number(saved.diligence) : autoDiligence;
-      const resolvedHazard = (saved && saved.manualHazard) ? Number(saved.hazard) : autoHazard;
-
-      return {
-        diligence: resolvedDiligence,
-        hazard: resolvedHazard,
-        manualDiligence: Boolean(saved?.manualDiligence),
-        manualHazard: Boolean(saved?.manualHazard),
-        bonus: saved?.bonus ?? 0,
-        otherIncome: saved?.otherIncome ?? 0,
-        socSec: saved?.socSec ?? autoSocSec,
-        uniform: saved?.uniform ?? 0,
-        otherDed: saved?.otherDed ?? 0,
-        studentLoan: saved?.studentLoan ?? 0,
-        baseYTDEarnings: saved?.baseYTDEarnings ?? 43625.00,
-        baseYTDSocial: saved?.baseYTDSocial ?? 1200.00
-      };
-    }
-
-    function setQuickDiligence(amount) {
-      document.getElementById('adjDiligence').value = amount;
-      saveAndRefreshPayslip(true, false);
-    }
-
-    function toggleSlipEditor() {
-      document.getElementById('slipEditorPanel').classList.toggle('hidden');
-    }
-
-    function saveScheduleOverrides() {
-      localStorage.setItem("working_saturdays", document.getElementById('workingSaturdaysInput').value.trim());
-      localStorage.setItem("custom_company_holidays", document.getElementById('customHolidaysInput').value.trim());
-      renderPayslipContent(true);
-    }
-
-    function saveAndRefreshPayslip(editedDiligence = false, editedHazard = false) {
-      const prevSaved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null");
-      const adj = {
-        diligence: parseFloat(document.getElementById('adjDiligence').value) || 0,
-        hazard: parseFloat(document.getElementById('adjHazard').value) || 0,
-        manualDiligence: editedDiligence || Boolean(prevSaved?.manualDiligence),
-        manualHazard: editedHazard || Boolean(prevSaved?.manualHazard),
-        bonus: parseFloat(document.getElementById('adjBonus').value) || 0,
-        otherIncome: parseFloat(document.getElementById('adjOtherIncome').value) || 0,
-        socSec: parseFloat(document.getElementById('adjSocSec').value) || 0,
-        uniform: parseFloat(document.getElementById('adjUniform').value) || 0,
-        otherDed: parseFloat(document.getElementById('adjOtherDed').value) || 0,
-        studentLoan: parseFloat(document.getElementById('adjStudentLoan').value) || 0,
-        baseYTDEarnings: parseFloat(document.getElementById('baseYTDEarnings').value) || 0,
-        baseYTDSocial: parseFloat(document.getElementById('baseYTDSocial').value) || 0
-      };
-      localStorage.setItem(getSlipAdjKey(), JSON.stringify(adj));
-      renderPayslipContent(false);
-    }
-
-    function resetSlipAdjustments() {
-      localStorage.removeItem(getSlipAdjKey());
-      renderPayslipContent(true);
-      showToast("รีเซ็ตค่าปรับปรุงสลิปเป็นค่าอัตโนมัติแล้ว");
-    }
-
-    function openPayslipModal() {
-      renderPayslipContent(true);
-      document.getElementById('payslipModal').classList.remove('hidden');
-    }
-
-    function renderPayslipContent(syncInputs = true) {
-      const emp = getCurrentEmpObj();
-      const allEmpRecords = JSON.parse(localStorage.getItem("payroll_records") || "[]").filter(r => r.id === currentEmpId);
-      const cutoffSelect = document.getElementById('cutoffPeriodSelect');
-      const periodLabelText = cutoffSelect?.options[cutoffSelect.selectedIndex]?.text || 'งวดปัจจุบัน';
-
-      let startStr = '', endStr = '';
-      let empRecords = allEmpRecords;
-      if (cutoffSelect && cutoffSelect.value) {
-        [startStr, endStr] = cutoffSelect.value.split('|');
-        empRecords = allEmpRecords.filter(r => r.date >= startStr && r.date <= endStr);
-      }
-
-      const sortedDates = empRecords.map(r => r.date).sort().reverse();
-      const latestRecordDate = sortedDates[0] || '';
-      const payDateInfo = computeScheduledPayDate(startStr, endStr, latestRecordDate);
+    function summarizePeriodBaseMetrics(allEmpRecords, startStr, endStr) {
+      const empRecords = (startStr && startStr !== '2000-01-01')
+        ? allEmpRecords.filter(r => r.date >= startStr && r.date <= endStr)
+        : allEmpRecords;
 
       let workDaysCount = 0;
       let actualWorkedDays = 0;
@@ -1923,16 +1934,274 @@
         }
       });
 
+      const baseEarnings = Math.round((sumBase + sumOT15 + sumOT20 + sumOT30 + sumShift + sumMeal + sumOTMeal) * 100) / 100;
+      const autoSocSec = baseEarnings > 0 ? Math.min(Math.round(baseEarnings * 0.05), 200.00) : 0.00;
+      const autoHazard = Math.round(actualWorkedDays * 20 * 100) / 100;
+
+      return {
+        empRecords,
+        workDaysCount,
+        actualWorkedDays,
+        sumBase,
+        sumOT15,
+        sumOT20,
+        sumOT30,
+        sumShift,
+        sumMeal,
+        sumOTMeal,
+        minsOT15,
+        minsOT20,
+        minsOT30,
+        baseEarnings,
+        autoSocSec,
+        autoHazard
+      };
+    }
+
+    function getCarriedForwardYTD(allEmpRecords, startStr, depth = 0) {
+      const emp = getCurrentEmpObj();
+      if (!startStr || startStr === '2000-01-01' || depth > 24) {
+        return {
+          baseYTDEarnings: emp.anchorYtdEarnings || 0.00,
+          baseYTDSocial: emp.anchorYtdSocial || 0.00,
+          sourceLabel: "แสดงทั้งหมด (ยอดสะสมตั้งต้น)"
+        };
+      }
+
+      // กรณีเปิดดูงวดอ้างอิง (16-31 ต.ค. 2569) โดยตรง ให้ตั้งต้นให้ยอดรวมสุทธิปลายงวดเท่ากับ 43,625.00 และ 1,200.00
+      if (emp.anchorPeriodStart && startStr === emp.anchorPeriodStart) {
+        const [ay, am] = startStr.split('-').map(Number);
+        const aLastDay = new Date(ay, am, 0).getDate();
+        const aEnd = `${ay}-${String(am).padStart(2, '0')}-${String(aLastDay).padStart(2, '0')}`;
+        const aSaved = JSON.parse(localStorage.getItem(getSlipAdjKeyForPeriod(`${startStr}|${aEnd}`)) || "null");
+        const aMetrics = summarizePeriodBaseMetrics(allEmpRecords, startStr, aEnd);
+        const aHazard = (aSaved && aSaved.manualHazard) ? Number(aSaved.hazard) : aMetrics.autoHazard;
+        const aDiligence = (aSaved && aSaved.manualDiligence) ? Number(aSaved.diligence) : 0;
+        const aBonus = aSaved?.bonus ?? 0;
+        const aOtherIncome = aSaved?.otherIncome ?? 0;
+        const aSocSec = aSaved?.socSec ?? aMetrics.autoSocSec;
+        const aPeriodTotalEarn = Math.round((aMetrics.baseEarnings + aDiligence + aHazard + aBonus + aOtherIncome) * 100) / 100;
+
+        const baseEarn = Math.max(0, Math.round(((emp.anchorYtdEarnings || 0) - aPeriodTotalEarn) * 100) / 100);
+        const baseSoc = Math.max(0, Math.round(((emp.anchorYtdSocial || 0) - aSocSec) * 100) / 100);
+        return {
+          baseYTDEarnings: baseEarn,
+          baseYTDSocial: baseSoc,
+          sourceLabel: `งวดอ้างอิง 16-31 ต.ค. 2569 (ยอดสะสมสุทธิปลายงวด = ${fmtNum(emp.anchorYtdEarnings)} / ${fmtNum(emp.anchorYtdSocial)})`
+        };
+      }
+
+      const [y, m, d] = startStr.split('-').map(Number);
+      let prevStart = '';
+      let prevEnd = '';
+      let prevLabel = '';
+
+      if (d > 15) {
+        // งวด 16-30/31 -> ดึงยอดสะสมสุทธิมาจากงวด 1-15 ของเดือนเดียวกัน
+        const mStr = String(m).padStart(2, '0');
+        prevStart = `${y}-${mStr}-01`;
+        prevEnd = `${y}-${mStr}-15`;
+        prevLabel = `งวด 1-15 ${formatThaiShortMonthYear(y, m)}`;
+      } else {
+        // งวด 1-15 -> ดึงยอดสะสมสุทธิมาจากงวด 16-30/31 ของเดือนก่อนหน้า
+        if (m === 1) {
+          return { baseYTDEarnings: 0.00, baseYTDSocial: 0.00, sourceLabel: "ขึ้นปีภาษีใหม่ (เริ่มสะสมที่ 0.00)" };
+        }
+        const prevM = m - 1;
+        const prevMStr = String(prevM).padStart(2, '0');
+        const prevLastDay = new Date(y, prevM, 0).getDate();
+        prevStart = `${y}-${prevMStr}-16`;
+        prevEnd = `${y}-${prevMStr}-${String(prevLastDay).padStart(2, '0')}`;
+        prevLabel = `งวด 16-${prevLastDay} ${formatThaiShortMonthYear(y, prevM)}`;
+      }
+
+      const prevPeriodKey = `${prevStart}|${prevEnd}`;
+      const prevSaved = JSON.parse(localStorage.getItem(getSlipAdjKeyForPeriod(prevPeriodKey)) || "null");
+
+      // หากงวดก่อนหน้าตรงกับงวดอ้างอิง 16-31 ต.ค. 2569 (และไม่ได้ถูกแก้ไขยอดเอง) ให้ดึงยอด 43,625.00 และ 1,200.00 ส่งต่อให้งวด 1-15 พ.ย. 2569 ทันที
+      if (emp.anchorPeriodStart && prevStart === emp.anchorPeriodStart && !prevSaved) {
+        return {
+          baseYTDEarnings: emp.anchorYtdEarnings,
+          baseYTDSocial: emp.anchorYtdSocial,
+          sourceLabel: `ดึงยอดสะสมสุทธิมาจาก ${prevLabel} (${fmtNum(emp.anchorYtdEarnings)} / ${fmtNum(emp.anchorYtdSocial)})`
+        };
+      }
+
+      // หากงวดก่อนหน้าอยู่ก่อนวันที่เริ่มงานของพนักงาน ให้ตั้งต้นที่ 0.00
+      if (emp.startDate && prevEnd < emp.startDate) {
+        return {
+          baseYTDEarnings: 0.00,
+          baseYTDSocial: 0.00,
+          sourceLabel: `งวดแรกที่เริ่มงาน (ก่อนหน้า ${prevLabel} = 0.00)`
+        };
+      }
+
+      const prevMetrics = summarizePeriodBaseMetrics(allEmpRecords, prevStart, prevEnd);
+      const prevIsSecondHalf = Number(prevStart.split('-')[2]) > 15;
+
+      let prevAutoDiligence = 0;
+      if (prevIsSecondHalf) {
+        const dilCheck = checkMonthlyDiligenceEligibility(allEmpRecords, y, Number(prevStart.split('-')[1]));
+        prevAutoDiligence = dilCheck.isEligible ? 500 : 0.00;
+      }
+
+      const prevDiligence = (prevSaved && prevSaved.manualDiligence) ? Number(prevSaved.diligence) : prevAutoDiligence;
+      const prevHazard = (prevSaved && prevSaved.manualHazard) ? Number(prevSaved.hazard) : prevMetrics.autoHazard;
+      const prevBonus = prevSaved?.bonus ?? 0;
+      const prevOtherIncome = prevSaved?.otherIncome ?? 0;
+      const prevSocSec = prevSaved?.socSec ?? prevMetrics.autoSocSec;
+
+      const prevTotalEarnings = Math.round((prevMetrics.baseEarnings + prevDiligence + prevHazard + prevBonus + prevOtherIncome) * 100) / 100;
+
+      let priorCarry = { baseYTDEarnings: 0.00, baseYTDSocial: 0.00 };
+      if (prevSaved && prevSaved.manualYTD) {
+        priorCarry = {
+          baseYTDEarnings: Number(prevSaved.baseYTDEarnings) || 0,
+          baseYTDSocial: Number(prevSaved.baseYTDSocial) || 0
+        };
+      } else {
+        priorCarry = getCarriedForwardYTD(allEmpRecords, prevStart, depth + 1);
+      }
+
+      const carryEarn = Math.round((priorCarry.baseYTDEarnings + prevTotalEarnings) * 100) / 100;
+      const carrySoc = Math.round((priorCarry.baseYTDSocial + prevSocSec) * 100) / 100;
+
+      return {
+        baseYTDEarnings: carryEarn,
+        baseYTDSocial: carrySoc,
+        sourceLabel: `ดึงยอดสะสมสุทธิมาจาก ${prevLabel} (${fmtNum(carryEarn)} / ${fmtNum(carrySoc)})`
+      };
+    }
+
+    function getDefaultSlipAdj(autoSocSec = 0, autoDiligence = 0, autoHazard = 0, carriedYTD = { baseYTDEarnings: 0, baseYTDSocial: 0, sourceLabel: '' }) {
+      const saved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null");
+      const resolvedDiligence = (saved && saved.manualDiligence) ? Number(saved.diligence) : autoDiligence;
+      const resolvedHazard = (saved && saved.manualHazard) ? Number(saved.hazard) : autoHazard;
+      const isManualYTD = Boolean(saved?.manualYTD);
+      const resolvedBaseYTDEarnings = isManualYTD ? Number(saved.baseYTDEarnings) : carriedYTD.baseYTDEarnings;
+      const resolvedBaseYTDSocial = isManualYTD ? Number(saved.baseYTDSocial) : carriedYTD.baseYTDSocial;
+
+      return {
+        diligence: resolvedDiligence,
+        hazard: resolvedHazard,
+        manualDiligence: Boolean(saved?.manualDiligence),
+        manualHazard: Boolean(saved?.manualHazard),
+        manualYTD: isManualYTD,
+        ytdSourceLabel: isManualYTD ? "กำหนดยอดยกมาเอง (กด 'ดึงจากงวดก่อนอัตโนมัติ' เพื่อรีเซ็ต)" : carriedYTD.sourceLabel,
+        bonus: saved?.bonus ?? 0,
+        otherIncome: saved?.otherIncome ?? 0,
+        socSec: saved?.socSec ?? autoSocSec,
+        uniform: saved?.uniform ?? 0,
+        otherDed: saved?.otherDed ?? 0,
+        studentLoan: saved?.studentLoan ?? 0,
+        baseYTDEarnings: resolvedBaseYTDEarnings,
+        baseYTDSocial: resolvedBaseYTDSocial
+      };
+    }
+
+    function syncAutoYTDNow() {
+      const prevSaved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null") || {};
+      prevSaved.manualYTD = false;
+      localStorage.setItem(getSlipAdjKey(), JSON.stringify(prevSaved));
+      renderPayslipContent(true);
+      playClick('confirm');
+      showToast("ดึงยอดสะสมจากงวดก่อนหน้าเรียบร้อย");
+    }
+
+    function setQuickDiligence(amount) {
+      document.getElementById('adjDiligence').value = amount;
+      saveAndRefreshPayslip(true, false);
+    }
+
+    function toggleSlipEditor() {
+      document.getElementById('slipEditorPanel').classList.toggle('hidden');
+    }
+
+    function saveScheduleOverrides() {
+      localStorage.setItem("working_saturdays", document.getElementById('workingSaturdaysInput').value.trim());
+      localStorage.setItem("custom_company_holidays", document.getElementById('customHolidaysInput').value.trim());
+      renderPayslipContent(true);
+    }
+
+    function saveAndRefreshPayslip(editedDiligence = false, editedHazard = false, editedYTDEarn = false, editedYTDSoc = false) {
+      const prevSaved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null");
+      const adj = {
+        diligence: parseFloat(document.getElementById('adjDiligence').value) || 0,
+        hazard: parseFloat(document.getElementById('adjHazard').value) || 0,
+        manualDiligence: editedDiligence || Boolean(prevSaved?.manualDiligence),
+        manualHazard: editedHazard || Boolean(prevSaved?.manualHazard),
+        manualYTD: editedYTDEarn || editedYTDSoc || Boolean(prevSaved?.manualYTD),
+        bonus: parseFloat(document.getElementById('adjBonus').value) || 0,
+        otherIncome: parseFloat(document.getElementById('adjOtherIncome').value) || 0,
+        socSec: parseFloat(document.getElementById('adjSocSec').value) || 0,
+        uniform: parseFloat(document.getElementById('adjUniform').value) || 0,
+        otherDed: parseFloat(document.getElementById('adjOtherDed').value) || 0,
+        studentLoan: parseFloat(document.getElementById('adjStudentLoan').value) || 0,
+        baseYTDEarnings: parseFloat(document.getElementById('baseYTDEarnings').value) || 0,
+        baseYTDSocial: parseFloat(document.getElementById('baseYTDSocial').value) || 0
+      };
+      localStorage.setItem(getSlipAdjKey(), JSON.stringify(adj));
+      renderPayslipContent(false);
+    }
+
+    function resetSlipAdjustments() {
+      localStorage.removeItem(getSlipAdjKey());
+      renderPayslipContent(true);
+      showToast("รีเซ็ตค่าปรับปรุงสลิปเป็นค่าอัตโนมัติแล้ว");
+    }
+
+    function openPayslipModal() {
+      const mainSelect = document.getElementById('cutoffPeriodSelect');
+      const modalSelect = document.getElementById('modalPeriodSelect');
+      if (mainSelect && modalSelect) {
+        modalSelect.value = mainSelect.value;
+      }
+      renderPayslipContent(true);
+      document.getElementById('payslipModal').classList.remove('hidden');
+    }
+
+    function renderPayslipContent(syncInputs = true) {
+      const emp = getCurrentEmpObj();
+      const allEmpRecords = getNormalizedPayrollRecords().filter(r => r.id === String(currentEmpId).trim());
+      const cutoffSelect = document.getElementById('cutoffPeriodSelect');
+      const periodLabelText = cutoffSelect?.options[cutoffSelect.selectedIndex]?.text || 'งวดปัจจุบัน';
+
+      let startStr = '', endStr = '';
+      if (cutoffSelect && cutoffSelect.value) {
+        [startStr, endStr] = cutoffSelect.value.split('|');
+      }
+
+      const metrics = summarizePeriodBaseMetrics(allEmpRecords, startStr, endStr);
+      const {
+        empRecords,
+        workDaysCount,
+        actualWorkedDays,
+        sumBase,
+        sumOT15,
+        sumOT20,
+        sumOT30,
+        sumShift,
+        sumMeal,
+        sumOTMeal,
+        minsOT15,
+        minsOT20,
+        minsOT30,
+        baseEarnings,
+        autoSocSec,
+        autoHazard
+      } = metrics;
+
+      const sortedDates = empRecords.map(r => r.date).sort().reverse();
+      const latestRecordDate = sortedDates[0] || '';
+      const payDateInfo = computeScheduledPayDate(startStr, endStr, latestRecordDate);
+
       const diligenceCheck = checkMonthlyDiligenceEligibility(allEmpRecords, payDateInfo.refYear, payDateInfo.refMonth);
       const autoDiligence = payDateInfo.isSecondHalf
         ? (diligenceCheck.isEligible ? 500 : 0.00)
         : 0;
 
-      const autoHazard = Math.round(actualWorkedDays * 20 * 100) / 100;
-
-      const baseEarnings = sumBase + sumOT15 + sumOT20 + sumOT30 + sumShift + sumMeal + sumOTMeal;
-      const autoSocSec = baseEarnings > 0 ? Math.min(Math.round(baseEarnings * 0.05), 200.00) : 0.00;
-      const adj = getDefaultSlipAdj(autoSocSec, autoDiligence, autoHazard);
+      const carriedYTD = getCarriedForwardYTD(allEmpRecords, startStr);
+      const adj = getDefaultSlipAdj(autoSocSec, autoDiligence, autoHazard, carriedYTD);
 
       if (syncInputs) {
         document.getElementById('adjDiligence').value = adj.diligence;
@@ -1947,6 +2216,17 @@
         document.getElementById('baseYTDSocial').value = adj.baseYTDSocial;
         document.getElementById('workingSaturdaysInput').value = localStorage.getItem("working_saturdays") || "2026-11-07, 2026-11-14, 2026-11-21, 2026-11-28";
         document.getElementById('customHolidaysInput').value = localStorage.getItem("custom_company_holidays") || "";
+      }
+
+      const earnHintEl = document.getElementById('ytdEarnSourceHint');
+      const socHintEl = document.getElementById('ytdSocSourceHint');
+      if (earnHintEl) {
+        earnHintEl.className = `text-[9.5px] mt-0.5 font-medium ${adj.manualYTD ? 'text-amber-700' : 'text-indigo-600'}`;
+        earnHintEl.textContent = `• ${adj.ytdSourceLabel}`;
+      }
+      if (socHintEl) {
+        socHintEl.className = `text-[9.5px] mt-0.5 font-medium ${adj.manualYTD ? 'text-amber-700' : 'text-indigo-600'}`;
+        socHintEl.textContent = `• ${adj.ytdSourceLabel}`;
       }
 
       const dilHintEl = document.getElementById('diligenceRuleHint');
