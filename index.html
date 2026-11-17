@@ -132,7 +132,7 @@
       overflow-x: hidden;
     }
     .safe-top-header {
-      padding-top: calc(0.7rem + env(safe-area-inset-top));
+      padding-top: calc(1.8rem + env(safe-area-inset-top));
     }
     .safe-bottom-nav {
       bottom: calc(0.85rem + env(safe-area-inset-bottom));
@@ -289,7 +289,7 @@
     .chrono-pusher {
       clip-path: polygon(
         8px 0%, calc(100% - 8px) 0%,
-        100% 8px, 100% calc(100% - 8px),
+        100% 8px, 100% calc(100% - 16px),
         calc(100% - 8px) 100%, 8px 100%,
         0% calc(100% - 8px), 0% 8px
       );
@@ -2631,7 +2631,7 @@
     }
 
     async function clearLocalStorageData() {
-      const pin = await requestAdminPin("ล้างข้อมูลแคชในเครื่อง", "กรอก Admin PIN เพื่อล้างประวัติในเครื่องแล้วดึงใหม่จาก Cloud");
+      const pin = await requestAdminPin("ล้างข้อมูลแคชในเครื่อง", "กรอก Admin PIN เพื่อลบประวัติในเครื่องแล้วดึงใหม่จาก Cloud");
       if (!pin) return;
       localStorage.removeItem("payroll_records");
       localStorage.removeItem("leave_records");
