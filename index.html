@@ -1210,7 +1210,6 @@
 
     let employeeList = JSON.parse(localStorage.getItem("cached_employees") || "null") || DEFAULT_EMPLOYEES;
 
-    // ปฏิทินวันหยุดนักขัตฤกษ์ + วันหยุดพิเศษ 2026-2027
     const THAI_PUBLIC_HOLIDAYS = new Set([
       "2026-01-01", "2026-01-02", "2026-03-02", "2026-03-03", "2026-04-06",
       "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18",
@@ -1244,7 +1243,6 @@
     let isSavingPng = false;
     let isFlushingQueue = false;
 
-    // Persistent Tombstone Sets (ป้องกันข้อมูลที่ลบไปแล้วเด้งกลับเมื่อรีเฟรชตอนออฟไลน์)
     let deletedRecordKeys = new Set(JSON.parse(localStorage.getItem("deleted_record_keys") || "[]"));
     let deletedLeaveKeys = new Set(JSON.parse(localStorage.getItem("deleted_leave_keys") || "[]"));
 
@@ -1260,9 +1258,6 @@
       localStorage.setItem("deleted_leave_keys", JSON.stringify(Array.from(deletedLeaveKeys)));
     }
 
-    // =============================================================
-    // 🔐 Admin PIN Security Guard
-    // =============================================================
     function requestAdminPin(title = "ยืนยันรหัสความปลอดภัย", desc = "กรอก Admin PIN (ค่าเริ่มต้น 1234)") {
       return new Promise((resolve) => {
         pinResolver = resolve;
@@ -1295,9 +1290,6 @@
       }
     }
 
-    // =============================================================
-    // 🛰️ Fast Non-Blocking GPS Telemetry
-    // =============================================================
     function captureFastGps() {
       return new Promise((resolve) => {
         if (!navigator.geolocation) return resolve("");
@@ -1502,7 +1494,6 @@
       return new Set(satRaw.split(',').map(s => s.trim()).filter(Boolean));
     }
 
-    // ใช้สำหรับตรวจสอบวันหยุดธนาคาร/วันหยุดราชการเพื่อเลื่อนวันจ่ายเงินเดือน
     function isNonWorkingDay(dateObj) {
       const dow = dateObj.getDay();
       if (dow === 0 || dow === 6) return true;
@@ -1510,7 +1501,6 @@
       return THAI_PUBLIC_HOLIDAYS.has(dateStr) || getCustomHolidaysSet().has(dateStr);
     }
 
-    // ใช้สำหรับตรวจสอบวันหยุดปฏิบัติงานจริงของบริษัท (นับวันเสาร์ทำงานตามปฏิทินบริษัท)
     function isHolidayForWorkDay(dateObj) {
       const dateStr = getLocalDateStr(dateObj);
       if (THAI_PUBLIC_HOLIDAYS.has(dateStr) || getCustomHolidaysSet().has(dateStr)) return true;
@@ -1789,9 +1779,6 @@
       window.addEventListener('online', () => flushOfflineQueue(true));
     });
 
-    // =============================================================
-    // 🧭 Navigation & Employee Selection
-    // =============================================================
     function switchTab(tabNum) {
       for (let i = 1; i <= 4; i++) {
         const sec = document.getElementById(`tab-${i}`);
@@ -1850,9 +1837,6 @@
       autoDetectShiftAndDayType(false);
     }
 
-    // =============================================================
-    // ⏱️ Live Chronograph & Tourbillon Telemetry
-    // =============================================================
     function startLiveChronograph() {
       const clockEl = document.getElementById('liveClock');
       const dateEl = document.getElementById('currentDateDisplay');
@@ -1937,9 +1921,6 @@
       requestAnimationFrame(frame);
     }
 
-    // =============================================================
-    // 🧮 Precision Payroll & OT Calculation Engine
-    // =============================================================
     function timeToMinutes(hhmm) {
       if (!hhmm || !hhmm.includes(':')) return 0;
       const [h, m] = hhmm.split(':').map(Number);
@@ -1949,19 +1930,14 @@
     function calculateShiftPay({ date, shift = "DAY", dayType = "REGULAR", workType = "FULL", checkInTime, checkOutTime, overrideElapsedMinutes = null }) {
       const inMin = timeToMinutes(checkInTime);
       let outMin = timeToMinutes(checkOutTime);
-      // แก้ไข: ใช้ < แทน <= เพื่อป้องกันการกดเข้า-ออกในนาทีเดียวกันแล้วคิดเป็น 24 ชั่วโมง
       if (outMin < inMin) outMin += 1440;
 
       const grossMinutes = overrideElapsedMinutes !== null ? Math.max(0, overrideElapsedMinutes) : Math.max(0, outMin - inMin);
-
-      // แก้ไข: หักพักเบรกมาตรฐาน 50 นาที เฉพาะกะเต็มวัน (FULL) ที่ทำงานเกิน 5 ชั่วโมง (300 นาที)
       const breakDeduct = (workType !== 'HALF' && grossMinutes > 300) ? 50 : 0;
       const netWorkMinutes = Math.max(0, grossMinutes - breakDeduct);
-
-      // ปัดเศษทุก 30 นาที (0.5 ชม.) โดยมีระยะผ่อนผัน 5 นาที
       const workedHours = Math.floor((netWorkMinutes + 5) / 30) * 0.5;
 
-      const hourlyRate = 50; // 400 บาท / 8 ชม.
+      const hourlyRate = 50;
       const standardHours = workType === 'HALF' ? 4 : 8;
 
       let baseSalary = 0;
@@ -2031,9 +2007,6 @@
       document.getElementById('estTotal').textContent = `${fmtNum(total)} ฿`;
     }
 
-    // =============================================================
-    // 🟢🔴 Live Check-In & Check-Out Actions
-    // =============================================================
     function loadTodayLiveStatus() {
       const activeIn = getActiveCheckInForCurrentEmp();
       const btnIn = document.getElementById('btnCheckIn');
@@ -2084,8 +2057,6 @@
     async function handleLiveCheckIn() {
       if (isPunchBusy) return;
       const now = new Date();
-
-      // ตรวจสอบหากเปิดหน้าเว็บค้างไว้ข้ามช่วงเวลาและกะไม่ตรงกับเวลาปัจจุบัน
       const expectedShift = getExpectedShiftNow(now);
       if (currentShift !== expectedShift) {
         const expectedLabel = expectedShift === 'NIGHT' ? 'กะกลางคืน (NIGHT)' : 'กะกลางวัน (DAY)';
@@ -2099,7 +2070,6 @@
         ? getYesterdayDateStr(now)
         : getLocalDateStr(now);
 
-      // เตือนหากมีประวัติลงเวลาของวันที่กำลังจะเข้างานอยู่แล้ว
       const existingRec = getNormalizedPayrollRecords().find(r => r.id === currentEmpId && r.date === workDate);
       if (existingRec) {
         if (!confirm(`วันที่ ${formatThaiBE(workDate)} มีข้อมูลลงเวลาไว้แล้ว (${existingRec.checkInTime}-${existingRec.checkOutTime})\nต้องการเริ่มลงเวลาใหม่เพื่อเขียนทับข้อมูลเดิมหรือไม่?`)) {
@@ -2208,9 +2178,6 @@
       localStorage.setItem("payroll_records", JSON.stringify(list));
     }
 
-    // =============================================================
-    // ⏪ Tab 2: Manual / Backdated Entry (Admin PIN Protected)
-    // =============================================================
     function prefillManualByDate() {
       const dateVal = document.getElementById('manualDate').value;
       if (!dateVal) return;
@@ -2305,9 +2272,6 @@
       flushOfflineQueue(true);
     }
 
-    // =============================================================
-    // 📅 Tab 3: Leave Management
-    // =============================================================
     function handleLeaveSubmit(e) {
       e.preventDefault();
       const leaveType = document.getElementById('leaveType').value;
@@ -2379,9 +2343,6 @@
       flushOfflineQueue(true);
     }
 
-    // =============================================================
-    // 📊 Tab 4: Cutoff Periods, Heatmap, Breakdown & CSV
-    // =============================================================
     function buildCutoffOptions() {
       const emp = getCurrentEmployee();
       const records = getNormalizedPayrollRecords().filter(r => r.id === currentEmpId);
@@ -2430,7 +2391,6 @@
 
       const allPeriodsWithAll = [...periods, { value: "2000-01-01|2099-12-31", label: "แสดงทั้งหมดทุกงวด (All Records)" }];
       const htmlMain = allPeriodsWithAll.map(p => `<option value="${p.value}" class="bg-zinc-900 text-white">${p.label}</option>`).join('');
-      // ตัวเลือกในหน้าสลิปแสดงเฉพาะงวดรายปักษ์ที่ถูกต้อง เพื่อป้องกันยอด YTD คลาดเคลื่อน
       const htmlModal = periods.map(p => `<option value="${p.value}" class="bg-zinc-900 text-white">${p.label}</option>`).join('');
 
       if (selMain) {
@@ -2501,7 +2461,6 @@
         }).join('');
       }
 
-      // Render Leave History
       const leaveEl = document.getElementById('leaveHistoryList');
       if (leaveEl) {
         const leaves = JSON.parse(localStorage.getItem("leave_records") || "[]")
@@ -2569,7 +2528,6 @@
             cellCls = "bg-emerald-600/30 text-emerald-200 border-emerald-500/65 font-bold";
           }
         } else if (isHolidayForWorkDay(cur)) {
-          // แก้ไข: ใช้ isHolidayForWorkDay เพื่อแยกวันเสาร์ทำงานออกจากวันหยุดจริง
           cellCls = "bg-zinc-300/40 dark:bg-zinc-950/70 text-zinc-400/60 border-zinc-300/40 dark:border-zinc-900";
         }
 
@@ -2716,9 +2674,6 @@
       showToast("ดาวน์โหลดไฟล์ CSV สำเร็จ");
     }
 
-    // =============================================================
-    // 🧾 Official Payslip Modal, Auto-YTD, PNG & LINE Delivery
-    // =============================================================
     function getSlipAdjStorageKey(periodVal) {
       return `slip_adj_${currentEmpId}_${periodVal}`;
     }
@@ -2729,7 +2684,6 @@
 
       if (mainSel && modalSel) {
         if (mainSel.value === "2000-01-01|2099-12-31") {
-          // เลือกงวดปัจจุบันอัตโนมัติแทน All Records เพื่อให้คำนวณ YTD ได้ถูกต้อง
           if (modalSel.options.length > 0) {
             modalSel.selectedIndex = 0;
             mainSel.value = modalSel.value;
@@ -2840,6 +2794,11 @@
 
       const defaultDiligence = (payMeta.isSecondHalf && dilCheck.isEligible) ? 500 : 0;
       const defaultHazard = filtered.length * 20;
+
+      // คำนวณฐานเงินค่าแรงปกติสำหรับงวดนี้เพื่อหักประกันสังคมอัตโนมัติ (5% สูงสุด 375 บาทต่อปักษ์)
+      const baseSalForPeriod = filtered.reduce((acc, r) => acc + (r.dayType !== 'HOLIDAY' ? (r.baseSalary || 0) : 0), 0);
+      const defaultSocSec = Math.min(baseSalForPeriod * 0.05, 375);
+
       const priorYtd = computePriorYTDForPeriod(startStr);
 
       let saved = {};
@@ -2851,7 +2810,10 @@
       document.getElementById('adjHazard').value = saved.manualHazard ? sanitizeNumber(saved.hazard) : defaultHazard;
       document.getElementById('adjBonus').value = sanitizeNumber(saved.bonus);
       document.getElementById('adjOtherIncome').value = sanitizeNumber(saved.otherIncome);
-      document.getElementById('adjSocSec').value = sanitizeNumber(saved.socSec);
+      
+      // กำหนดค่าประกันสังคมอัตโนมัติตามงวด หากยังไม่มีการบันทึกทับ
+      document.getElementById('adjSocSec').value = saved.socSec !== undefined ? sanitizeNumber(saved.socSec) : defaultSocSec;
+
       document.getElementById('adjUniform').value = sanitizeNumber(saved.uniform);
       document.getElementById('adjOtherDed').value = sanitizeNumber(saved.otherDed);
       document.getElementById('adjStudentLoan').value = sanitizeNumber(saved.studentLoan);
@@ -2975,6 +2937,7 @@
       const bonus = parseNumStrict(document.getElementById('adjBonus').value, 0);
       const otherIncome = parseNumStrict(document.getElementById('adjOtherIncome').value, 0);
 
+      // ดึงค่าประกันสังคมจากช่อง input หน้าเว็บมาคำนวณหักออกทันที
       const socSec = parseNumStrict(document.getElementById('adjSocSec').value, 0);
       const uniform = parseNumStrict(document.getElementById('adjUniform').value, 0);
       const otherDed = parseNumStrict(document.getElementById('adjOtherDed').value, 0);
@@ -3143,9 +3106,6 @@
       }
     }
 
-    // =============================================================
-    // ☁️ Cloud Sync, Offline Queue, Rollback & Admin Config Modal
-    // =============================================================
     function enqueueOfflineAction(payload, rollbackData = null) {
       const queue = JSON.parse(localStorage.getItem("offline_sync_queue") || "[]");
       queue.push({
@@ -3227,7 +3187,6 @@
               remaining.push(item);
             }
           } else {
-            // ล้าง Tombstone เฉพาะเมื่อคำสั่งลบส่งขึ้น Server สำเร็จแล้ว
             if (item.payload?.action === "delete_record") {
               deletedRecordKeys.delete(`${item.payload.id}_${item.payload.date}`);
               tombstoneChanged = true;
