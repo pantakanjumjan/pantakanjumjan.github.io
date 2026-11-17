@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Provide Power // AEGIS CHRONOGRAPH HUD v5.1</title>
+  <title>Provide Power // AEGIS CHRONOGRAPH HUD v5.2</title>
 
   <!-- Mobile Web App Fullscreen & Native Feel -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -402,7 +402,7 @@
               <h1 class="font-hud font-extrabold text-xs tracking-wider text-zinc-900 dark:text-white truncate">PROVIDE POWER</h1>
               <span id="cloudSyncPill" onclick="flushOfflineQueue(false)" title="แตะเพื่อซิงค์คิวค้าง" class="cursor-pointer text-[8.5px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40 tracking-wider shrink-0">AEGIS OK</span>
             </div>
-            <p class="text-[9.5px] font-mono text-zinc-500 dark:text-zinc-400 tracking-wider truncate">AEGIS CHRONOGRAPH // v5.1</p>
+            <p class="text-[9.5px] font-mono text-zinc-500 dark:text-zinc-400 tracking-wider truncate">AEGIS CHRONOGRAPH // v5.2</p>
           </div>
         </div>
 
@@ -722,7 +722,7 @@
       <div class="grid grid-cols-2 gap-2.5">
         <div class="col-span-2 watch-case-shell">
           <div class="watch-case-inner text-white p-4 relative overflow-hidden">
-            <img alt="" aria-hidden="true" class="exact-user-logo absolute right-3 bottom-2 w-24 h-20 object-contain opacity-25 pointer-events-none">
+            <img alt="" aria-hidden="true" class="exact-user-logo right-3 bottom-2 w-24 h-20 object-contain opacity-25 pointer-events-none">
             <span class="text-[11px] text-zinc-400 font-medium">ยอดรวมค่าแรง + OT ในรอบนี้</span>
             <div class="flex justify-between items-baseline mt-1.5 relative z-10">
               <div class="font-mono text-3xl font-extrabold text-red-400 tracking-tight" id="summaryTotalSalary">0.00 ฿</div>
@@ -1946,23 +1946,31 @@
       let ot20Hours = 0, ot20Pay = 0;
       let ot30Hours = 0, ot30Pay = 0;
 
-      if (dayType === 'HOLIDAY') {
+      if (workedHours < 4) {
+        // ทำงานไม่ถึง 4 ชม. ไม่ได้รับค่าแรง
         baseSalary = 0;
-        otHours = workedHours;
-        ot20Hours = Math.min(workedHours, 8);
-        ot20Pay = Math.round(ot20Hours * hourlyRate * 2.0 * 100) / 100;
-        ot30Hours = Math.max(0, Math.round((workedHours - 8) * 100) / 100);
-        ot30Pay = Math.round(ot30Hours * hourlyRate * 3.0 * 100) / 100;
+      } else if (workedHours >= 4 && workedHours < 8 && dayType !== 'HOLIDAY') {
+        // ทำงานครึ่งวัน (4 ถึงต่ำกว่า 8 ชม.): ได้ค่าแรง 200 บาท
+        baseSalary = 200;
       } else {
-        baseSalary = workType === 'HALF' ? 200 : 400;
-        otHours = Math.max(0, Math.round((workedHours - standardHours) * 100) / 100);
-        ot15Hours = otHours;
-        ot15Pay = Math.round(ot15Hours * hourlyRate * 1.5 * 100) / 100;
+        if (dayType === 'HOLIDAY') {
+          baseSalary = 0;
+          otHours = workedHours;
+          ot20Hours = Math.min(workedHours, 8);
+          ot20Pay = Math.round(ot20Hours * hourlyRate * 2.0 * 100) / 100;
+          ot30Hours = Math.max(0, Math.round((workedHours - 8) * 100) / 100);
+          ot30Pay = Math.round(ot30Hours * hourlyRate * 3.0 * 100) / 100;
+        } else {
+          baseSalary = workType === 'HALF' ? 200 : 400;
+          otHours = Math.max(0, Math.round((workedHours - standardHours) * 100) / 100);
+          ot15Hours = otHours;
+          ot15Pay = Math.round(ot15Hours * hourlyRate * 1.5 * 100) / 100;
+        }
       }
 
       const otPay = Math.round((ot15Pay + ot20Pay + ot30Pay) * 100) / 100;
-      const shiftAllowance = shift === 'NIGHT' ? (workType === 'HALF' ? 90 : 180) : 0;
-      const normalMeal = workedHours > 0 ? 10 : 0;
+      const shiftAllowance = workedHours < 4 ? 0 : (shift === 'NIGHT' ? (workType === 'HALF' ? 90 : 180) : 0);
+      const normalMeal = workedHours >= 4 ? 10 : 0;
       const otMeal = otHours >= 2 ? 20 : 0;
       const totalMealAllowance = normalMeal + otMeal;
       const totalSalary = Math.round((baseSalary + otPay + shiftAllowance + totalMealAllowance) * 100) / 100;
@@ -2795,7 +2803,6 @@
       const defaultDiligence = (payMeta.isSecondHalf && dilCheck.isEligible) ? 500 : 0;
       const defaultHazard = filtered.length * 20;
 
-      // คำนวณฐานเงินค่าแรงปกติสำหรับงวดนี้เพื่อหักประกันสังคมอัตโนมัติ (5% สูงสุด 375 บาทต่อปักษ์)
       const baseSalForPeriod = filtered.reduce((acc, r) => acc + (r.dayType !== 'HOLIDAY' ? (r.baseSalary || 0) : 0), 0);
       const defaultSocSec = Math.min(baseSalForPeriod * 0.05, 375);
 
@@ -2810,8 +2817,6 @@
       document.getElementById('adjHazard').value = saved.manualHazard ? sanitizeNumber(saved.hazard) : defaultHazard;
       document.getElementById('adjBonus').value = sanitizeNumber(saved.bonus);
       document.getElementById('adjOtherIncome').value = sanitizeNumber(saved.otherIncome);
-      
-      // กำหนดค่าประกันสังคมอัตโนมัติตามงวด หากยังไม่มีการบันทึกทับ
       document.getElementById('adjSocSec').value = saved.socSec !== undefined ? sanitizeNumber(saved.socSec) : defaultSocSec;
 
       document.getElementById('adjUniform').value = sanitizeNumber(saved.uniform);
@@ -2937,7 +2942,6 @@
       const bonus = parseNumStrict(document.getElementById('adjBonus').value, 0);
       const otherIncome = parseNumStrict(document.getElementById('adjOtherIncome').value, 0);
 
-      // ดึงค่าประกันสังคมจากช่อง input หน้าเว็บมาคำนวณหักออกทันที
       const socSec = parseNumStrict(document.getElementById('adjSocSec').value, 0);
       const uniform = parseNumStrict(document.getElementById('adjUniform').value, 0);
       const otherDed = parseNumStrict(document.getElementById('adjOtherDed').value, 0);
@@ -2990,6 +2994,7 @@
 
       const baseYtdEarn = parseNumStrict(document.getElementById('baseYTDEarnings').value, 0);
       const baseYtdSoc = parseNumStrict(document.getElementById('baseYTDSocial').value, 0);
+      
       const finalYtdEarn = Math.round((baseYtdEarn + totalEarnings) * 100) / 100;
       const finalYtdSoc = Math.round((baseYtdSoc + socSec) * 100) / 100;
 
