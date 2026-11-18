@@ -1947,10 +1947,8 @@
       let ot30Hours = 0, ot30Pay = 0;
 
       if (workedHours < 4) {
-        // ทำงานไม่ถึง 4 ชม. ไม่ได้รับค่าแรง
         baseSalary = 0;
       } else if (workedHours >= 4 && workedHours < 8 && dayType !== 'HOLIDAY') {
-        // ทำงานครึ่งวัน (4 ถึงต่ำกว่า 8 ชม.): ได้ค่าแรง 200 บาท
         baseSalary = 200;
       } else {
         if (dayType === 'HOLIDAY') {
@@ -2750,23 +2748,37 @@
       const priorRecords = allRecords.filter(r => r.date >= calcStart && r.date < startStr);
       const priorSum = priorRecords.reduce((s, r) => s + r.totalSalary, 0);
 
-      let priorAdjEarn = 0;
-      let priorAdjSoc = 0;
-      const seenPeriods = new Set();
+      // จัดกลุ่มบันทึกเวลาตามงวด เพื่อคำนวณยอดปรับปรุงและประกันสังคม 5% ของงวดก่อนหน้าอัตโนมัติ
+      const periodGroups = new Map();
       priorRecords.forEach(r => {
         const [y, m, d] = r.date.split('-').map(Number);
         const mStr = String(m).padStart(2, '0');
         const lastD = new Date(y, m, 0).getDate();
         const pKey = d <= 15 ? `${y}-${mStr}-01|${y}-${mStr}-15` : `${y}-${mStr}-16|${y}-${mStr}-${String(lastD).padStart(2, '0')}`;
-        if (!seenPeriods.has(pKey) && pKey.split('|')[0] < startStr) {
-          seenPeriods.add(pKey);
-          try {
-            const savedAdj = JSON.parse(localStorage.getItem(getSlipAdjStorageKey(pKey)) || "null");
-            if (savedAdj) {
-              priorAdjEarn += sanitizeNumber(savedAdj.diligence) + sanitizeNumber(savedAdj.hazard) + sanitizeNumber(savedAdj.bonus) + sanitizeNumber(savedAdj.otherIncome);
-              priorAdjSoc += sanitizeNumber(savedAdj.socSec);
-            }
-          } catch (e) {}
+        if (pKey.split('|')[0] < startStr) {
+          if (!periodGroups.has(pKey)) periodGroups.set(pKey, []);
+          periodGroups.get(pKey).push(r);
+        }
+      });
+
+      let priorAdjEarn = 0;
+      let priorAdjSoc = 0;
+
+      periodGroups.forEach((recs, pKey) => {
+        let savedAdj = null;
+        try {
+          savedAdj = JSON.parse(localStorage.getItem(getSlipAdjStorageKey(pKey)) || "null");
+        } catch (e) {}
+
+        if (savedAdj) {
+          priorAdjEarn += sanitizeNumber(savedAdj.diligence) + sanitizeNumber(savedAdj.hazard) + sanitizeNumber(savedAdj.bonus) + sanitizeNumber(savedAdj.otherIncome);
+          priorAdjSoc += savedAdj.socSec !== undefined
+            ? sanitizeNumber(savedAdj.socSec)
+            : Math.min(recs.reduce((acc, r) => acc + (r.dayType !== 'HOLIDAY' ? (r.baseSalary || 0) : 0), 0) * 0.05, 375);
+        } else {
+          priorAdjEarn += (recs.length * 20);
+          const baseSal = recs.reduce((acc, r) => acc + (r.dayType !== 'HOLIDAY' ? (r.baseSalary || 0) : 0), 0);
+          priorAdjSoc += Math.min(baseSal * 0.05, 375);
         }
       });
 
