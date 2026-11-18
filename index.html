@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Provide Power // AEGIS CHRONOGRAPH HUD v5.2</title>
+  <title>Provide Power // AEGIS CHRONOGRAPH HUD v5.3</title>
 
   <!-- Mobile Web App Fullscreen & Native Feel -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -402,7 +402,7 @@
               <h1 class="font-hud font-extrabold text-xs tracking-wider text-zinc-900 dark:text-white truncate">PROVIDE POWER</h1>
               <span id="cloudSyncPill" onclick="flushOfflineQueue(false)" title="แตะเพื่อซิงค์คิวค้าง" class="cursor-pointer text-[8.5px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40 tracking-wider shrink-0">AEGIS OK</span>
             </div>
-            <p class="text-[9.5px] font-mono text-zinc-500 dark:text-zinc-400 tracking-wider truncate">AEGIS CHRONOGRAPH // v5.2</p>
+            <p class="text-[9.5px] font-mono text-zinc-500 dark:text-zinc-400 tracking-wider truncate">AEGIS CHRONOGRAPH // v5.3</p>
           </div>
         </div>
 
@@ -875,7 +875,7 @@
             <input type="number" step="0.01" id="adjDiligence" oninput="saveAndRefreshPayslip(true, false)" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white mt-0.5">
           </div>
           <div class="min-w-0">
-            <label class="block text-slate-500">ค่าเสี่ยงภัย (20฿/วันจริง)</label>
+            <label class="block text-slate-500">ค่าเสี่ยงภัย (รวมทั้งเดือนในงวด 2)</label>
             <input type="number" step="0.01" id="adjHazard" oninput="saveAndRefreshPayslip(false, true)" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white mt-0.5">
           </div>
           <div class="min-w-0">
@@ -2776,7 +2776,13 @@
             ? sanitizeNumber(savedAdj.socSec)
             : Math.min(recs.reduce((acc, r) => acc + (r.dayType !== 'HOLIDAY' ? (r.baseSalary || 0) : 0), 0) * 0.05, 375);
         } else {
-          priorAdjEarn += (recs.length * 20);
+          // งวดที่ 2 ของเดือน (16-สิ้นเดือน) มีการรวมค่าเสี่ยงภัยทั้งเดือนไปแล้ว
+          const isSecondHalfGroup = pKey.split('|')[0].endsWith('-16');
+          if (isSecondHalfGroup) {
+            const ymPrefix = pKey.slice(0, 7);
+            const fullMonthRecs = allRecords.filter(r => r.date.startsWith(ymPrefix));
+            priorAdjEarn += (fullMonthRecs.length * 20);
+          }
           const baseSal = recs.reduce((acc, r) => acc + (r.dayType !== 'HOLIDAY' ? (r.baseSalary || 0) : 0), 0);
           priorAdjSoc += Math.min(baseSal * 0.05, 375);
         }
@@ -2808,12 +2814,16 @@
             ? `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> เข้าเงื่อนไขเบี้ยขยันประจำเดือน (มาครบ ${dilCheck.workedWeekdays}/${dilCheck.requiredWeekdays} วันทำงาน)`
             : `<i class="fa-solid fa-circle-info text-amber-600 mr-1"></i> มาทำงาน ${dilCheck.workedWeekdays}/${dilCheck.requiredWeekdays} วัน (ขาด/ลา ${dilCheck.missingDates.length} วัน)`;
         } else {
-          dilHintEl.innerHTML = `<i class="fa-solid fa-clock text-slate-500 mr-1"></i> งวดแรก (1-15): เบี้ยขยันจะประเมินและจ่ายในงวดที่ 2 ของเดือน`;
+          dilHintEl.innerHTML = `<i class="fa-solid fa-clock text-slate-500 mr-1"></i> งวดแรก (1-15): เบี้ยขยันและค่าเสี่ยงภัยจะนำไปรวมจ่ายในงวดที่ 2 ของเดือน`;
         }
       }
 
       const defaultDiligence = (payMeta.isSecondHalf && dilCheck.isEligible) ? 500 : 0;
-      const defaultHazard = filtered.length * 20;
+
+      // ค่าเสี่ยงภัย (20 บาท/วัน) นำยอดงวด 1-15 ไปรวมจ่ายในงวด 16-30/31 ของทุกเดือน
+      const monthPrefix = `${payMeta.refYear}-${String(payMeta.refMonth).padStart(2, '0')}`;
+      const fullMonthRecords = allEmpRecords.filter(r => r.date.startsWith(monthPrefix));
+      const defaultHazard = payMeta.isSecondHalf ? (fullMonthRecords.length * 20) : 0;
 
       const baseSalForPeriod = filtered.reduce((acc, r) => acc + (r.dayType !== 'HOLIDAY' ? (r.baseSalary || 0) : 0), 0);
       const defaultSocSec = Math.min(baseSalForPeriod * 0.05, 375);
@@ -2959,6 +2969,9 @@
       const otherDed = parseNumStrict(document.getElementById('adjOtherDed').value, 0);
       const studentLoan = parseNumStrict(document.getElementById('adjStudentLoan').value, 0);
 
+      const monthPrefix = `${payMeta.refYear}-${String(payMeta.refMonth).padStart(2, '0')}`;
+      const fullMonthWorkDays = getNormalizedPayrollRecords().filter(r => r.id === currentEmpId && r.date.startsWith(monthPrefix)).length;
+
       const earningRows = [
         { label: "ค่าแรงปกติ", qty: regDays > 0 ? `${regDays} วัน` : "", amt: regPay },
         { label: "ค่าล่วงเวลา 1.5 เท่า", qty: ot15Hrs > 0 ? `${ot15Hrs.toFixed(1)} ชม.` : "", amt: ot15Pay },
@@ -2967,7 +2980,7 @@
         { label: "ค่ากะการทำงาน", qty: shiftDays > 0 ? `${shiftDays} วัน` : "", amt: shiftPay },
         { label: "ค่าอาหาร / ค่าอาหาร OT", qty: mealDays > 0 ? `${mealDays} วัน` : "", amt: mealPay },
         { label: "เบี้ยขยันประจำเดือน", qty: diligence > 0 ? "1 เดือน" : "", amt: diligence },
-        { label: "ค่าเสี่ยงภัย / ค่าตำแหน่ง", qty: hazard > 0 ? `${filtered.length} วัน` : "", amt: hazard },
+        { label: "ค่าเสี่ยงภัย / ค่าตำแหน่ง", qty: hazard > 0 ? `${payMeta.isSecondHalf ? fullMonthWorkDays : filtered.length} วัน` : "", amt: hazard },
         { label: "Bonus / ค่ารถ", qty: "", amt: bonus },
         { label: "รายได้อื่นๆ / ค่าแรง 75%", qty: "", amt: otherIncome }
       ];
