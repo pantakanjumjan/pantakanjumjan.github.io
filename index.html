@@ -383,7 +383,7 @@
               <h1 class="font-hud font-black text-xs tracking-wider text-white truncate">PROVIDE POWER</h1>
               <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/50">LINKED</span>
             </div>
-            <p class="font-mono text-[9px] text-cyan-400/95 tracking-widest">VALKYRIE CHRONO // MK-IX</p>
+            <p class="font-mono text-[9px] text-cyan-400/95 tracking-widest">SHIFT 08:00-16:50 // OT 17:10-19:10</p>
           </div>
         </div>
 
@@ -534,22 +534,22 @@
         </div>
       </div>
 
-      <!-- Interactive OT Scrubber Simulator Strip (ลากจำลองเวลาเลิกงานได้จริง!) -->
+      <!-- Interactive OT Scrubber Simulator Strip (08:00-16:50 ปกติ | OT 17:10-19:10) -->
       <div class="armor-frame chamfer-sm">
         <div class="armor-inner chamfer-sm p-3 space-y-2.5">
           <div class="flex justify-between items-center text-[10px] font-mono">
             <span class="text-cyan-300 font-bold flex items-center gap-1.5">
               <i class="fa-solid fa-sliders text-red-500"></i>
-              <span>OT SIMULATOR // ออก <strong id="simOutTimeLabel" class="text-amber-400">17:00</strong></span>
+              <span>OT SIMULATOR // ออก <strong id="simOutTimeLabel" class="text-amber-400">16:50 (ปกติ)</strong></span>
             </span>
             <button type="button" onclick="resetSimScrubber()" class="text-[9px] font-hud text-zinc-400 hover:text-white underline">RESET</button>
           </div>
 
-          <input type="range" id="otSimScrubber" min="0" max="240" step="10" value="0" oninput="onSimScrubberChange(this.value)" class="chrono-scrubber">
+          <input type="range" id="otSimScrubber" min="0" max="140" step="10" value="0" oninput="onSimScrubberChange(this.value)" class="chrono-scrubber">
 
           <div class="grid grid-cols-3 gap-2 text-center font-mono">
             <div class="chamfer-sm bg-black/65 p-2 border border-zinc-800/90">
-              <span id="estBaseLabel" class="block text-[8.5px] text-zinc-400">BASE + OT</span>
+              <span id="estBaseLabel" class="block text-[8.5px] text-zinc-400">BASE PAY</span>
               <span id="estBasePay" class="text-xs font-extrabold text-white">400 ฿</span>
             </div>
             <div class="chamfer-sm bg-black/65 p-2 border border-zinc-800/90">
@@ -609,7 +609,7 @@
               </div>
               <div>
                 <h2 class="font-hud font-bold text-xs tracking-wide text-white">MANUAL OVERRIDE</h2>
-                <p class="text-[10px] text-zinc-400">บันทึกเวลาย้อนหลัง / แก้ไขข้อมูลรายวัน</p>
+                <p class="text-[10px] text-zinc-400">บันทึกเวลาย้อนหลัง (08:00-16:50 | OT 17:10-19:10)</p>
               </div>
             </div>
             <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 border border-amber-500/40">EXISTING</span>
@@ -634,8 +634,8 @@
               <div>
                 <label class="block text-[10px] font-semibold text-zinc-400 mb-1">กะการทำงาน</label>
                 <select id="manualShift" onchange="updateManualPreview()" class="hw-select w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg text-xs text-white outline-none focus:border-red-500">
-                  <option value="DAY">กลางวัน (08:00)</option>
-                  <option value="NIGHT">กลางคืน (20:00)</option>
+                  <option value="DAY">กลางวัน (08:00-16:50)</option>
+                  <option value="NIGHT">กลางคืน (20:00-04:50)</option>
                 </select>
               </div>
               <div>
@@ -1326,7 +1326,8 @@
       const inMins = timeToMins(checkIn);
       let outMins = timeToMins(checkOut);
       if (outMins < inMins) outMins += 1440;
-      const netMins = Math.max(0, (outMins - inMins) - 70);
+      // 08:00 - 16:50 = 530 นาที หักพักกลางวัน 50 นาที = 480 นาที (8 ชม.)
+      const netMins = Math.max(0, (outMins - inMins) - 50);
       return Math.round((netMins / 60) * 100) / 100;
     }
 
@@ -1721,7 +1722,8 @@
           const mins = totalMins % 60;
           document.getElementById('liveElapsedText').textContent = `${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`;
 
-          const progressRatio = Math.min(1, totalMins / 550);
+          // 08:00 - 16:50 = 530 นาทีเต็มกะ
+          const progressRatio = Math.min(1, totalMins / 530);
           const pctInt = Math.min(100, Math.round(progressRatio * 100));
           if (arcEl) arcEl.style.strokeDashoffset = (ARC_CIRCUMFERENCE * (1 - progressRatio)).toFixed(1);
 
@@ -1774,6 +1776,7 @@
       return (h * 60) + m;
     }
 
+    // คำนวณเวลาทำงาน 08:00 - 16:50 (พัก 50 นาที -> 8 ชม.) | พักเบรก 16:50 - 17:10 (20 นาที) | เริ่ม OT 17:10 - 19:10 (สูงสุด 2 ชม.)
     function calculatePayroll(shift, dayType, checkInTime, checkOutTime, workType = 'FULL') {
       let otHours = 0, otRate = 1.5, otPay = 0, shiftAllowance = 0;
       let normalMeal = 10, otMeal = 0;
@@ -1787,20 +1790,38 @@
       let afterShiftOtHours = 0;
 
       if (shift === 'DAY') {
-        const rawDuration = Math.max(0, outMins - inMins);
-        totalWorkedMinutes = Math.max(0, rawDuration - 70);
-        const cappedOutMins = outMins > 1150 ? 1150 : outMins;
-        if (cappedOutMins > 1030) afterShiftOtHours = (cappedOutMins - 1030) / 60;
-      } else {
-        shiftAllowance = 180;
-        let nightOutMins = outMins;
-        if (inMins < 720 && nightOutMins < 720) {
-          nightOutMins += 1440;
+        // กะกลางวัน: 08:00 (480) - 16:50 (1010) = 530 นาที หักพักกลางวัน 50 นาที = 480 นาที (8 ชม.)
+        const effectiveIn = Math.max(inMins, 480);
+        const regularEnd = Math.min(outMins, 1010);
+        const regularSpan = Math.max(0, regularEnd - effectiveIn);
+        totalWorkedMinutes = Math.max(0, regularSpan - 50);
+
+        // ช่วง OT: 17:10 (1030) - 19:10 (1150) สูงสุด 2.0 ชม. (120 นาที)
+        const otStart = 1030;
+        const otEndCap = 1150;
+        const cappedOutMins = Math.min(outMins, otEndCap);
+        if (cappedOutMins > otStart) {
+          afterShiftOtHours = (cappedOutMins - otStart) / 60;
         }
-        const rawDuration = Math.max(0, nightOutMins - inMins);
-        totalWorkedMinutes = Math.max(0, rawDuration - 70);
-        const cappedOutMins = nightOutMins > 1870 ? 1870 : nightOutMins;
-        if (cappedOutMins > 1750) afterShiftOtHours = (cappedOutMins - 1750) / 60;
+      } else {
+        // กะกลางคืน: 20:00 (1200) - 04:50 (1730) = 530 นาที หักพัก 50 นาที = 480 นาที (8 ชม.)
+        shiftAllowance = 180;
+        let nightInMins = inMins < 720 ? inMins + 1440 : inMins;
+        let nightOutMins = outMins < 720 ? outMins + 1440 : outMins;
+        if (nightOutMins < nightInMins) nightOutMins += 1440;
+
+        const effectiveIn = Math.max(nightInMins, 1200);
+        const regularEnd = Math.min(nightOutMins, 1730);
+        const regularSpan = Math.max(0, regularEnd - effectiveIn);
+        totalWorkedMinutes = Math.max(0, regularSpan - 50);
+
+        // ช่วง OT กะดึก: 05:10 (1750) - 07:10 (1870) สูงสุด 2.0 ชม.
+        const otStart = 1750;
+        const otEndCap = 1870;
+        const cappedOutMins = Math.min(nightOutMins, otEndCap);
+        if (cappedOutMins > otStart) {
+          afterShiftOtHours = (cappedOutMins - otStart) / 60;
+        }
       }
 
       const workedHours = Math.round((totalWorkedMinutes / 60) * 100) / 100;
@@ -1864,20 +1885,26 @@
 
     function updateLiveEstimator() {
       const dummyIn = currentShift === 'DAY' ? '08:00' : '20:00';
-      const baseOutMins = currentShift === 'DAY' ? (17 * 60) : (5 * 60);
+      // 16:50 = 1010 นาที | 04:50 = 290 นาที (เลื่อนได้ถึง +140 นาที -> 19:10 / 07:10)
+      const baseOutMins = currentShift === 'DAY' ? (16 * 60 + 50) : (4 * 60 + 50);
       const simOutTotalMins = (baseOutMins + simExtraMinutes) % 1440;
       const simH = String(Math.floor(simOutTotalMins / 60)).padStart(2, '0');
       const simM = String(simOutTotalMins % 60).padStart(2, '0');
       const dummyOut = `${simH}:${simM}`;
 
+      const calc = calculatePayroll(currentShift, currentDayType, dummyIn, dummyOut, currentWorkType);
       const simLabel = document.getElementById('simOutTimeLabel');
       if (simLabel) {
-        simLabel.textContent = simExtraMinutes > 0
-          ? `${dummyOut} (+${(simExtraMinutes / 60).toFixed(1)}h)`
-          : `${dummyOut} (ปกติ)`;
+        if (simExtraMinutes === 0) {
+          simLabel.textContent = `${dummyOut} (เลิกปกติ)`;
+        } else if (simExtraMinutes <= 20) {
+          simLabel.textContent = `${dummyOut} (พักก่อน OT)`;
+        } else {
+          const otSimHrs = ((simExtraMinutes - 20) / 60).toFixed(2).replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
+          simLabel.textContent = `${dummyOut} (+OT ${otSimHrs}h)`;
+        }
       }
 
-      const calc = calculatePayroll(currentShift, currentDayType, dummyIn, dummyOut, currentWorkType);
       const baseAndOt = calc.baseSalary + calc.otPay;
       document.getElementById('estBaseLabel').textContent = calc.otHours > 0 ? `BASE+OT(${calc.otHours}h)` : "BASE PAY";
       document.getElementById('estBasePay').textContent = `${baseAndOt} ฿`;
@@ -2418,7 +2445,7 @@
       content.innerHTML = `
         <div class="chamfer-sm bg-black/70 p-2.5 space-y-1 border border-zinc-800">
           <div class="font-bold text-white">${item.employeeName} (${formatThaiBE(item.date)})</div>
-          <div>กะการทำงาน: <span class="font-bold">${item.shift === 'DAY' ? 'กลางวัน' : 'กลางคืน'}</span></div>
+          <div>กะการทำงาน: <span class="font-bold">${item.shift === 'DAY' ? 'กลางวัน (08:00-16:50)' : 'กลางคืน (20:00-04:50)'}</span></div>
           <div>ประเภทวัน: <span class="font-bold">${item.dayType === 'REGULAR' ? 'วันปกติ' : 'วันหยุด (OT 2.0)'}</span></div>
           <div>เวลาจริง: <span class="font-mono font-bold text-cyan-300">${item.checkIn} - ${item.checkOut} (${item.workedHours} ชม.)</span></div>
         </div>
