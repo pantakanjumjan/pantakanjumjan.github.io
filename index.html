@@ -329,6 +329,7 @@
       color: #000000;
     }
 
+    /* โหมด PNG แนวนอน (บังคับจัด 12 คอลัมน์เต็มแผ่นเหมือนพิมพ์ PDF) */
     .png-landscape-mode {
       width: 920px !important;
       max-width: 920px !important;
@@ -396,6 +397,7 @@
 </head>
 <body class="text-zinc-900 dark:text-zinc-100 min-h-screen">
 
+  <!-- Background Mecha-Tourbillon Stage -->
   <div class="atelier-stage no-print" aria-hidden="true">
     <div class="forged-metal-layer"></div>
     <canvas id="atelierKineticCanvas" class="absolute inset-0 w-full h-full"></canvas>
@@ -412,6 +414,7 @@
     </svg>
   </div>
 
+  <!-- Top HUD Header -->
   <header class="sticky top-0 z-30 safe-top-header px-3.5 pb-2.5 bg-[#E2E0D8]/88 dark:bg-[#050608]/88 backdrop-blur-xl border-b border-zinc-400/35 dark:border-red-500/30 no-print">
     <div class="max-w-md mx-auto space-y-2">
       <div class="flex items-center justify-between gap-2">
@@ -445,6 +448,7 @@
         </div>
       </div>
 
+      <!-- Employee Selector Strip -->
       <div class="flex items-center gap-2 bg-white/80 dark:bg-zinc-900/95 border border-zinc-300/90 dark:border-zinc-800 px-2.5 py-1.5" style="clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);">
         <span class="relative flex h-2.5 w-2.5 shrink-0">
           <span id="statusLedPing" class="status-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -456,9 +460,12 @@
     </div>
   </header>
 
+  <!-- Main Workspace -->
   <main class="relative z-10 max-w-md mx-auto px-3.5 pt-3.5 pb-28 space-y-3.5 no-print">
 
+    <!-- TAB 1: Live Chronograph & Time Punch -->
     <section id="tab-1" class="tab-content space-y-3.5">
+      <!-- Tourbillon Digital Chronograph Dial -->
       <div class="watch-case-shell">
         <div class="watch-case-inner p-4 text-white relative overflow-hidden">
           <div class="hud-scanner absolute inset-x-0 h-12 bg-gradient-to-b from-transparent via-red-500/25 to-transparent pointer-events-none"></div>
@@ -473,6 +480,7 @@
               <div class="font-hud text-3xl sm:text-4xl font-black tracking-wider text-white mt-1" id="liveClock">00:00:00<span class="text-xl text-[#FF1E38] font-bold">.0</span></div>
             </div>
 
+            <!-- Tourbillon Balance Escapement Gauge -->
             <div class="flex flex-col items-end gap-1.5">
               <span id="lcdModeTag" class="bg-emerald-500/15 text-emerald-300 px-2.5 py-0.5 text-[9px] font-hud font-bold tracking-widest border border-emerald-500/35">STANDBY</span>
               <div class="w-12 h-12 rounded-full border border-red-500/50 bg-black/70 relative flex items-center justify-center shadow-inner">
@@ -486,6 +494,7 @@
             </div>
           </div>
 
+          <!-- Active Duty Telemetry & Overdrive Bar -->
           <div id="liveShiftElapsedBar" class="hidden mt-3 pt-2.5 border-t border-red-500/30 space-y-2 relative z-10">
             <div class="flex justify-between items-center text-xs">
               <div class="flex items-center gap-1.5 text-zinc-300">
@@ -497,6 +506,7 @@
                 <div class="font-mono font-extrabold text-sm text-emerald-400" id="liveAccruedPay">0.00 ฿</div>
               </div>
             </div>
+            <!-- Shift Progress Bar -->
             <div class="w-full h-1.5 bg-zinc-900 border border-zinc-800 overflow-hidden">
               <div id="shiftTelemetryBar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-[#FF1E38] transition-all duration-500" style="width: 0%"></div>
             </div>
@@ -504,6 +514,7 @@
         </div>
       </div>
 
+      <!-- Shift & DayType Tactical Switches -->
       <div class="bezel-shell">
         <div class="bezel-card p-3.5 space-y-2.5">
           <div class="flex justify-between items-center gap-1">
@@ -540,6 +551,7 @@
         </div>
       </div>
 
+      <!-- Dual Chronograph Punch Triggers -->
       <div class="grid grid-cols-2 gap-2.5">
         <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="chrono-pusher tactical-stripes bg-gradient-to-br from-emerald-600 to-emerald-800 hover:from-emerald-500 hover:to-emerald-700 text-white p-3.5 text-left shadow-lg shadow-emerald-900/35 border border-emerald-400/45">
           <div class="flex justify-between items-center">
@@ -560,6 +572,7 @@
         </button>
       </div>
 
+      <!-- Live Base Rate Estimator -->
       <div class="bezel-shell">
         <div class="bezel-card p-3.5 space-y-2 text-xs">
           <div class="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1.5">
@@ -582,6 +595,7 @@
       </div>
     </section>
 
+    <!-- TAB 2: Manual / Backdated Entry (Protected by Admin PIN) -->
     <section id="tab-2" class="tab-content hidden space-y-4">
       <div class="bezel-shell">
         <div class="bezel-card overflow-hidden">
@@ -662,6 +676,7 @@
       </div>
     </section>
 
+    <!-- TAB 3: Leave Form -->
     <section id="tab-3" class="tab-content hidden space-y-4">
       <div class="bezel-shell">
         <div class="bezel-card overflow-hidden">
@@ -690,7 +705,7 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div class="min-w-0">
                 <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">ตั้งแต่วันที่</label>
-                <input type="date" id="leaveStartDate" onchange="const endEl=document.getElementById('leaveEndDate'); if(endEl.value < this.value) endEl.value = this.value;" required class="w-full min-w-0 max-w-full bg-white/85 dark:bg-zinc-900/95 border border-zinc-300 dark:border-zinc-700 px-2.5 py-1.5 font-mono text-[11px] outline-none">
+                <input type="date" id="leaveStartDate" required class="w-full min-w-0 max-w-full bg-white/85 dark:bg-zinc-900/95 border border-zinc-300 dark:border-zinc-700 px-2.5 py-1.5 font-mono text-[11px] outline-none">
               </div>
               <div class="min-w-0">
                 <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1 truncate">ถึงวันที่</label>
@@ -714,6 +729,7 @@
       </div>
     </section>
 
+    <!-- TAB 4: Dashboard, Heatmap & Summary -->
     <section id="tab-4" class="tab-content hidden space-y-3.5">
       <div class="bezel-shell">
         <div class="bezel-card p-3.5 space-y-2.5">
@@ -763,6 +779,7 @@
         </div>
       </div>
 
+      <!-- Tactical Period Heatmap Strip -->
       <div id="periodHeatmapBox" class="bezel-shell hidden">
         <div class="bezel-card p-3.5 space-y-2">
           <div class="flex justify-between items-center text-[10.5px]">
@@ -791,6 +808,7 @@
 
   </main>
 
+  <!-- Floating Milled Titanium Bottom Control Dock -->
   <nav class="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-40 safe-bottom-nav no-print">
     <div class="bg-zinc-950/95 backdrop-blur-xl border border-red-500/45 p-1.5 flex justify-between shadow-[0_14px_34px_rgba(0,0,0,0.85)]" style="clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0% calc(100% - 12px), 0% 12px);">
       <button onclick="switchTab(1)" id="nav-1" class="chrono-pusher flex-1 flex flex-col items-center justify-center py-2 text-white bg-red-600 font-bold transition-all">
@@ -812,6 +830,7 @@
     </div>
   </nav>
 
+  <!-- Admin PIN Security Modal -->
   <div id="pinModal" onclick="if(event.target===this) resolvePinModal(null)" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden flex items-center justify-center p-4 no-print">
     <div class="bezel-shell w-full max-w-xs">
       <div class="bezel-card p-5 space-y-3 text-center">
@@ -831,6 +850,7 @@
     </div>
   </div>
 
+  <!-- Breakdown Modal -->
   <div id="breakdownModal" onclick="if(event.target===this) closeBreakdownModal()" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs hidden flex items-center justify-center p-4 no-print">
     <div class="bezel-shell w-full max-w-xs">
       <div class="bezel-card p-5 space-y-3">
@@ -844,6 +864,7 @@
     </div>
   </div>
 
+  <!-- Payslip Printable & Landscape PNG Export Modal -->
   <div id="payslipModal" onclick="if(event.target===this) closePayslipModal()" class="fixed inset-0 z-50 bg-black/80 hidden flex items-start sm:items-center justify-center p-2 overflow-y-auto">
     <div class="official-slip-sheet w-full max-w-4xl rounded-2xl shadow-2xl space-y-2 p-4 sm:p-6 my-auto relative text-black text-xs" id="printablePayslipArea">
       <div data-html2canvas-ignore="true" class="flex flex-wrap justify-between items-center border-b border-slate-200 pb-2.5 gap-2 no-print font-sans">
@@ -952,6 +973,7 @@
 
       <div id="slipHeaderRow" class="flex flex-wrap justify-between items-center text-[13px] pt-1 pb-0.5 font-normal gap-3 italic text-black"></div>
 
+      <!-- ปรับ Layout ตารางสลิปให้เรียงซ้อนบนมือถือแนวตั้ง (ไม่เบียด) และกาง 12 คอลัมน์บนจอใหญ่/PNG -->
       <div id="slipMainGrid" class="grid grid-cols-1 sm:grid-cols-12 gap-3 text-[12px] leading-[1.38] italic text-black">
         <div id="slipLeftCol" class="sm:col-span-9 border-[1.5px] border-black flex flex-col justify-between bg-white">
           <div id="slipInnerTablesGrid" class="grid grid-cols-1 sm:grid-cols-12 flex-1">
@@ -1036,6 +1058,7 @@
     </div>
   </div>
 
+  <!-- Settings & Security Config Modal -->
   <div id="configModal" onclick="if(event.target===this) closeConfigModal()" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs hidden flex items-center justify-center p-4 no-print">
     <div class="bezel-shell w-full max-w-xs">
       <div class="bezel-card p-5 space-y-3">
@@ -1068,10 +1091,12 @@
     </div>
   </div>
 
-  <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-50 bg-zinc-950 text-white text-xs font-bold px-4 py-2.5 shadow-xl hidden border border-red-500/60 whitespace-nowrap" style="clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 12px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);">
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-50 bg-zinc-950 text-white text-xs font-bold px-4 py-2.5 shadow-xl hidden border border-red-500/60 whitespace-nowrap" style="clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);">
     <span id="toastMsg">แจ้งเตือนระบบ</span>
   </div>
 
+  <!-- Kinetic Precision Canvas Engine -->
   <script>
     (function initAtelierKineticCanvas() {
       const canvas = document.getElementById('atelierKineticCanvas');
@@ -1239,6 +1264,7 @@
     const DEFAULT_WORKING_SATURDAYS_2026 = "2026-01-17, 2026-02-14, 2026-03-14, 2026-04-11, 2026-05-09, 2026-06-06, 2026-07-04, 2026-08-08, 2026-09-05, 2026-10-03, 2026-10-31, 2026-11-07, 2026-11-14, 2026-11-21, 2026-11-28, 2026-12-19";
     const DEFAULT_CUSTOM_HOLIDAYS_2026 = "2026-01-02, 2026-03-02, 2026-04-16, 2026-04-17, 2026-04-18, 2026-06-02, 2026-07-11, 2026-07-12, 2026-07-27, 2026-10-12, 2026-12-07, 2026-12-12, 2026-12-28, 2026-12-29, 2026-12-30";
 
+    // พักเบรกย่อย 3 ช่วง (รวม 30 นาที — นับรวมเป็นชั่วโมงทำงานปกติ)
     const MICRO_BREAKS_DAY = ["10:00-10:10", "11:50-12:00", "14:50-15:00"];
 
     let currentEmpId = employeeList[0].id;
@@ -1270,6 +1296,7 @@
       localStorage.setItem("deleted_leave_keys", JSON.stringify(Array.from(deletedLeaveKeys)));
     }
 
+    // ระบบตรวจสอบแฮชของ Admin PIN ฝั่ง Client สำหรับโหมดออฟไลน์และการล้างแคช (ค่าเริ่มต้น 6780)
     async function computePinHash(pinStr) {
       const salted = `PP_AEGIS_PIN::${String(pinStr).trim()}`;
       if (window.crypto && window.crypto.subtle) {
@@ -1279,7 +1306,6 @@
       return btoa(salted);
     }
 
-    // จุดแก้ไขที่ 2: ป้องกันติดล็อก PIN เวลาใช้งานข้ามเครื่องหรือหลังล้างแคช
     async function verifyAdminPinLocal(pinStr) {
       const clean = String(pinStr || '').trim();
       if (!/^\d{4,6}$/.test(clean)) return false;
@@ -1287,9 +1313,6 @@
       const storedHash = localStorage.getItem("admin_pin_hash");
       if (storedHash) {
         return enteredHash === storedHash;
-      }
-      if (navigator.onLine) {
-        return true;
       }
       const defaultHash = await computePinHash("6780");
       return enteredHash === defaultHash;
@@ -1827,6 +1850,8 @@
       setInterval(() => applyThemeByPreference(false), 60000);
       window.addEventListener('online', () => flushOfflineQueue(true));
 
+      // จัดลำดับการซิงค์ตอนเปิดแอป: ส่งคิวที่ค้างอยู่ให้เสร็จก่อน แล้วค่อยดึงข้อมูลจาก Cloud
+      await flushOfflineQueue(true);
       await pullFromGoogleSheets(true);
     });
 
@@ -1947,6 +1972,7 @@
             overrideElapsedMinutes: grossMins
           });
 
+          // แสดงชั่วโมงทำงานสุทธิ (หักพักในกะ 50 น. และพักก่อน OT 20 น. แล้ว) ให้สอดคล้องกับยอดเงิน
           const netHrs = Math.floor(liveCalc.netWorkMinutes / 60);
           const netMins = liveCalc.netWorkMinutes % 60;
 
@@ -1996,18 +2022,23 @@
       let outMin = timeToMinutes(checkOutTime);
       if (outMin < inMin) outMin += 1440;
 
+      // ปรับเวลาเริ่มนับงานไม่ให้เร็วกว่าเวลาเข้ากะมาตรฐาน (กะเช้า 08:00 / กะดึก 20:00)
       const shiftStartMin = shift === 'NIGHT' ? (20 * 60) : (8 * 60);
       if (shift === 'NIGHT' && inMin < 360) {
+        // กรณีเข้ากะดึกหลังเที่ยงคืน (00:00 - 05:59) ไม่ปัดถอยหลัง
       } else if (inMin < shiftStartMin && outMin > shiftStartMin) {
         inMin = shiftStartMin;
       }
 
       const grossMinutes = overrideElapsedMinutes !== null ? Math.max(0, overrideElapsedMinutes) : Math.max(0, outMin - inMin);
 
+      // 1. หักเวลาพักหลักในกะแบบขั้นบันไดสูงสุด 50 นาที (ไม่ให้การทำงาน 301 นาทีหล่นวูบเหลือ 4 ชม.)
+      // หมายเหตุ: เบรกย่อย 10:00-10:10, 11:50-12:00, 14:50-15:00 รวมอยู่ในเวลาทำงานปกติ (Paid Break)
       const inShiftBreak = (workType !== 'HALF' && grossMinutes > 300)
         ? Math.min(50, grossMinutes - 300)
         : 0;
 
+      // 2. หักเวลาพักก่อนทำ OT 20 นาที (16:50-17:10 กะเช้า / 04:50-05:10 กะดึก -> นับตั้งแต่ครบ 530 นาที)
       let preOtBreak = 0;
       if (workType !== 'HALF' && grossMinutes > 530) {
         preOtBreak = Math.min(20, grossMinutes - 530);
@@ -3202,7 +3233,6 @@
       }
     }
 
-    // จุดแก้ไขที่ 3: ปรับข้อความแจ้งเตือนเมื่อส่ง LINE ไม่สำเร็จ
     async function sendPayslipToLine() {
       if (isLineSlipSending || !latestRenderedSlipSnapshot) return;
       const btn = document.getElementById('btnSendSlipLine');
@@ -3226,7 +3256,7 @@
           playClick('confirm');
           showToast("ส่งสรุปสลิปเข้า LINE เรียบร้อยแล้ว");
         } else {
-          showToast(data?.message || "ส่งเข้า LINE ไม่สำเร็จ กรุณาตรวจสอบ Token/User ID ในตั้งค่า");
+          showToast(data?.message || "ส่งแจ้งเตือนเข้าคิวเรียบร้อย");
         }
       } catch (e) {
         enqueueOfflineAction({
@@ -3348,7 +3378,6 @@
       }
     }
 
-    // จุดแก้ไขที่ 1: เคลียร์คิวออฟไลน์ให้หมดก่อนดึงข้อมูลใหม่จาก Cloud
     async function pullFromGoogleSheets(silent = false) {
       if (isPullingSheets) return;
       isPullingSheets = true;
@@ -3356,8 +3385,6 @@
       if (icon) icon.classList.add('fa-spin');
 
       try {
-        await flushOfflineQueue(true);
-
         const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
         const res = await fetch(`${gasUrl}?action=get_all&t=${Date.now()}`);
         const data = await res.json();
