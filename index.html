@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Provide Power // AEGIS CHRONOGRAPH HUD v5.6</title>
+  <title>Provide Power // AEGIS CHRONOGRAPH HUD v5.5</title>
 
   <!-- Mobile Web App Fullscreen & Native Feel -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -329,7 +329,6 @@
       color: #000000;
     }
 
-    /* โหมด PNG แนวนอน (บังคับจัด 12 คอลัมน์เต็มแผ่นเหมือนพิมพ์ PDF) */
     .png-landscape-mode {
       width: 920px !important;
       max-width: 920px !important;
@@ -343,30 +342,6 @@
     }
     .png-landscape-mode #slipLeftCol {
       grid-column: span 9 / span 9 !important;
-    }
-    .png-landscape-mode #slipInnerTablesGrid {
-      display: grid !important;
-      grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-    }
-    .png-landscape-mode #slipEarnCol {
-      grid-column: span 7 / span 7 !important;
-      border-right-width: 1.5px !important;
-      border-bottom-width: 0px !important;
-    }
-    .png-landscape-mode #slipDedCol {
-      grid-column: span 5 / span 5 !important;
-    }
-    .png-landscape-mode #slipTotalsRow {
-      display: grid !important;
-      grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-    }
-    .png-landscape-mode #slipTotalEarnCell {
-      grid-column: span 7 / span 7 !important;
-      border-right-width: 1.5px !important;
-      border-bottom-width: 0px !important;
-    }
-    .png-landscape-mode #slipTotalDedCell {
-      grid-column: span 5 / span 5 !important;
     }
     .png-landscape-mode #slipRightCol {
       grid-column: span 3 / span 3 !important;
@@ -427,7 +402,7 @@
               <h1 class="font-hud font-extrabold text-xs tracking-wider text-zinc-900 dark:text-white truncate">PROVIDE POWER</h1>
               <span id="cloudSyncPill" onclick="flushOfflineQueue(false)" title="แตะเพื่อซิงค์คิวค้าง" class="cursor-pointer text-[8.5px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40 tracking-wider shrink-0">AEGIS OK</span>
             </div>
-            <p class="text-[9.5px] font-mono text-zinc-500 dark:text-zinc-400 tracking-wider truncate">AEGIS CHRONOGRAPH // v5.6</p>
+            <p class="text-[9.5px] font-mono text-zinc-500 dark:text-zinc-400 tracking-wider truncate">AEGIS CHRONOGRAPH // v5.5</p>
           </div>
         </div>
 
@@ -499,7 +474,7 @@
             <div class="flex justify-between items-center text-xs">
               <div class="flex items-center gap-1.5 text-zinc-300">
                 <i class="fa-solid fa-stopwatch text-red-400"></i>
-                <span>สุทธิ: <strong id="liveElapsedText" class="font-mono text-white">00 ชม. 00 น.</strong></span>
+                <span>สะสม: <strong id="liveElapsedText" class="font-mono text-white">00 ชม. 00 น.</strong></span>
               </div>
               <div class="flex items-center gap-2">
                 <span id="overdriveBadge" class="hidden text-[9px] font-hud font-extrabold px-1.5 py-0.5 bg-red-600 text-white tracking-wider overdrive-glow">OT OVERDRIVE</span>
@@ -524,10 +499,6 @@
             <button type="button" onclick="autoDetectShiftAndDayType(true)" class="chrono-pusher px-2 py-0.5 bg-zinc-900 dark:bg-zinc-800 text-white text-[9.5px] font-hud font-bold tracking-wider border border-red-500/40 flex items-center gap-1 shrink-0">
               <i class="fa-solid fa-wand-magic-sparkles text-red-400 text-[9px]"></i> AUTO
             </button>
-          </div>
-
-          <div id="microBreakBanner" class="text-[9.5px] font-mono text-zinc-600 dark:text-zinc-400 bg-black/5 dark:bg-white/[0.04] px-2 py-1 border border-zinc-300/60 dark:border-zinc-800">
-            <i class="fa-solid fa-mug-hot text-amber-500 mr-1"></i> เบรกย่อย: 10:00-10:10, 11:50-12:00, 14:50-15:00 (รวมในชั่วโมงงานปกติ)
           </div>
 
           <div id="switchLockHint" class="hidden text-[10px] text-amber-700 dark:text-amber-300 bg-amber-500/15 border border-amber-500/35 px-2.5 py-1 font-semibold">
@@ -621,7 +592,7 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div class="min-w-0">
                 <label class="block text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400 mb-1">กะการทำงาน</label>
-                <select id="manualShift" onchange="onManualShiftChange()" class="custom-select w-full bg-white/85 dark:bg-zinc-900/95 border border-zinc-300 dark:border-zinc-700 p-2.5 font-medium outline-none">
+                <select id="manualShift" onchange="updateManualPreview()" class="custom-select w-full bg-white/85 dark:bg-zinc-900/95 border border-zinc-300 dark:border-zinc-700 p-2.5 font-medium outline-none">
                   <option value="DAY">กะกลางวัน (DAY)</option>
                   <option value="NIGHT">กะกลางคืน (NIGHT)</option>
                 </select>
@@ -635,13 +606,12 @@
               </div>
             </div>
 
-            <div id="manualDayShiftNote" class="text-[10px] text-red-700 dark:text-red-300 bg-red-500/10 border border-red-500/30 px-2.5 py-1.5 space-y-0.5">
-              <div><i class="fa-solid fa-sun mr-1"></i> กะกลางวัน: 08:00 - 16:50 (พักหลัก 50 น.) | พักก่อน OT 16:50 - 17:10 (เริ่ม OT 17:10)</div>
-              <div class="text-[9.5px] opacity-85">เบรกย่อยในกะ: 10:00-10:10, 11:50-12:00, 14:50-15:00 (ไม่หักเวลา)</div>
+            <div id="manualDayShiftNote" class="text-[10px] text-red-700 dark:text-red-300 bg-red-500/10 border border-red-500/30 px-2.5 py-1.5">
+              <i class="fa-solid fa-sun mr-1"></i> กะกลางวัน: 08:00 - 16:50 (พัก 50 น.) | พักก่อน OT 16:50 - 17:10 (เริ่มนับ OT 17:10)
             </div>
 
             <div id="manualNightShiftNote" class="hidden text-[10px] text-indigo-700 dark:text-indigo-300 bg-indigo-500/10 border border-indigo-500/30 px-2.5 py-1.5">
-              <i class="fa-solid fa-moon mr-1"></i> กะกลางคืน: 20:00 - 04:50 (พักหลัก 50 น.) | พักก่อน OT 04:50 - 05:10 (เริ่ม OT 05:10)
+              <i class="fa-solid fa-moon mr-1"></i> กะกลางคืน: 20:00 - 04:50 (พัก 50 น.) | พักก่อน OT 04:50 - 05:10 (เริ่มนับ OT 05:10)
             </div>
 
             <div class="min-w-0">
@@ -839,7 +809,7 @@
         </div>
         <div>
           <h3 class="font-bold text-sm" id="pinModalTitle">ยืนยันรหัสความปลอดภัย</h3>
-          <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5" id="pinModalDesc">กรอก Admin PIN (ค่าเริ่มต้น 6780)</p>
+          <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5" id="pinModalDesc">กรอก Admin PIN (ค่าเริ่มต้น 1234)</p>
         </div>
         <input type="password" inputmode="numeric" maxlength="6" id="pinInputField" onkeydown="if(event.key==='Enter') submitPinModal()" placeholder="••••" class="w-full text-center tracking-[0.5em] font-mono text-xl font-extrabold bg-white/90 dark:bg-zinc-900 border border-zinc-300 dark:border-red-500/40 py-2.5 outline-none">
         <div class="grid grid-cols-2 gap-2 pt-1">
@@ -973,29 +943,28 @@
 
       <div id="slipHeaderRow" class="flex flex-wrap justify-between items-center text-[13px] pt-1 pb-0.5 font-normal gap-3 italic text-black"></div>
 
-      <!-- ปรับ Layout ตารางสลิปให้เรียงซ้อนบนมือถือแนวตั้ง (ไม่เบียด) และกาง 12 คอลัมน์บนจอใหญ่/PNG -->
-      <div id="slipMainGrid" class="grid grid-cols-1 sm:grid-cols-12 gap-3 text-[12px] leading-[1.38] italic text-black">
-        <div id="slipLeftCol" class="sm:col-span-9 border-[1.5px] border-black flex flex-col justify-between bg-white">
-          <div id="slipInnerTablesGrid" class="grid grid-cols-1 sm:grid-cols-12 flex-1">
-            <div id="slipEarnCol" class="sm:col-span-7 border-b-[1.5px] sm:border-b-0 sm:border-r-[1.5px] border-black flex flex-col">
+      <div id="slipMainGrid" class="grid grid-cols-12 gap-3 text-[12px] leading-[1.38] italic text-black">
+        <div id="slipLeftCol" class="col-span-12 sm:col-span-9 border-[1.5px] border-black flex flex-col justify-between bg-white">
+          <div class="grid grid-cols-12 flex-1">
+            <div class="col-span-7 border-r-[1.5px] border-black flex flex-col">
               <table class="w-full text-left border-collapse flex-1">
                 <thead>
-                  <tr class="border-b-[1.5px] border-black font-bold text-[12px] sm:text-[12.5px]">
+                  <tr class="border-b-[1.5px] border-black font-bold text-[12.5px]">
                     <th class="py-1 px-2 text-center border-r border-black">รายได้</th>
-                    <th class="py-1 px-1.5 text-center border-r border-black w-[72px] sm:w-[76px]">จำนวน</th>
-                    <th class="py-1 px-2 text-center w-[86px] sm:w-[92px]">จำนวนเงิน</th>
+                    <th class="py-1 px-1.5 text-center border-r border-black w-[76px]">จำนวน</th>
+                    <th class="py-1 px-2 text-center w-[92px]">จำนวนเงิน</th>
                   </tr>
                 </thead>
                 <tbody id="payslipEarningsBody"></tbody>
               </table>
             </div>
 
-            <div id="slipDedCol" class="sm:col-span-5 flex flex-col">
+            <div class="col-span-5 flex flex-col">
               <table class="w-full text-left border-collapse flex-1">
                 <thead>
-                  <tr class="border-b-[1.5px] border-black font-bold text-[12px] sm:text-[12.5px]">
+                  <tr class="border-b-[1.5px] border-black font-bold text-[12.5px]">
                     <th class="py-1 px-2 text-center border-r border-black">รายการหัก</th>
-                    <th class="py-1 px-2 text-center w-[86px] sm:w-[92px]">จำนวนเงิน</th>
+                    <th class="py-1 px-2 text-center w-[92px]">จำนวนเงิน</th>
                   </tr>
                 </thead>
                 <tbody id="payslipDeductionsBody"></tbody>
@@ -1003,19 +972,19 @@
             </div>
           </div>
 
-          <div id="slipTotalsRow" class="grid grid-cols-1 sm:grid-cols-12 border-t-[1.5px] border-black font-bold text-[12.5px] sm:text-[13px]">
-            <div id="slipTotalEarnCell" class="sm:col-span-7 border-b sm:border-b-0 sm:border-r-[1.5px] border-black flex items-stretch">
+          <div class="grid grid-cols-12 border-t-[1.5px] border-black font-bold text-[13px]">
+            <div class="col-span-7 border-r-[1.5px] border-black flex items-stretch">
               <div class="flex-1 py-1.5 px-2 text-center border-r border-black">รวมเงินได้</div>
-              <div class="w-[86px] sm:w-[92px] py-1.5 px-2 text-right" id="payslipTotalEarnings">0.00</div>
+              <div class="w-[92px] py-1.5 px-2 text-right" id="payslipTotalEarnings">0.00</div>
             </div>
-            <div id="slipTotalDedCell" class="sm:col-span-5 flex items-stretch">
+            <div class="col-span-5 flex items-stretch">
               <div class="flex-1 py-1.5 px-2 text-center border-r border-black">รวมรายการหัก</div>
-              <div class="w-[86px] sm:w-[92px] py-1.5 px-2 text-right" id="payslipTotalDeductions">0.00</div>
+              <div class="w-[92px] py-1.5 px-2 text-right" id="payslipTotalDeductions">0.00</div>
             </div>
           </div>
         </div>
 
-        <div id="slipRightCol" class="sm:col-span-3 flex flex-col justify-between space-y-2.5 text-[12px] italic text-black bg-white">
+        <div id="slipRightCol" class="col-span-12 sm:col-span-3 flex flex-col justify-between space-y-2.5 text-[12px] italic text-black bg-white">
           <div class="border-[1.5px] border-black text-center bg-white">
             <div class="border-b border-black py-1 font-bold text-[12.5px]">วันที่จ่าย</div>
             <div id="payslipPayDate" class="py-1 font-normal text-[12.5px]">--/--/----</div>
@@ -1081,7 +1050,7 @@
           </div>
           <div>
             <label class="block text-[10px] font-bold text-zinc-500 mb-1">ตั้งรหัส Admin PIN ใหม่ (ตัวเลข 4-6 หลัก)</label>
-            <input type="password" inputmode="numeric" maxlength="6" id="newAdminPinInput" placeholder="เว้นว่างหากใช้ค่าเดิม" class="w-full bg-white/85 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 p-2 text-[10px] font-mono outline-none">
+            <input type="password" inputmode="numeric" maxlength="6" id="newAdminPinInput" placeholder="เว้นว่างหากใช้ค่าเดิม (เริ่มต้น 1234)" class="w-full bg-white/85 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 p-2 text-[10px] font-mono outline-none">
           </div>
         </div>
         <button onclick="saveConfigSettings()" class="chrono-pusher w-full bg-red-600 text-white font-bold py-2.5 text-xs">
@@ -1264,9 +1233,6 @@
     const DEFAULT_WORKING_SATURDAYS_2026 = "2026-01-17, 2026-02-14, 2026-03-14, 2026-04-11, 2026-05-09, 2026-06-06, 2026-07-04, 2026-08-08, 2026-09-05, 2026-10-03, 2026-10-31, 2026-11-07, 2026-11-14, 2026-11-21, 2026-11-28, 2026-12-19";
     const DEFAULT_CUSTOM_HOLIDAYS_2026 = "2026-01-02, 2026-03-02, 2026-04-16, 2026-04-17, 2026-04-18, 2026-06-02, 2026-07-11, 2026-07-12, 2026-07-27, 2026-10-12, 2026-12-07, 2026-12-12, 2026-12-28, 2026-12-29, 2026-12-30";
 
-    // พักเบรกย่อย 3 ช่วง (รวม 30 นาที — นับรวมเป็นชั่วโมงทำงานปกติ)
-    const MICRO_BREAKS_DAY = ["10:00-10:10", "11:50-12:00", "14:50-15:00"];
-
     let currentEmpId = employeeList[0].id;
     let currentShift = "DAY";
     let currentDayType = "REGULAR";
@@ -1296,34 +1262,7 @@
       localStorage.setItem("deleted_leave_keys", JSON.stringify(Array.from(deletedLeaveKeys)));
     }
 
-    // ระบบตรวจสอบแฮชของ Admin PIN ฝั่ง Client สำหรับโหมดออฟไลน์และการล้างแคช (ค่าเริ่มต้น 6780)
-    async function computePinHash(pinStr) {
-      const salted = `PP_AEGIS_PIN::${String(pinStr).trim()}`;
-      if (window.crypto && window.crypto.subtle) {
-        const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(salted));
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-      }
-      return btoa(salted);
-    }
-
-    async function verifyAdminPinLocal(pinStr) {
-      const clean = String(pinStr || '').trim();
-      if (!/^\d{4,6}$/.test(clean)) return false;
-      const enteredHash = await computePinHash(clean);
-      const storedHash = localStorage.getItem("admin_pin_hash");
-      if (storedHash) {
-        return enteredHash === storedHash;
-      }
-      const defaultHash = await computePinHash("6780");
-      return enteredHash === defaultHash;
-    }
-
-    async function storeVerifiedAdminPinHash(pinStr) {
-      const hash = await computePinHash(pinStr);
-      localStorage.setItem("admin_pin_hash", hash);
-    }
-
-    function requestAdminPin(title = "ยืนยันรหัสความปลอดภัย", desc = "กรอก Admin PIN (ค่าเริ่มต้น 6780)") {
+    function requestAdminPin(title = "ยืนยันรหัสความปลอดภัย", desc = "กรอก Admin PIN (ค่าเริ่มต้น 1234)") {
       return new Promise((resolve) => {
         pinResolver = resolve;
         document.getElementById('pinModalTitle').textContent = title;
@@ -1336,16 +1275,10 @@
       });
     }
 
-    async function submitPinModal() {
+    function submitPinModal() {
       const val = document.getElementById('pinInputField').value.trim();
       if (!val) {
         showToast("กรุณากรอกรหัส Admin PIN");
-        return;
-      }
-      const isOk = await verifyAdminPinLocal(val);
-      if (!isOk) {
-        showToast("รหัส Admin PIN ไม่ถูกต้อง");
-        document.getElementById('pinInputField').value = "";
         return;
       }
       resolvePinModal(val);
@@ -1812,15 +1745,12 @@
       const lockHint = document.getElementById('switchLockHint');
       if (lockHint) lockHint.classList.toggle('hidden', !locked);
 
-      const microBanner = document.getElementById('microBreakBanner');
-      if (microBanner) microBanner.classList.toggle('hidden', currentShift !== 'DAY');
-
       document.getElementById('shiftScheduleHint').innerHTML = currentShift === 'DAY'
         ? `<i class="fa-regular fa-sun text-red-600"></i> กะเช้า 08:00-16:50 | OT เริ่ม 17:10`
         : `<i class="fa-regular fa-moon text-indigo-500"></i> กะดึก 20:00-04:50 (+180฿) | OT เริ่ม 05:10`;
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("DOMContentLoaded", () => {
       applyEmbeddedLogoToAllSlots();
       if (!localStorage.getItem("gas_url")) localStorage.setItem("gas_url", DEFAULT_GAS_URL);
       if (!localStorage.getItem("working_saturdays")) localStorage.setItem("working_saturdays", DEFAULT_WORKING_SATURDAYS_2026);
@@ -1846,13 +1776,11 @@
       if (leaveEndEl) leaveEndEl.value = today;
 
       prefillManualByDate();
+      flushOfflineQueue(true);
+      pullFromGoogleSheets(true);
 
       setInterval(() => applyThemeByPreference(false), 60000);
       window.addEventListener('online', () => flushOfflineQueue(true));
-
-      // จัดลำดับการซิงค์ตอนเปิดแอป: ส่งคิวที่ค้างอยู่ให้เสร็จก่อน แล้วค่อยดึงข้อมูลจาก Cloud
-      await flushOfflineQueue(true);
-      await pullFromGoogleSheets(true);
     });
 
     function switchTab(tabNum) {
@@ -1954,13 +1882,16 @@
         if (activeIn && activeIn.checkInTimestamp) {
           if (elapsedBar) elapsedBar.classList.remove('hidden');
 
+          // คำนวณเวลาเริ่มงานมาตรฐาน (กะเช้า 08:00 / กะดึก 20:00) ไม่นับช่วงเข้าก่อนกะ
           const shiftStartHour = activeIn.shift === 'NIGHT' ? 20 : 8;
           const workDateParts = (activeIn.date || getLocalDateStr(now)).split('-').map(Number);
           const officialStartTs = new Date(workDateParts[0], workDateParts[1] - 1, workDateParts[2], shiftStartHour, 0, 0, 0).getTime();
           const effectiveStartTs = Math.max(activeIn.checkInTimestamp, officialStartTs);
 
           const diffMs = Math.max(0, now.getTime() - effectiveStartTs);
-          const grossMins = Math.floor(diffMs / 60000);
+          const totalMins = Math.floor(diffMs / 60000);
+          const hrs = Math.floor(totalMins / 60);
+          const mins = totalMins % 60;
 
           const liveCalc = calculateShiftPay({
             date: activeIn.date,
@@ -1969,27 +1900,23 @@
             workType: activeIn.workType,
             checkInTime: activeIn.checkInTime,
             checkOutTime: getLocalTimeStr(now),
-            overrideElapsedMinutes: grossMins
+            overrideElapsedMinutes: totalMins
           });
-
-          // แสดงชั่วโมงทำงานสุทธิ (หักพักในกะ 50 น. และพักก่อน OT 20 น. แล้ว) ให้สอดคล้องกับยอดเงิน
-          const netHrs = Math.floor(liveCalc.netWorkMinutes / 60);
-          const netMins = liveCalc.netWorkMinutes % 60;
 
           if (elapsedText) {
             if (now.getTime() < officialStartTs) {
               elapsedText.textContent = `รอเริ่มกะ (${String(shiftStartHour).padStart(2, '0')}:00)`;
-            } else if (activeIn.workType !== 'HALF' && grossMins >= 530 && grossMins < 550) {
-              elapsedText.textContent = `พักก่อน OT (${550 - grossMins} น.)`;
+            } else if (activeIn.workType !== 'HALF' && totalMins >= 530 && totalMins < 550) {
+              elapsedText.textContent = `พักก่อน OT (${550 - totalMins} น.)`;
             } else {
-              elapsedText.textContent = `${String(netHrs).padStart(2, '0')} ชม. ${String(netMins).padStart(2, '0')} น.`;
+              elapsedText.textContent = `${String(hrs).padStart(2, '0')} ชม. ${String(mins).padStart(2, '0')} น.`;
             }
           }
 
           if (accruedText) accruedText.textContent = `${fmtNum(liveCalc.totalSalary)} ฿`;
 
-          const targetNetMins = activeIn.workType === 'HALF' ? 240 : 480;
-          const pct = Math.min(100, Math.round((liveCalc.netWorkMinutes / targetNetMins) * 100));
+          const targetShiftMins = activeIn.workType === 'HALF' ? 240 : 530;
+          const pct = Math.min(100, Math.round((totalMins / targetShiftMins) * 100));
           if (telemetryBar) telemetryBar.style.width = `${pct}%`;
 
           const isOverdrive = liveCalc.otHours > 0;
@@ -2022,23 +1949,20 @@
       let outMin = timeToMinutes(checkOutTime);
       if (outMin < inMin) outMin += 1440;
 
-      // ปรับเวลาเริ่มนับงานไม่ให้เร็วกว่าเวลาเข้ากะมาตรฐาน (กะเช้า 08:00 / กะดึก 20:00)
+      // ปรับเวลาเริ่มนับงานไม่ให้เร็วกว่าเวลาเข้ากะมาตรฐาน (กะเช้า 08:00 = 480 นาที / กะดึก 20:00 = 1200 นาที)
       const shiftStartMin = shift === 'NIGHT' ? (20 * 60) : (8 * 60);
       if (shift === 'NIGHT' && inMin < 360) {
-        // กรณีเข้ากะดึกหลังเที่ยงคืน (00:00 - 05:59) ไม่ปัดถอยหลัง
+        // กรณีเข้างานกะดึกหลังเที่ยงคืน (00:00 - 05:59) ถือว่าเลย 20:00 มาแล้ว ไม่ปัดถอยหลัง
       } else if (inMin < shiftStartMin && outMin > shiftStartMin) {
         inMin = shiftStartMin;
       }
 
       const grossMinutes = overrideElapsedMinutes !== null ? Math.max(0, overrideElapsedMinutes) : Math.max(0, outMin - inMin);
 
-      // 1. หักเวลาพักหลักในกะแบบขั้นบันไดสูงสุด 50 นาที (ไม่ให้การทำงาน 301 นาทีหล่นวูบเหลือ 4 ชม.)
-      // หมายเหตุ: เบรกย่อย 10:00-10:10, 11:50-12:00, 14:50-15:00 รวมอยู่ในเวลาทำงานปกติ (Paid Break)
-      const inShiftBreak = (workType !== 'HALF' && grossMinutes > 300)
-        ? Math.min(50, grossMinutes - 300)
-        : 0;
+      // 1. หักเวลาพักในกะ 50 นาที (เมื่อทำงานเต็มวันเกิน 5 ชม.)
+      const inShiftBreak = (workType !== 'HALF' && grossMinutes > 300) ? 50 : 0;
 
-      // 2. หักเวลาพักก่อนทำ OT 20 นาที (16:50-17:10 กะเช้า / 04:50-05:10 กะดึก -> นับตั้งแต่ครบ 530 นาที)
+      // 2. หักเวลาพักก่อนทำ OT 20 นาที (16:50-17:10 กะเช้า / 04:50-05:10 กะดึก -> นับตั้งแต่ครบ 8 ชม. 50 น. = 530 นาที)
       let preOtBreak = 0;
       if (workType !== 'HALF' && grossMinutes > 530) {
         preOtBreak = Math.min(20, grossMinutes - 530);
@@ -2090,7 +2014,6 @@
         workType,
         checkInTime,
         checkOutTime,
-        netWorkMinutes,
         workedHours,
         baseSalary,
         otHours,
@@ -2105,8 +2028,7 @@
         normalMeal,
         otMeal,
         totalMealAllowance,
-        totalSalary,
-        microBreaks: shift === 'DAY' ? MICRO_BREAKS_DAY : []
+        totalSalary
       };
     }
 
@@ -2301,26 +2223,6 @@
       localStorage.setItem("payroll_records", JSON.stringify(list));
     }
 
-    function applyDefaultShiftTimesToManual(shiftVal) {
-      if (shiftVal === 'NIGHT') {
-        document.getElementById('manualCheckIn').value = '20:00';
-        document.getElementById('manualCheckOut').value = '04:50';
-      } else {
-        document.getElementById('manualCheckIn').value = '08:00';
-        document.getElementById('manualCheckOut').value = '16:50';
-      }
-    }
-
-    function onManualShiftChange() {
-      const dateVal = document.getElementById('manualDate').value;
-      const shiftVal = document.getElementById('manualShift').value;
-      const existing = getNormalizedPayrollRecords().find(r => r.id === currentEmpId && r.date === dateVal);
-      if (!existing) {
-        applyDefaultShiftTimesToManual(shiftVal);
-      }
-      updateManualPreview();
-    }
-
     function prefillManualByDate() {
       const dateVal = document.getElementById('manualDate').value;
       if (!dateVal) return;
@@ -2334,14 +2236,14 @@
         document.getElementById('manualShift').value = existing.shift || 'DAY';
         document.getElementById('manualDayType').value = existing.dayType || 'REGULAR';
         document.getElementById('manualWorkType').value = existing.workType || 'FULL';
-        document.getElementById('manualCheckIn').value = existing.checkInTime || (existing.shift === 'NIGHT' ? '20:00' : '08:00');
-        document.getElementById('manualCheckOut').value = existing.checkOutTime || (existing.shift === 'NIGHT' ? '04:50' : '16:50');
+        document.getElementById('manualCheckIn').value = existing.checkInTime || '08:00';
+        document.getElementById('manualCheckOut').value = existing.checkOutTime || '16:50';
       } else {
         if (badge) badge.classList.add('hidden');
         const dObj = new Date(dateVal + 'T00:00:00');
         document.getElementById('manualDayType').value = isHolidayForWorkDay(dObj) ? 'HOLIDAY' : 'REGULAR';
-        const currentManualShift = document.getElementById('manualShift').value || 'DAY';
-        applyDefaultShiftTimesToManual(currentManualShift);
+        if (!document.getElementById('manualCheckIn').value) document.getElementById('manualCheckIn').value = '08:00';
+        if (!document.getElementById('manualCheckOut').value) document.getElementById('manualCheckOut').value = '16:50';
       }
       updateManualPreview();
     }
@@ -3352,9 +3254,6 @@
               remaining.push(item);
             }
           } else {
-            if (item.payload?.adminPin) {
-              await storeVerifiedAdminPinHash(item.payload.adminPin);
-            }
             if (item.payload?.action === "delete_record") {
               deletedRecordKeys.delete(`${item.payload.id}_${item.payload.date}`);
               tombstoneChanged = true;
@@ -3458,11 +3357,6 @@
       const lineUserId = document.getElementById('lineUserIdInput').value.trim();
       const newAdminPin = document.getElementById('newAdminPinInput').value.trim();
 
-      if (newAdminPin && !/^\d{4,6}$/.test(newAdminPin)) {
-        showToast("รหัส Admin PIN ใหม่ต้องเป็นตัวเลข 4-6 หลัก");
-        return;
-      }
-
       localStorage.setItem("gas_url", gasUrl);
       closeConfigModal();
       showToast("บันทึก URL แล้ว กำลังอัปเดตการตั้งค่า Server...");
@@ -3481,7 +3375,6 @@
         });
         const data = await res.json();
         if (data && data.status === "success") {
-          await storeVerifiedAdminPinHash(newAdminPin || pin);
           playClick('confirm');
           showToast("อัปเดตความปลอดภัย & LINE Token ฝั่ง Server สำเร็จ");
         } else {
