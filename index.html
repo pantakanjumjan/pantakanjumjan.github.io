@@ -1,15 +1,59 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PK-MECHA // CHRONO-UNIT MK.II</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Provide Power // AEGIS CHRONOGRAPH HUD v5.6</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ProvidePower">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#050608">
+  <link id="appleTouchIconLink" rel="apple-touch-icon" sizes="180x180" href="">
+  <link id="faviconLink" rel="icon" type="image/png" href="">
+  <link id="pwaManifestLink" rel="manifest" href="">
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,600;1,700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Orbitron:wght@600;700;800;900&family=Sarabun:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    const EXACT_USER_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 225" fill="none">
+      <path fill="#FF1212" d="M68 18 H192 L222 70 H112 L94 101 H54 L36 70 Z"/>
+      <path fill="#FF1212" d="M29 82 L47 51 L65 82 L41 124 L23 93 Z"/>
+      <path fill="#FF1212" d="M77 82 H115 L74 153 L55 120 Z"/>
+      <path fill="#FF1212" d="M128 82 H229 L246 112 H111 L82 162 L101 195 H159 L174 169 H126 L142 141 H231 L182 225 H82 L42 156 L84 82 Z"/>
+    </svg>`;
+    const EMBEDDED_LOGO_DATA_URI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(EXACT_USER_LOGO_SVG);
+
+    function applyEmbeddedLogoToAllSlots() {
+      document.querySelectorAll('.exact-user-logo').forEach(img => { img.src = EMBEDDED_LOGO_DATA_URI; });
+    }
+
+    (function initBespokeAppIconAndBranding() {
+      window.addEventListener('DOMContentLoaded', applyEmbeddedLogoToAllSlots);
+      const img = new Image();
+      img.onload = function () {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = 512; canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          const bgGrad = ctx.createLinearGradient(0, 0, 512, 512);
+          bgGrad.addColorStop(0, '#181A20'); bgGrad.addColorStop(0.5, '#090A0D'); bgGrad.addColorStop(1, '#040507');
+          ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, 512, 512);
+          ctx.drawImage(img, 106, 96, 300, 260);
+          const iconDataUrl = canvas.toDataURL('image/png');
+          document.getElementById('appleTouchIconLink').href = iconDataUrl;
+          document.getElementById('faviconLink').href = iconDataUrl;
+        } catch (e) {}
+      };
+      img.src = EMBEDDED_LOGO_DATA_URI;
+    })();
+  </script>
 
   <script>
     tailwind.config = {
@@ -18,21 +62,10 @@
         extend: {
           fontFamily: {
             sans: ['IBM Plex Sans Thai', 'sans-serif'],
+            display: ['Chakra Petch', 'IBM Plex Sans Thai', 'sans-serif'],
+            hud: ['Orbitron', 'Chakra Petch', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            unit: {
-              shell: '#E3DFD5',
-              plate: '#EFECE6',
-              well: '#D2CDC1',
-              ink: '#161615',
-              signal: '#FF4800',
-              darkShell: '#111110',
-              darkPlate: '#191917',
-              darkWell: '#0C0C0B',
-              lcdBg: '#07100B',
-              lcdGlow: '#2EE59D'
-            }
+            slip: ['Sarabun', 'IBM Plex Sans Thai', 'sans-serif'],
           }
         }
       }
@@ -40,1002 +73,378 @@
   </script>
 
   <style>
-    * { -webkit-tap-highlight-color: transparent; }
-    body {
-      font-family: 'IBM Plex Sans Thai', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-      background-image: radial-gradient(rgba(22, 22, 21, 0.08) 1px, transparent 0);
-      background-size: 14px 14px;
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans Thai', sans-serif; -webkit-font-smoothing: antialiased; user-select: none; padding-bottom: env(safe-area-inset-bottom); position: relative; overflow-x: hidden; }
+    .safe-top-header { padding-top: calc(1.8rem + env(safe-area-inset-top)); }
+    .safe-bottom-nav { bottom: calc(0.85rem + env(safe-area-inset-bottom)); }
+    input, textarea, select { user-select: auto; max-width: 100%; min-width: 0; }
+    @media screen and (max-width: 768px) {
+      input, textarea, select { font-size: 16px !important; }
     }
-    html.dark body {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 0);
-      background-size: 14px 14px;
-    }
-    input, textarea, select { user-select: auto; }
-
-    /* Hardware Plate */
-    .hw-plate {
-      box-shadow: 0 2px 0 rgba(22, 22, 21, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.7);
-    }
-    html.dark .hw-plate {
-      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    /* Recessed LCD Bezel */
-    .lcd-screen {
-      box-shadow:
-        inset 0 4px 12px rgba(0, 0, 0, 0.92),
-        inset 0 0 0 1px rgba(46, 229, 157, 0.14),
-        0 1px 0 rgba(255, 255, 255, 0.5);
-      background-image:
-        linear-gradient(rgba(46, 229, 157, 0.035) 50%, rgba(0, 0, 0, 0.25) 50%),
-        radial-gradient(circle at 50% 35%, rgba(46, 229, 157, 0.09), transparent 72%);
-      background-size: 100% 3px, 100% 100%;
-    }
-
-    /* Mechanical Keycaps */
-    .mech-btn {
-      position: relative;
-      transition: transform 0.07s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.07s cubic-bezier(0.2, 0, 0, 1);
-    }
-    .mech-btn-green {
-      background: linear-gradient(180deg, #0D9466 0%, #057A52 100%);
-      box-shadow: 0 5px 0 #03442E, 0 7px 10px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.32);
-    }
-    .mech-btn-green:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 #03442E, inset 0 1px 0 rgba(255,255,255,0.15);
-    }
-    .mech-btn-orange {
-      background: linear-gradient(180deg, #FF550D 0%, #E03E00 100%);
-      box-shadow: 0 5px 0 #7C2200, 0 7px 10px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.32);
-    }
-    .mech-btn-orange:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 #7C2200, inset 0 1px 0 rgba(255,255,255,0.15);
-    }
-    .mech-btn-dark {
-      box-shadow: 0 3px 0 rgba(22, 22, 21, 0.28), inset 0 1px 0 rgba(255,255,255,0.45);
-    }
-    html.dark .mech-btn-dark {
-      box-shadow: 0 3px 0 #000000, inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .mech-btn-dark:active {
-      transform: translateY(2px);
-      box-shadow: none;
-    }
-
-    .hw-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23FF4800'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.55rem center;
-      background-size: 0.8rem;
-    }
-
-    @keyframes led-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(0.92); }
-    }
-    .led-active { animation: led-pulse 1.5s infinite ease-in-out; }
-
-    @media print {
-      body { background: #fff !important; color: #000 !important; background-image: none !important; }
-      body * { visibility: hidden !important; }
-      #printablePayslipArea, #printablePayslipArea * { visibility: visible !important; }
-      #printablePayslipArea {
-        position: absolute !important; left: 0 !important; top: 0 !important;
-        width: 100% !important; padding: 0 !important; margin: 0 !important;
-        box-shadow: none !important; background: #fff !important; color: #000 !important;
-      }
-      .no-print { display: none !important; }
-    }
+    input[type="date"], input[type="time"] { display: block; width: 100%; height: 2.35rem; -webkit-appearance: none; appearance: none; }
+    .atelier-stage { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .forged-metal-layer { position: absolute; inset: 0; background-color: #050608; }
+    .bezel-shell { position: relative; padding: 1.25px; background: linear-gradient(135deg, rgba(255, 30, 56, 0.7) 0%, rgba(161, 161, 170, 0.35) 100%); clip-path: polygon(14px 0%, calc(100% - 14px) 0%, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0% calc(100% - 14px), 0% 14px); }
+    .bezel-card { position: relative; background: linear-gradient(165deg, rgba(16, 18, 25, 0.95) 0%, rgba(8, 10, 14, 0.93) 100%); clip-path: polygon(13.2px 0%, calc(100% - 13.2px) 0%, 100% 13.2px, 100% calc(100% - 13.2px), calc(100% - 13.2px) 100%, 13.2px 100%, 0% calc(100% - 13.2px), 0% 13.2px); }
+    .watch-case-shell { position: relative; padding: 1.5px; background: linear-gradient(135deg, #FF1E38 0%, #52525B 48%, #FF1E38 100%); clip-path: polygon(16px 0%, calc(100% - 16px) 0%, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0% calc(100% - 16px), 0% 16px); }
+    .watch-case-inner { background: linear-gradient(160deg, #12151D 0%, #06070A 100%); clip-path: polygon(15px 0%, calc(100% - 15px) 0%, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0% calc(100% - 15px), 0% 15px); }
+    .chrono-pusher { transition: transform 0.12s ease, opacity 0.15s ease; }
+    .chrono-pusher:active:not(:disabled) { transform: scale(0.96); }
+    .custom-select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF1E38' stroke-width='2.5'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 0.65rem center; background-size: 0.95em; padding-right: 2rem; }
+    .official-slip-sheet { font-family: 'Sarabun', sans-serif; background: #FFFFFF; color: #000000; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-unit-shell dark:bg-unit-darkShell text-unit-ink dark:text-unit-shell transition-colors duration-150">
+<body class="text-zinc-100 min-h-screen">
 
-  <!-- Top Machined Header Bar -->
-  <header class="sticky top-0 z-30 bg-unit-plate/95 dark:bg-unit-darkPlate/95 backdrop-blur-md border-b-2 border-unit-ink dark:border-zinc-800 px-3.5 py-2 no-print">
-    <div class="max-w-md mx-auto flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <div class="w-8 h-8 bg-unit-ink dark:bg-unit-signal text-white rounded-lg flex flex-col items-center justify-center font-mono leading-none border border-black/50 shadow-inner">
-          <span class="text-[6.5px] tracking-widest opacity-70">MK.II</span>
-          <span class="font-extrabold text-[11px] tracking-tighter">PW01</span>
-        </div>
-        <div>
-          <div class="flex items-center gap-1.5">
-            <h1 class="font-mono font-extrabold text-xs tracking-tight">PK-MECHA // CHRONO</h1>
-            <span id="cloudSyncPill" class="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">READY</span>
+  <header class="sticky top-0 z-30 safe-top-header px-3.5 pb-2.5 bg-[#050608]/88 backdrop-blur-xl border-b border-red-500/30 no-print">
+    <div class="max-w-md mx-auto space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 bg-zinc-950 border border-red-500/60 flex items-center justify-center shrink-0">
+            <img alt="Logo" class="exact-user-logo w-6 h-5 object-contain">
           </div>
-          <p class="font-mono text-[8.5px] text-zinc-500 dark:text-zinc-400 tracking-wide">PROVIDE POWER OUTSOURCING</p>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <h1 class="font-hud font-extrabold text-xs tracking-wider text-white truncate">PROVIDE POWER</h1>
+              <span id="cloudSyncPill" onclick="flushOfflineQueue(false)" class="cursor-pointer text-[8.5px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/40">AEGIS OK</span>
+            </div>
+            <p class="text-[9.5px] font-mono text-zinc-400">AEGIS CHRONOGRAPH // v5.6</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="pullFromGoogleSheets(false)" class="chrono-pusher w-8 h-8 bg-white/10 hover:bg-emerald-600 flex items-center justify-center text-zinc-300 border border-white/10" title="ซิงค์ข้อมูล">
+            <i id="topSyncIcon" class="fa-solid fa-arrows-rotate text-xs"></i>
+          </button>
+          <button onclick="openConfigModal()" class="chrono-pusher w-8 h-8 bg-zinc-950 text-white hover:bg-red-600 flex items-center justify-center border border-red-500/50" title="ตั้งค่าระบบ">
+            <i class="fa-solid fa-shield-halved text-xs text-red-400"></i>
+          </button>
         </div>
       </div>
 
-      <div class="flex items-center space-x-1">
-        <button onclick="pullFromGoogleSheets(false)" id="btnTopSync" title="ซิงค์ข้อมูลกับ Google Sheets" aria-label="ซิงค์ข้อมูล" class="mech-btn mech-btn-dark w-7 h-7 bg-unit-shell dark:bg-zinc-800 border border-unit-ink/30 dark:border-zinc-700 rounded-md flex items-center justify-center">
-          <i class="fa-solid fa-rotate text-[11px] text-unit-signal" id="topSyncIcon"></i>
-        </button>
-        <button onclick="toggleAudio()" id="audioToggleBtn" aria-label="สลับเสียง" class="mech-btn mech-btn-dark w-7 h-7 bg-unit-shell dark:bg-zinc-800 border border-unit-ink/30 dark:border-zinc-700 rounded-md flex items-center justify-center">
-          <i class="fa-solid fa-volume-high text-[11px]" id="audioIcon"></i>
-        </button>
-        <button onclick="toggleDarkMode()" aria-label="สลับโหมดสี" class="mech-btn mech-btn-dark w-7 h-7 bg-unit-ink dark:bg-unit-shell text-unit-shell dark:text-unit-ink rounded-md flex items-center justify-center">
-          <i class="fa-solid fa-circle-half-stroke text-[11px]"></i>
-        </button>
-        <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="mech-btn mech-btn-dark w-7 h-7 bg-unit-shell dark:bg-zinc-800 border border-unit-ink/30 dark:border-zinc-700 rounded-md flex items-center justify-center">
-          <i class="fa-solid fa-sliders text-[11px]"></i>
-        </button>
+      <div class="flex items-center gap-2 bg-zinc-900/95 border border-zinc-800 px-2.5 py-1.5">
+        <span class="relative flex h-2.5 w-2.5 shrink-0">
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="custom-select flex-1 bg-transparent font-bold text-xs text-white outline-none truncate"></select>
+        <span id="dutyBadge" class="text-[10px] px-2.5 py-0.5 bg-white/10 font-bold text-zinc-200 border border-white/10 shrink-0">พร้อมปฏิบัติงาน</span>
       </div>
     </div>
   </header>
 
-  <!-- Main Hardware Chassis -->
-  <main class="flex-1 max-w-md w-full mx-auto px-3.5 py-3 space-y-3 pb-24 no-print">
-
-    <!-- Operator Cartridge Slot -->
-    <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-800 p-2 rounded-xl hw-plate">
-      <div class="px-1 pb-1 text-[9px] font-mono font-bold tracking-wider text-zinc-500 dark:text-zinc-400 flex justify-between items-center">
-        <span class="flex items-center gap-1.5">
-          <span id="statusLed" class="w-2 h-2 rounded-full bg-emerald-500 led-active inline-block"></span>
-          OPERATOR CARTRIDGE
-        </span>
-        <span id="dutyBadge" class="text-[8.5px] px-1.5 py-0.2 bg-zinc-200 dark:bg-zinc-800 rounded font-extrabold text-zinc-700 dark:text-zinc-300">STANDBY</span>
-      </div>
-      <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="hw-select w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 text-[11px] font-mono font-bold px-2 py-1.5 rounded-md outline-none cursor-pointer">
-      </select>
-    </div>
-
-    <!-- TAB 1: Live Punch Chronograph -->
-    <section id="tab-1" class="tab-content space-y-3">
-      
-      <!-- Recessed FSTN Phosphor LCD Screen -->
-      <div class="bg-unit-lcdBg border-[3px] border-unit-ink dark:border-zinc-700 rounded-2xl p-3.5 text-unit-lcdGlow font-mono space-y-2.5 lcd-screen">
-        <div class="flex justify-between items-center text-[9.5px] border-b border-emerald-500/20 pb-1.5">
-          <span id="currentDateDisplay" class="font-bold tracking-tight text-emerald-300">--/--/----</span>
-          <span id="lcdModeTag" class="bg-emerald-500/15 text-emerald-300 px-1.5 py-0.5 rounded text-[8.5px] border border-emerald-500/30">RTC // IDLE</span>
-        </div>
-
-        <!-- Primary Clock Readout -->
-        <div class="text-center py-0.5">
-          <div class="text-[40px] font-extrabold tracking-tight leading-none text-unit-lcdGlow drop-shadow-[0_0_10px_rgba(46,229,157,0.32)]" id="liveClock">
-            00:00:00<span class="text-lg opacity-70">.0</span>
-          </div>
-          <!-- Live Elapsed Shift Counter (Visible when checked in) -->
-          <div id="liveShiftElapsedBar" class="hidden mt-2 pt-1.5 border-t border-emerald-500/20 flex justify-between items-center text-[10px] px-1">
-            <span class="text-amber-300 font-bold"><i class="fa-solid fa-stopwatch mr-1"></i>ELAPSED: <span id="liveElapsedText">00h 00m</span></span>
-            <span class="text-emerald-300 font-bold">LIVE PAY: <span id="liveAccruedPay">0 ฿</span></span>
-          </div>
-        </div>
-
-        <!-- Tactile Segmented Rocker Switches -->
-        <div class="space-y-1.5 pt-2 border-t border-emerald-500/20 text-[9.5px]">
-          <div class="grid grid-cols-2 gap-2">
+  <main class="relative z-10 max-w-md mx-auto px-3.5 pt-3.5 pb-28 space-y-3.5 no-print">
+    <!-- TAB 1: Live HUD Chronograph -->
+    <section id="tab-1" class="tab-content space-y-3.5">
+      <div class="watch-case-shell">
+        <div class="watch-case-inner p-4 text-white relative overflow-hidden space-y-3">
+          <div class="flex justify-between items-start relative z-10">
             <div>
-              <span class="block text-emerald-500/70 text-[8px] mb-0.5 tracking-wider">SHIFT SELECT</span>
-              <div class="grid grid-cols-2 bg-black/80 p-0.5 rounded-md border border-emerald-500/30">
-                <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1 rounded font-bold text-[9.5px] transition">DAY</button>
-                <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1 rounded font-bold text-[9.5px] transition">NIGHT</button>
+              <div class="text-[10px] font-mono text-zinc-400" id="currentDateDisplay">กำลังโหลด...</div>
+              <div class="font-hud text-3xl sm:text-4xl font-black tracking-wider text-white mt-1" id="liveClock">00:00:00<span class="text-xl text-[#FF1E38] font-bold">.0</span></div>
+              <div id="liveShiftElapsedBar" class="hidden text-[11px] font-mono text-amber-400 mt-1 font-bold">
+                <i class="fa-solid fa-stopwatch mr-1"></i>ทำงานแล้ว: <span id="liveElapsedText">00h 00m</span> | สะสม: <span id="liveAccruedPay" class="text-emerald-400">0 ฿</span>
+              </div>
+            </div>
+            <span id="lcdModeTag" class="bg-emerald-500/15 text-emerald-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-emerald-500/35">STANDBY</span>
+          </div>
+
+          <!-- Rocker Switches -->
+          <div class="space-y-2 pt-2 border-t border-zinc-800 text-[10px] font-mono">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <span class="block text-zinc-400 text-[8.5px] mb-1">SHIFT</span>
+                <div class="grid grid-cols-2 bg-black/80 p-0.5 rounded border border-zinc-700">
+                  <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1 rounded font-bold transition">DAY</button>
+                  <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1 rounded font-bold transition">NIGHT</button>
+                </div>
+              </div>
+              <div>
+                <span class="block text-zinc-400 text-[8.5px] mb-1">DAY RATE</span>
+                <div class="grid grid-cols-2 bg-black/80 p-0.5 rounded border border-zinc-700">
+                  <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1 rounded font-bold transition">REG 1.5</button>
+                  <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1 rounded font-bold transition">HOL 2.0</button>
+                </div>
               </div>
             </div>
             <div>
-              <span class="block text-emerald-500/70 text-[8px] mb-0.5 tracking-wider">DAY RATE</span>
-              <div class="grid grid-cols-2 bg-black/80 p-0.5 rounded-md border border-emerald-500/30">
-                <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1 rounded font-bold text-[9.5px] transition">REG 1.5</button>
-                <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1 rounded font-bold text-[9.5px] transition">HOL 2.0</button>
+              <span class="block text-zinc-400 text-[8.5px] mb-1">WORK MODE</span>
+              <div class="grid grid-cols-2 bg-black/80 p-0.5 rounded border border-zinc-700">
+                <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1 rounded font-bold transition">FULL (8H)</button>
+                <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1 rounded font-bold transition">HALF LEAVE</button>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div>
-            <span class="block text-emerald-500/70 text-[8px] mb-0.5 tracking-wider">WORK MODE</span>
-            <div class="grid grid-cols-2 bg-black/80 p-0.5 rounded-md border border-emerald-500/30">
-              <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1 rounded font-bold text-[9.5px] transition">FULL TIME (8H)</button>
-              <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1 rounded font-bold text-[9.5px] transition">HALF LEAVE</button>
+      <!-- Telemetry Estimator Strip -->
+      <div class="bezel-shell">
+        <div class="bezel-card p-3 space-y-1.5">
+          <div class="flex justify-between items-center text-[9.5px] font-mono font-bold text-zinc-400">
+            <span id="shiftScheduleHint">SCHEDULE // 08:00 - 16:50</span>
+            <span class="text-red-500">BASE ESTIMATE</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center font-mono">
+            <div class="bg-zinc-900 p-2 border border-zinc-800">
+              <span id="estBaseLabel" class="block text-[8px] text-zinc-400">BASE</span>
+              <span id="estBasePay" class="text-xs font-extrabold text-white">400 ฿</span>
+            </div>
+            <div class="bg-zinc-900 p-2 border border-zinc-800">
+              <span class="block text-[8px] text-zinc-400">ALLOWANCE</span>
+              <span id="estAllowance" class="text-xs font-extrabold text-white">10 ฿</span>
+            </div>
+            <div class="bg-zinc-900 p-2 border border-zinc-800">
+              <span class="block text-[8px] text-zinc-400">TOTAL</span>
+              <span id="estTotal" class="text-xs font-extrabold text-red-500">410 ฿</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Telemetry Matrix Strip -->
-      <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-800 p-2.5 rounded-xl hw-plate space-y-1.5">
-        <div class="flex justify-between items-center text-[9px] font-mono font-bold text-zinc-500 dark:text-zinc-400">
-          <span id="shiftScheduleHint">SCHEDULE // 08:00 - 16:50</span>
-          <span class="text-unit-signal">BASE ESTIMATE</span>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-center font-mono">
-          <div class="bg-unit-well/75 dark:bg-unit-darkWell p-1.5 rounded-lg border border-unit-ink/15 dark:border-zinc-800">
-            <span id="estBaseLabel" class="block text-[8px] text-zinc-500">BASE</span>
-            <span id="estBasePay" class="text-xs font-extrabold">400 ฿</span>
-          </div>
-          <div class="bg-unit-well/75 dark:bg-unit-darkWell p-1.5 rounded-lg border border-unit-ink/15 dark:border-zinc-800">
-            <span class="block text-[8px] text-zinc-500">ALLOWANCE</span>
-            <span id="estAllowance" class="text-xs font-extrabold">10 ฿</span>
-          </div>
-          <div class="bg-unit-well/75 dark:bg-unit-darkWell p-1.5 rounded-lg border border-unit-ink/15 dark:border-zinc-800">
-            <span class="block text-[8px] text-zinc-500">MIN DAY</span>
-            <span id="estTotal" class="text-xs font-extrabold text-unit-signal">410 ฿</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dual Time Readout Cards -->
-      <div class="grid grid-cols-2 gap-2.5 font-mono">
-        <div class="bg-unit-plate dark:bg-unit-darkPlate p-2.5 rounded-xl border-2 border-unit-ink dark:border-zinc-800 hw-plate flex items-center justify-between">
-          <div>
-            <span class="text-[8px] text-zinc-500 dark:text-zinc-400 font-bold block">IN STAMP</span>
-            <span class="text-lg font-extrabold tracking-tight" id="displayCheckInTime">--:--</span>
-          </div>
-          <div class="w-6 h-6 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-[11px]">
-            <i class="fa-solid fa-right-to-bracket"></i>
-          </div>
-        </div>
-        <div class="bg-unit-plate dark:bg-unit-darkPlate p-2.5 rounded-xl border-2 border-unit-ink dark:border-zinc-800 hw-plate flex items-center justify-between">
-          <div>
-            <span class="text-[8px] text-zinc-500 dark:text-zinc-400 font-bold block">OUT STAMP</span>
-            <span class="text-lg font-extrabold tracking-tight" id="displayCheckOutTime">--:--</span>
-          </div>
-          <div class="w-6 h-6 rounded-md bg-unit-signal/15 text-unit-signal flex items-center justify-center text-[11px]">
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- Heavy Mechanical Keycaps -->
-      <div class="grid grid-cols-2 gap-2.5 pt-0.5">
-        <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="mech-btn mech-btn-green py-3 px-3 text-white rounded-xl font-mono font-bold tracking-wider text-xs border-2 border-emerald-950 flex flex-col items-center justify-center gap-0.5">
-          <div class="flex items-center space-x-1.5">
-            <i class="fa-solid fa-play text-[10px]"></i>
-            <span>CHECK IN</span>
-          </div>
-          <span class="text-[10px] font-sans font-medium opacity-95" id="checkInStatusText">บันทึกเวลาเข้างาน</span>
+      <div class="grid grid-cols-2 gap-2.5">
+        <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="chrono-pusher bg-emerald-700 text-white p-3.5 text-left border border-emerald-400/45">
+          <div class="flex justify-between items-center"><span class="font-hud text-[10px] font-bold">CHECK IN</span><i class="fa-solid fa-right-to-bracket"></i></div>
+          <div class="font-mono text-2xl font-extrabold mt-1.5" id="displayCheckInTime">--:--</div>
         </button>
-
-        <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="mech-btn mech-btn-orange py-3 px-3 text-white rounded-xl font-mono font-bold tracking-wider text-xs border-2 border-[#6B1D00] flex flex-col items-center justify-center gap-0.5">
-          <div class="flex items-center space-x-1.5">
-            <i class="fa-solid fa-stop text-[10px]"></i>
-            <span>CHECK OUT</span>
-          </div>
-          <span class="text-[10px] font-sans font-medium opacity-95" id="checkOutStatusText">คำนวณเวลาออกงาน</span>
+        <button id="btnCheckOut" onclick="handleLiveCheckOut()" disabled class="chrono-pusher bg-red-800 text-white p-3.5 text-left border border-red-400/45 opacity-50">
+          <div class="flex justify-between items-center"><span class="font-hud text-[10px] font-bold">CHECK OUT</span><i class="fa-solid fa-right-from-bracket"></i></div>
+          <div class="font-mono text-2xl font-extrabold mt-1.5" id="displayCheckOutTime">--:--</div>
         </button>
       </div>
     </section>
 
-    <!-- TAB 2: Manual Edit (Compact Version) -->
+    <!-- TAB 2: Manual Override -->
     <section id="tab-2" class="tab-content hidden space-y-3">
-      <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-800 p-3 rounded-xl hw-plate space-y-2.5">
-        <div class="border-b border-unit-ink/15 dark:border-zinc-800 pb-2 flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 bg-unit-signal text-white rounded flex items-center justify-center text-[11px]">
-              <i class="fa-solid fa-pen-to-square"></i>
+      <div class="bezel-shell">
+        <div class="bezel-card p-4 space-y-3">
+          <h2 class="font-hud font-bold text-xs text-white">MANUAL OVERRIDE // บันทึกย้อนหลัง</h2>
+          <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-2.5 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">วันที่</label>
+                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs font-mono text-white outline-none">
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">สถานะงาน</label>
+                <select id="manualWorkType" onchange="updateManualPreview()" class="custom-select w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs text-white outline-none">
+                  <option value="FULL">เต็มวัน (8 ชม.)</option>
+                  <option value="HALF">ลาครึ่งวัน</option>
+                </select>
+              </div>
             </div>
-            <div>
-              <h2 class="font-mono font-bold text-xs leading-tight">MANUAL OVERRIDE</h2>
-              <p class="text-[10px] text-zinc-500">บันทึกเวลาย้อนหลัง / แก้ไขข้อมูลรายวัน</p>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">กะ</label>
+                <select id="manualShift" onchange="updateManualPreview()" class="custom-select w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs text-white outline-none">
+                  <option value="DAY">กลางวัน</option>
+                  <option value="NIGHT">กลางคืน</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">ประเภทวัน</label>
+                <select id="manualDayType" onchange="updateManualPreview()" class="custom-select w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs text-white outline-none">
+                  <option value="REGULAR">วันปกติ (OT 1.5)</option>
+                  <option value="HOLIDAY">วันหยุด (OT 2.0)</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <span id="manualExistingBadge" class="hidden text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30">EXISTING</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">เวลาเข้า</label>
+                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs font-mono text-white outline-none">
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">เวลาออก</label>
+                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs font-mono text-white outline-none">
+              </div>
+            </div>
+            <div id="manualPreviewBox" class="hidden bg-zinc-950 p-2.5 border border-zinc-800 text-[11px] font-mono flex justify-between text-emerald-400">
+              <span id="manPrevDetail">OT: 0h</span>
+              <span class="font-bold text-white">สุทธิ: <span id="manPrevTotal">0</span> ฿</span>
+            </div>
+            <button type="submit" class="chrono-pusher w-full bg-red-600 text-white font-bold py-2.5 text-xs">บันทึกเวลาย้อนหลัง</button>
+          </form>
         </div>
-
-        <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-2 text-[11px]">
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">วันที่ต้องการบันทึก</label>
-              <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md font-mono text-[11px] outline-none">
-            </div>
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">สถานะการทำงาน</label>
-              <select id="manualWorkType" onchange="updateManualPreview()" class="hw-select w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md text-[11px] outline-none">
-                <option value="FULL">เต็มวัน (8 ชม.)</option>
-                <option value="HALF">ลาครึ่งวัน (ครึ่งกะ)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">กะการทำงาน</label>
-              <select id="manualShift" onchange="updateManualPreview()" class="hw-select w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md text-[11px] outline-none">
-                <option value="DAY">กลางวัน (08:00)</option>
-                <option value="NIGHT">กลางคืน (20:00)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">ประเภทวัน</label>
-              <select id="manualDayType" onchange="updateManualPreview()" class="hw-select w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md text-[11px] outline-none">
-                <option value="REGULAR">วันปกติ (OT 1.5)</option>
-                <option value="HOLIDAY">วันหยุด (OT 2.0)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">เวลาเข้า</label>
-              <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md font-mono text-[11px] outline-none">
-            </div>
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">เวลาออก</label>
-              <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md font-mono text-[11px] outline-none">
-            </div>
-          </div>
-
-          <!-- Live Calculation Preview Box before Saving -->
-          <div id="manualPreviewBox" class="hidden bg-unit-lcdBg text-unit-lcdGlow font-mono px-2.5 py-1.5 rounded-lg border border-unit-ink flex justify-between items-center text-[10px]">
-            <span id="manPrevDetail">OT: 0h (0h)</span>
-            <span class="font-extrabold text-xs">สุทธิ <span id="manPrevTotal">0</span> ฿</span>
-          </div>
-
-          <button type="submit" class="mech-btn mech-btn-orange w-full py-2 text-white rounded-lg font-bold text-[11px] border-2 border-[#6B1D00] mt-1">
-            คำนวณ & บันทึกย้อนหลัง
-          </button>
-        </form>
       </div>
     </section>
 
-    <!-- TAB 3: Leave Form (Compact Version) -->
+    <!-- TAB 3: Leave Dispatch -->
     <section id="tab-3" class="tab-content hidden space-y-3">
-      <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-800 p-3 rounded-xl hw-plate space-y-2.5">
-        <div class="border-b border-unit-ink/15 dark:border-zinc-800 pb-2 flex items-center space-x-2">
-          <div class="w-6 h-6 bg-amber-600 text-white rounded flex items-center justify-center text-[11px]">
-            <i class="fa-solid fa-calendar-minus"></i>
-          </div>
-          <div>
-            <h2 class="font-mono font-bold text-xs leading-tight">LEAVE DISPATCH</h2>
-            <p class="text-[10px] text-zinc-500">บันทึกการลางานและส่งแจ้งเตือนเข้า LINE</p>
-          </div>
+      <div class="bezel-shell">
+        <div class="bezel-card p-4 space-y-3">
+          <h2 class="font-hud font-bold text-xs text-white">LEAVE DISPATCH // แจ้งลา</h2>
+          <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-2.5 text-xs">
+            <div>
+              <label class="block text-[10px] text-zinc-400 mb-1">ประเภทการลา</label>
+              <select id="leaveType" required class="custom-select w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs text-white outline-none">
+                <option value="ลากิจ">ลากิจ</option>
+                <option value="ลาป่วย">ลาป่วย</option>
+                <option value="ลาพักร้อน">ลาพักร้อน</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">ตั้งแต่</label>
+                <input type="date" id="leaveStartDate" required class="w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs font-mono text-white outline-none">
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 mb-1">ถึง</label>
+                <input type="date" id="leaveEndDate" required class="w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs font-mono text-white outline-none">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-400 mb-1">เหตุผล</label>
+              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="w-full bg-zinc-900 border border-zinc-700 px-2 py-1.5 text-xs text-white outline-none">
+            </div>
+            <button type="submit" class="chrono-pusher w-full bg-amber-600 text-white font-bold py-2.5 text-xs">ส่งใบลางาน</button>
+          </form>
         </div>
-
-        <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-2 text-[11px]">
-          <div>
-            <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">ประเภทการลา</label>
-            <select id="leaveType" required class="hw-select w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md text-[11px] outline-none">
-              <option value="ลากิจ">ลากิจ (Personal Leave)</option>
-              <option value="ลาป่วย">ลาป่วย (Sick Leave)</option>
-              <option value="ลาพักร้อน">ลาพักร้อน (Annual Leave)</option>
-              <option value="ลาอื่นๆ">ลาอื่นๆ</option>
-            </select>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">ตั้งแต่วันที่</label>
-              <input type="date" id="leaveStartDate" required class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md font-mono text-[11px] outline-none">
-            </div>
-            <div>
-              <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">ถึงวันที่</label>
-              <input type="date" id="leaveEndDate" required class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md font-mono text-[11px] outline-none">
-            </div>
-          </div>
-          <div>
-            <label class="block text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mb-0.5">เหตุผลการลา</label>
-            <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded-md text-[11px] outline-none">
-          </div>
-          <button type="submit" class="mech-btn mech-btn-dark w-full py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-bold text-[11px] mt-1">
-            ส่งใบลางาน
-          </button>
-        </form>
-      </div>
-      <div class="space-y-1.5">
-        <h3 class="text-[10px] font-mono font-bold text-zinc-500 px-1">ประวัติการลาล่าสุด</h3>
-        <div id="leaveHistoryList" class="space-y-1.5"></div>
       </div>
     </section>
 
     <!-- TAB 4: Dashboard & Summary -->
-    <section id="tab-4" class="tab-content hidden space-y-3">
-      <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-800 p-3 rounded-xl hw-plate space-y-2">
-        <div class="flex flex-wrap justify-between items-center gap-1.5">
-          <label class="text-[11px] font-bold text-zinc-600 dark:text-zinc-400 flex items-center gap-1">
-            <i class="fa-solid fa-filter text-unit-signal"></i> รอบตัดยอด
-          </label>
-          <div class="flex gap-1.5">
-            <button onclick="pullFromGoogleSheets(false)" class="mech-btn mech-btn-dark bg-emerald-700 hover:bg-emerald-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1">
-              <i class="fa-solid fa-cloud-arrow-down"></i> ดึงข้อมูล
-            </button>
-            <button onclick="exportCSV()" class="mech-btn mech-btn-dark bg-unit-ink text-unit-shell px-2 py-1 rounded-md text-[10px] font-mono font-bold flex items-center gap-1">
-              <i class="fa-solid fa-file-csv text-unit-signal"></i> CSV
-            </button>
-            <button onclick="openPayslipModal()" class="mech-btn mech-btn-dark bg-unit-signal text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1">
-              <i class="fa-solid fa-file-invoice-dollar"></i> ออกสลิป
-            </button>
+    <section id="tab-4" class="tab-content hidden space-y-3.5">
+      <div class="bezel-shell">
+        <div class="bezel-card p-3.5 space-y-2.5">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-zinc-300">รอบตัดยอด</span>
+            <div class="flex gap-1.5">
+              <button onclick="openPayslipModal()" class="chrono-pusher bg-red-600 text-white px-2.5 py-1 text-[11px] font-bold"><i class="fa-solid fa-file-invoice-dollar mr-1"></i>ออกสลิป</button>
+            </div>
           </div>
-        </div>
-        <select id="cutoffPeriodSelect" onchange="renderHistories()" class="hw-select w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 text-[11px] font-bold px-2 py-1.5 rounded-md outline-none">
-        </select>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 font-mono">
-        <div class="col-span-2 bg-unit-ink text-white p-3.5 rounded-xl border-2 border-unit-ink dark:border-zinc-800 shadow-lg">
-          <span class="text-[10px] font-sans text-zinc-400">ยอดรวมค่าแรง + OT ในรอบนี้</span>
-          <div class="flex justify-between items-baseline mt-1">
-            <div class="text-2xl font-extrabold text-unit-signal tracking-tight" id="summaryTotalSalary">0.00 ฿</div>
-            <span class="text-[10px] font-sans bg-white/10 px-2 py-0.5 rounded-full text-zinc-300" id="summaryTotalRecords">0 รายการ</span>
-          </div>
-        </div>
-        <div class="bg-unit-plate dark:bg-unit-darkPlate p-3 rounded-xl border-2 border-unit-ink dark:border-zinc-800 hw-plate">
-          <span class="text-[10px] font-sans text-zinc-500 block font-semibold">ชั่วโมง OT รวม</span>
-          <span class="text-base font-extrabold" id="summaryTotalOT">0.0 ชม.</span>
-        </div>
-        <div class="bg-unit-plate dark:bg-unit-darkPlate p-3 rounded-xl border-2 border-unit-ink dark:border-zinc-800 hw-plate">
-          <span class="text-[10px] font-sans text-zinc-500 block font-semibold">ค่าอาหารรวม</span>
-          <span class="text-base font-extrabold" id="summaryTotalMeals">0.00 ฿</span>
+          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="custom-select w-full bg-zinc-900 border border-zinc-700 text-xs font-bold p-2 outline-none"></select>
         </div>
       </div>
 
-      <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-800 p-3 rounded-xl hw-plate space-y-2.5">
-        <div class="flex justify-between items-center">
-          <h3 class="text-[11px] font-bold text-zinc-600 dark:text-zinc-400">ประวัติบันทึกเวลา</h3>
-          <button onclick="clearLocalStorageData()" class="text-[10px] text-rose-600 hover:underline font-semibold">ล้างประวัติในเครื่อง</button>
+      <div class="grid grid-cols-2 gap-2.5 font-mono">
+        <div class="col-span-2 bg-zinc-950 border border-zinc-800 p-3.5 space-y-1">
+          <span class="text-[10px] text-zinc-400 font-sans">รวมรายได้ในรอบนี้</span>
+          <div class="text-2xl font-extrabold text-red-500" id="summaryTotalSalary">0.00 ฿</div>
         </div>
-        <div id="payrollHistoryList" class="space-y-2"></div>
+        <div class="bg-zinc-950 border border-zinc-800 p-3">
+          <span class="text-[10px] text-zinc-400 font-sans block">OT รวม</span>
+          <span class="text-base font-bold" id="summaryTotalOT">0.0 ชม.</span>
+        </div>
+        <div class="bg-zinc-950 border border-zinc-800 p-3">
+          <span class="text-[10px] text-zinc-400 font-sans block">ค่าอาหารรวม</span>
+          <span class="text-base font-bold" id="summaryTotalMeals">0.00 ฿</span>
+        </div>
+      </div>
+
+      <div class="bezel-shell">
+        <div class="bezel-card p-4 space-y-3">
+          <h3 class="text-xs font-bold text-zinc-300">ประวัติบันทึกเวลา</h3>
+          <div id="payrollHistoryList" class="space-y-2"></div>
+        </div>
       </div>
     </section>
-
   </main>
 
-  <!-- Floating Tactile Control Dock -->
-  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-40 no-print">
-    <div class="bg-unit-ink dark:bg-zinc-900 border-2 border-zinc-700 rounded-2xl p-1 flex justify-between shadow-2xl">
-      <button onclick="switchTab(1)" id="nav-1" class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-xl text-white bg-unit-signal font-bold transition-all">
-        <i class="fa-solid fa-clock text-xs"></i>
-        <span class="text-[9.5px] mt-0.5">บันทึกสด</span>
-      </button>
-      <button onclick="switchTab(2)" id="nav-2" class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-white transition-all">
-        <i class="fa-solid fa-pen-to-square text-xs"></i>
-        <span class="text-[9.5px] mt-0.5">ย้อนหลัง</span>
-      </button>
-      <button onclick="switchTab(3)" id="nav-3" class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-white transition-all">
-        <i class="fa-solid fa-calendar-minus text-xs"></i>
-        <span class="text-[9.5px] mt-0.5">วันลา</span>
-      </button>
-      <button onclick="switchTab(4)" id="nav-4" class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-white transition-all">
-        <i class="fa-solid fa-chart-pie text-xs"></i>
-        <span class="text-[9.5px] mt-0.5">สรุปผล</span>
-      </button>
+  <nav class="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-40 safe-bottom-nav no-print">
+    <div class="bg-zinc-950/95 border border-red-500/45 p-1 flex justify-between rounded-xl">
+      <button onclick="switchTab(1)" id="nav-1" class="chrono-pusher flex-1 flex flex-col items-center py-1.5 text-white bg-red-600 rounded-lg font-bold"><i class="fa-solid fa-clock"></i><span class="text-[9.5px]">สด</span></button>
+      <button onclick="switchTab(2)" id="nav-2" class="chrono-pusher flex-1 flex flex-col items-center py-1.5 text-zinc-400"><i class="fa-solid fa-pen-to-square"></i><span class="text-[9.5px]">ย้อนหลัง</span></button>
+      <button onclick="switchTab(3)" id="nav-3" class="chrono-pusher flex-1 flex flex-col items-center py-1.5 text-zinc-400"><i class="fa-solid fa-calendar-minus"></i><span class="text-[9.5px]">ลา</span></button>
+      <button onclick="switchTab(4)" id="nav-4" class="chrono-pusher flex-1 flex flex-col items-center py-1.5 text-zinc-400"><i class="fa-solid fa-chart-pie"></i><span class="text-[9.5px]">สรุป</span></button>
     </div>
   </nav>
 
-  <!-- Breakdown Modal -->
-  <div id="breakdownModal" class="fixed inset-0 z-50 bg-black/65 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-700 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3">
-      <div class="flex justify-between items-center border-b border-unit-ink/15 dark:border-zinc-700 pb-2">
-        <h3 class="font-bold text-xs">รายละเอียดคำนวณเชิงลึก</h3>
-        <button onclick="closeBreakdownModal()" class="text-zinc-500 hover:text-unit-signal p-1"><i class="fa-solid fa-xmark"></i></button>
+  <!-- Payslip Modal -->
+  <div id="payslipModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-2 overflow-y-auto">
+    <div class="bg-white text-slate-900 w-full max-w-2xl rounded-xl p-4 space-y-3 official-slip-sheet max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-2 no-print">
+        <h3 class="font-bold text-sm">ใบจ่ายเงินเดือน (E-PaySlip)</h3>
+        <div class="flex gap-2">
+          <button onclick="window.print()" class="bg-red-600 text-white px-3 py-1 text-xs font-bold rounded">พิมพ์ / PDF</button>
+          <button onclick="closePayslipModal()" class="text-zinc-500 font-bold px-2">✕</button>
+        </div>
       </div>
-      <div id="modalContent" class="space-y-1.5 text-xs"></div>
-      <button onclick="closeBreakdownModal()" class="w-full bg-unit-ink text-white font-bold rounded-xl py-2 text-xs">ปิดหน้าต่าง</button>
+      <div id="payslipContentArea" class="space-y-2 text-xs"></div>
     </div>
   </div>
 
-  <!-- Payslip Printable Modal -->
-  <div id="payslipModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-start sm:items-center justify-center p-2 overflow-y-auto">
-    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl space-y-2.5 p-5 my-auto relative text-slate-900 text-xs" id="printablePayslipArea">
-      
-      <div class="flex flex-wrap justify-between items-center border-b border-slate-200 pb-2.5 gap-2 no-print">
-        <span class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
-          <i class="fa-solid fa-file-invoice-dollar text-unit-signal"></i> ใบจ่ายเงินเดือน (ตามแบบฟอร์มบริษัท)
-        </span>
-        <div class="flex flex-wrap items-center gap-1.5">
-          <button onclick="toggleSlipEditor()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1">
-            <i class="fa-solid fa-sliders text-unit-signal"></i> ปรับยอดเพิ่ม/หัก
-          </button>
-          <button id="btnSendSlipLine" onclick="sendPayslipToLine()" class="bg-[#06C755] hover:bg-[#05B34C] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
-            <i class="fa-brands fa-line text-sm"></i> ส่งเข้า LINE
-          </button>
-          <button onclick="window.print()" class="bg-unit-signal text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
-            <i class="fa-solid fa-print"></i> พิมพ์ / PDF
-          </button>
-          <button onclick="closePayslipModal()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-base"></i></button>
-        </div>
-      </div>
-
-      <div id="slipEditorPanel" class="hidden bg-slate-50 border border-slate-300 rounded-xl p-3 space-y-2.5 text-[11px] no-print">
-        <div class="flex justify-between items-center font-bold text-slate-700 border-b border-slate-200 pb-1">
-          <span>ปรับปรุงรายการเพิ่ม / รายการหัก / ยอดสะสมยกมา (บวกเพิ่มให้อัตโนมัติ)</span>
-          <button onclick="resetSlipAdjustments()" class="text-rose-600 hover:underline text-[10px]">รีเซ็ตงวดนี้</button>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          <div>
-            <label class="block text-slate-500">เบี้ยขยัน (บาท)</label>
-            <input type="number" step="0.01" id="adjDiligence" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div>
-            <label class="block text-slate-500">ค่าเสี่ยงภัย (บาท)</label>
-            <input type="number" step="0.01" id="adjHazard" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div>
-            <label class="block text-slate-500">Bonus/ค่ารถ (บาท)</label>
-            <input type="number" step="0.01" id="adjBonus" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div>
-            <label class="block text-slate-500">ค่าแรง 75%/อื่นๆ</label>
-            <input type="number" step="0.01" id="adjOtherIncome" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div>
-            <label class="block text-slate-500">หักสมทบประกันสังคม</label>
-            <input type="number" step="0.01" id="adjSocSec" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div>
-            <label class="block text-slate-500">หักค่าชุดฟอร์ม</label>
-            <input type="number" step="0.01" id="adjUniform" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div>
-            <label class="block text-slate-500">หักค่าอื่นๆ</label>
-            <input type="number" step="0.01" id="adjOtherDed" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div>
-            <label class="block text-slate-500">หัก กยศ./กรอ</label>
-            <input type="number" step="0.01" id="adjStudentLoan" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div class="col-span-2">
-            <label class="block text-indigo-700 font-semibold">เงินได้สะสมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDEarnings" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div class="col-span-2">
-            <label class="block text-indigo-700 font-semibold">เงินประกันสังคมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDSocial" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
-          </div>
-          <div class="col-span-2 sm:col-span-4">
-            <label class="block text-slate-600 font-semibold">วันหยุดบริษัทเพิ่มเติม (คั่นด้วยลูกน้ำ เช่น 2026-11-25, 2026-12-25)</label>
-            <input type="text" id="customHolidaysInput" placeholder="YYYY-MM-DD, YYYY-MM-DD" oninput="saveCustomHolidays()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-            <div id="payDateRuleHint" class="text-[10px] text-emerald-700 font-medium mt-1"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center space-y-0.5 pt-1">
-        <h2 class="font-bold text-base italic">ใบจ่ายเงินเดือน</h2>
-        <h3 class="font-extrabold text-base sm:text-lg text-slate-900 italic">บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</h3>
-      </div>
-
-      <div class="flex flex-wrap justify-between items-center text-[11px] pb-1 font-medium gap-2 italic" id="payslipHeaderInfo"></div>
-
-      <div class="grid grid-cols-12 gap-2.5 text-[10px] leading-snug italic text-black">
-        <div class="col-span-12 sm:col-span-9 border-[1.5px] border-black flex flex-col justify-between bg-white">
-          <div class="grid grid-cols-12">
-            <div class="col-span-7 border-r border-black">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="border-b border-black">
-                    <th class="py-1 px-1.5 font-bold text-center border-r border-black">รายได้</th>
-                    <th class="py-1 px-1 font-bold text-center border-r border-black w-14">จำนวน</th>
-                    <th class="py-1 px-1.5 font-bold text-center w-20">จำนวนเงิน</th>
-                  </tr>
-                </thead>
-                <tbody id="payslipEarningsBody"></tbody>
-              </table>
-            </div>
-            <div class="col-span-5">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="border-b border-black">
-                    <th class="py-1 px-1.5 font-bold text-center border-r border-black">รายการหัก</th>
-                    <th class="py-1 px-1.5 font-bold text-center w-20">จำนวนเงิน</th>
-                  </tr>
-                </thead>
-                <tbody id="payslipDeductionsBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-12 border-t-[1.5px] border-black font-bold text-[11px]">
-            <div class="col-span-7 border-r border-black flex justify-between items-center py-1 px-2">
-              <span class="mx-auto">รวมเงินได้</span>
-              <span id="payslipTotalEarnings">0.00</span>
-            </div>
-            <div class="col-span-5 flex justify-between items-center py-1 px-2">
-              <span class="mx-auto">รวมรายการหัก</span>
-              <span id="payslipTotalDeductions">0.00</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-span-12 sm:col-span-3 flex flex-col justify-between space-y-2 text-[10px] italic text-black bg-white">
-          <div class="border-[1.5px] border-black text-center bg-white">
-            <div class="border-b border-black py-1 font-bold">วันที่จ่าย</div>
-            <div id="payslipPayDate" class="py-1 font-medium text-black">--/--/----</div>
-          </div>
-
-          <div class="border-[1.5px] border-black text-center flex-1 flex flex-col justify-between bg-white">
-            <div class="border-b border-black">
-              <div class="py-0.5 font-bold border-b border-black">เงินได้สะสมต่อปี</div>
-              <div id="payslipYTDEarnings" class="py-1 font-medium">43,625.00</div>
-            </div>
-            <div class="border-b border-black">
-              <div class="py-0.5 font-bold border-b border-black">ภาษีสะสมต่อปี</div>
-              <div id="payslipYTDTax" class="py-1 font-medium">0.00</div>
-            </div>
-            <div class="border-b border-black">
-              <div class="py-0.5 font-bold border-b border-black">เงินสะสมกองทุนต่อปี</div>
-              <div id="payslipYTDFund" class="py-1 font-medium">0.00</div>
-            </div>
-            <div class="border-b border-black">
-              <div class="py-0.5 font-bold border-b border-black">ค่าลดหย่อนอื่นๆ</div>
-              <div id="payslipOtherDeductions" class="py-1 font-medium">0.00</div>
-            </div>
-            <div>
-              <div class="py-0.5 font-bold border-b border-black">เงินประกันสังคมต่อปี</div>
-              <div id="payslipYTDSocial" class="py-1 font-medium">1,200.00</div>
-            </div>
-          </div>
-
-          <div class="border-[1.5px] border-black text-center bg-white">
-            <div class="border-b border-black py-1 font-bold text-[10.5px]">เงินรับสุทธิ</div>
-            <div id="payslipNetPay" class="py-1.5 font-bold text-xs text-black">0.00</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pt-1 text-[9px] space-y-2">
-        <div class="text-slate-600 font-mono" id="payslipRefID">E_PaySlip ID : PROVIDE POWER OUTSOURCING CO., LTD.</div>
-        <div class="pl-8 font-bold text-xs text-black italic">ลงชื่อพนักงาน ___________________________________</div>
+  <div id="configModal" onclick="if(event.target===this) closeConfigModal()" class="fixed inset-0 z-50 bg-black/75 hidden flex items-center justify-center p-4 no-print">
+    <div class="bezel-shell w-full max-w-xs">
+      <div class="bezel-card p-5 space-y-3">
+        <h3 class="font-bold text-xs text-white">ตั้งค่า GAS URL</h3>
+        <input type="text" id="gasUrlInput" class="w-full bg-zinc-900 border border-zinc-700 p-2 text-[10px] font-mono text-white outline-none">
+        <button onclick="saveConfigSettings()" class="w-full bg-red-600 text-white font-bold py-2 text-xs">บันทึก</button>
       </div>
     </div>
   </div>
 
-  <!-- Settings Config Modal -->
-  <div id="configModal" class="fixed inset-0 z-50 bg-black/65 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-unit-plate dark:bg-unit-darkPlate border-2 border-unit-ink dark:border-zinc-700 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3">
-      <div class="flex justify-between items-center border-b border-unit-ink/15 dark:border-zinc-700 pb-2">
-        <h3 class="font-mono font-bold text-xs">CONFIG & WEBHOOK</h3>
-        <button onclick="closeConfigModal()" class="text-zinc-500 hover:text-unit-signal p-1"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="space-y-2 text-xs">
-        <div>
-          <label class="block text-[10px] font-mono font-bold text-zinc-500 mb-0.5">Google Apps Script URL</label>
-          <input type="text" id="gasUrlInput" class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded text-[10px] font-mono outline-none">
-        </div>
-        <div>
-          <label class="block text-[10px] font-mono font-bold text-zinc-500 mb-0.5">LINE Channel Token</label>
-          <input type="text" id="lineTokenInput" class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded text-[10px] font-mono outline-none">
-        </div>
-        <div>
-          <label class="block text-[10px] font-mono font-bold text-zinc-500 mb-0.5">LINE User ID</label>
-          <input type="text" id="lineUserIdInput" class="w-full bg-unit-well dark:bg-unit-darkWell border border-unit-ink/25 dark:border-zinc-700 px-2 py-1.5 rounded text-[10px] font-mono outline-none">
-        </div>
-      </div>
-      <button onclick="saveConfigSettings()" class="mech-btn mech-btn-orange w-full text-white font-bold rounded-xl py-2 text-xs">
-        บันทึกการตั้งค่า
-      </button>
-    </div>
-  </div>
-
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-unit-ink dark:bg-unit-shell text-unit-shell dark:text-unit-ink text-xs font-bold px-4 py-2 rounded-xl shadow-xl hidden border border-unit-signal/60">
-    <span id="toastMsg">แจ้งเตือนระบบ</span>
+  <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-50 bg-zinc-950 text-white text-xs font-bold px-4 py-2.5 hidden border border-red-500">
+    <span id="toastMsg">แจ้งเตือน</span>
   </div>
 
   <script>
-    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzIC7PtGt_PeyQ7Co1GTiC0Ev6dPfDSiGhhyHClbKL1yMzUCTmeju8JKOYAtNGJZaB7/exec";
-    const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
-    const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
-
-    const employeeList = [
+    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwOXRJRBfeTTN-JnYdLKK_epT-TsrfIMoKLckXxh0GyY07VP7JVSLrAqinOAUwLpmZ6ng/exec";
+    const DEFAULT_EMPLOYEES = [
       { id: "50001024", name: "นาย พันธกานต์ จูมจันทร์", dept: "MAT", startDate: "2026-08-03", bankAcc: "5052911817" },
       { id: "TEST SYSTEM", name: "TEST SYSTEM", dept: "TEST", startDate: "2026-01-01", bankAcc: "0000000000" }
     ];
 
-    const THAI_PUBLIC_HOLIDAYS = new Set([
-      "2026-01-01", "2026-01-02", "2026-03-03", "2026-04-06",
-      "2026-04-13", "2026-04-14", "2026-04-15", "2026-05-01",
-      "2026-05-04", "2026-05-31", "2026-06-01", "2026-06-03",
-      "2026-07-28", "2026-07-29", "2026-07-30", "2026-08-12",
-      "2026-10-13", "2026-10-23", "2026-12-05", "2026-12-07",
-      "2026-12-10", "2026-12-31",
-      "2027-01-01", "2027-02-21", "2027-02-22", "2027-04-06",
-      "2027-04-13", "2027-04-14", "2027-04-15", "2027-05-01",
-      "2027-05-03", "2027-05-04", "2027-05-20", "2027-06-03",
-      "2027-07-18", "2027-07-19", "2027-07-28", "2027-08-12",
-      "2027-10-13", "2027-10-23", "2027-10-25", "2027-12-05",
-      "2027-12-06", "2027-12-10", "2027-12-31"
-    ]);
-
+    let employeeList = JSON.parse(localStorage.getItem("cached_employees") || "null") || DEFAULT_EMPLOYEES;
     let currentEmpId = employeeList[0].id;
-    let currentShift = "DAY";
-    let currentDayType = "REGULAR";
-    let currentWorkType = "FULL";
+    let currentShift = "DAY", currentDayType = "REGULAR", currentWorkType = "FULL";
 
-    let soundEnabled = true;
-    let sharedAudioCtx = null;
-    let lastClickTime = 0;
-    let isPunchBusy = false;
-    let isLineSlipSending = false;
-    let isPullingSheets = false;
-    let latestRenderedSlipSnapshot = null;
-
-    function getLocalDateStr(dateObj = new Date()) {
-      const y = dateObj.getFullYear();
-      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const d = String(dateObj.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
-    }
-
-    function getLocalTimeStr(dateObj = new Date()) {
-      const hh = String(dateObj.getHours()).padStart(2, '0');
-      const mm = String(dateObj.getMinutes()).padStart(2, '0');
-      return `${hh}:${mm}`;
-    }
-
-    function isNonWorkingDay(dateObj) {
-      const dayOfWeek = dateObj.getDay();
-      if (dayOfWeek === 0 || dayOfWeek === 6) return true;
-
-      const dateStr = getLocalDateStr(dateObj);
-      if (THAI_PUBLIC_HOLIDAYS.has(dateStr)) return true;
-
-      const customRaw = localStorage.getItem("custom_company_holidays") || "";
-      if (customRaw) {
-        const customList = customRaw.split(',').map(s => s.trim()).filter(Boolean);
-        if (customList.includes(dateStr)) return true;
-      }
-      return false;
-    }
-
-    function computeScheduledPayDate(startStr, endStr, latestRecordDateStr = '') {
-      let refYear, refMonth, isFirstHalf;
-
-      if (!startStr || startStr === '2000-01-01') {
-        const refDate = latestRecordDateStr ? new Date(latestRecordDateStr + 'T00:00:00') : new Date();
-        refYear = refDate.getFullYear();
-        refMonth = refDate.getMonth() + 1;
-        isFirstHalf = refDate.getDate() <= 15;
-      } else {
-        const [y, m, d] = startStr.split('-').map(Number);
-        refYear = y;
-        refMonth = m;
-        isFirstHalf = d <= 15;
-      }
-
-      let targetDate = isFirstHalf
-        ? new Date(refYear, refMonth - 1, 25)
-        : new Date(refYear, refMonth, 10);
-
-      const originalDateStr = getLocalDateStr(targetDate);
-      let shifted = false;
-
-      while (isNonWorkingDay(targetDate)) {
-        targetDate.setDate(targetDate.getDate() - 1);
-        shifted = true;
-      }
-
-      const finalDateStr = getLocalDateStr(targetDate);
-      return {
-        payDateStr: finalDateStr,
-        originalDateStr,
-        shifted,
-        periodLabel: isFirstHalf ? "งวด 1-15 (กำหนดจ่ายวันที่ 25)" : "งวด 16-สิ้นเดือน (กำหนดจ่ายวันที่ 10 เดือนถัดไป)"
-      };
-    }
-
-    function initAudio() {
-      if (!sharedAudioCtx) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtx) sharedAudioCtx = new AudioCtx();
-      }
-      if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
-        sharedAudioCtx.resume().catch(() => {});
-      }
-    }
-
-    ['touchstart', 'pointerdown', 'click'].forEach(evt => {
-      document.addEventListener(evt, initAudio, { passive: true });
-    });
-
-    function toggleAudio() {
-      initAudio();
-      soundEnabled = !soundEnabled;
-      document.getElementById('audioIcon').className = soundEnabled ? "fa-solid fa-volume-high text-[11px]" : "fa-solid fa-volume-xmark text-[11px]";
-      if (soundEnabled) playClick('confirm');
-      showToast(soundEnabled ? "เปิดเสียงคลิกกลไกแล้ว" : "ปิดเสียงคลิกแล้ว");
-    }
-
-    function playClick(type = 'normal') {
-      if (!soundEnabled) return;
-      const nowMs = Date.now();
-      if (type === 'normal' && nowMs - lastClickTime < 60) return;
-      lastClickTime = nowMs;
-
-      try {
-        initAudio();
-        if (!sharedAudioCtx) return;
-
-        const now = sharedAudioCtx.currentTime;
-        const osc = sharedAudioCtx.createOscillator();
-        const gain = sharedAudioCtx.createGain();
-
-        if (type === 'confirm') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(980, now);
-          osc.frequency.exponentialRampToValueAtTime(1420, now + 0.045);
-          gain.gain.setValueAtTime(0.24, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-          osc.connect(gain);
-          gain.connect(sharedAudioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.055);
-        } else {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(860, now);
-          osc.frequency.exponentialRampToValueAtTime(210, now + 0.032);
-          gain.gain.setValueAtTime(0.28, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.038);
-          osc.connect(gain);
-          gain.connect(sharedAudioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.042);
-        }
-
-        if (navigator.vibrate) navigator.vibrate(12);
-      } catch (e) {}
-    }
-
-    document.addEventListener('pointerdown', (e) => {
-      const btn = e.target.closest('button, select, input[type="date"], input[type="time"]');
-      if (btn && btn.id !== 'audioToggleBtn') playClick('normal');
-    }, { passive: true });
-
-    function toggleDarkMode() {
-      const html = document.documentElement;
-      html.classList.toggle('dark');
-      const isDark = html.classList.contains('dark');
-      localStorage.setItem('theme_mode', isDark ? 'dark' : 'light');
-      showToast(isDark ? "OLED Dark Mode เปิดใช้งาน" : "Warm Aluminum Mode เปิดใช้งาน");
-    }
-
-    if (localStorage.getItem('theme_mode') === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
-
-    function formatThaiBE(dateStr) {
-      if (!dateStr || !dateStr.includes('-')) return '-';
-      const [y, m, d] = dateStr.split('-');
-      return `${d}/${m}/${Number(y) + 543}`;
-    }
-
-    function fmtNum(val) {
-      const num = Number(val);
-      if (isNaN(num)) return "0.00";
-      return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    // --- Segmented Hardware Rocker Switches ---
-    function setSwitchValue(group, val, shouldSave = true) {
-      if (group === 'shift') currentShift = val;
-      if (group === 'dayType') currentDayType = val;
-      if (group === 'workType') currentWorkType = val;
-
-      renderSwitchStates();
-      if (shouldSave) saveShiftPreference();
-      updateLiveEstimator();
-    }
-
-    function renderSwitchStates() {
-      const activeCls = "bg-emerald-500 text-black shadow-sm";
-      const inactiveCls = "text-emerald-400/65 hover:text-emerald-300";
-
-      document.getElementById('swShiftDay').className = `py-1 rounded font-bold text-[9.5px] transition ${currentShift === 'DAY' ? activeCls : inactiveCls}`;
-      document.getElementById('swShiftNight').className = `py-1 rounded font-bold text-[9.5px] transition ${currentShift === 'NIGHT' ? activeCls : inactiveCls}`;
-
-      document.getElementById('swDayReg').className = `py-1 rounded font-bold text-[9.5px] transition ${currentDayType === 'REGULAR' ? activeCls : inactiveCls}`;
-      document.getElementById('swDayHol').className = `py-1 rounded font-bold text-[9.5px] transition ${currentDayType === 'HOLIDAY' ? activeCls : inactiveCls}`;
-
-      document.getElementById('swModeFull').className = `py-1 rounded font-bold text-[9.5px] transition ${currentWorkType === 'FULL' ? activeCls : inactiveCls}`;
-      document.getElementById('swModeHalf').className = `py-1 rounded font-bold text-[9.5px] transition ${currentWorkType === 'HALF' ? activeCls : inactiveCls}`;
-
-      document.getElementById('shiftScheduleHint').textContent = currentShift === 'DAY'
-        ? "SCHEDULE // 08:00 - 16:50 (DAY)"
-        : "SCHEDULE // 20:00 - 04:50 (NIGHT +180฿)";
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
+      applyEmbeddedLogoToAllSlots();
       if (!localStorage.getItem("gas_url")) localStorage.setItem("gas_url", DEFAULT_GAS_URL);
-      if (!localStorage.getItem("line_token")) localStorage.setItem("line_token", DEFAULT_LINE_TOKEN);
-      if (!localStorage.getItem("line_user_id")) localStorage.setItem("line_user_id", DEFAULT_LINE_USER_ID);
-
       renderEmployeeDropdowns();
-      startLiveChronograph();
-      loadShiftPreference();
-      loadTodayLiveStatus();
       buildCutoffOptions();
       renderHistories();
-      updateLiveEstimator();
-
-      const todayStr = getLocalDateStr();
-      document.getElementById('manualDate').value = todayStr;
-      document.getElementById('leaveStartDate').value = todayStr;
-      document.getElementById('leaveEndDate').value = todayStr;
-      prefillManualByDate();
-
-      // Auto-sync silently on boot
-      pullFromGoogleSheets(true);
+      loadTodayLiveStatus();
+      renderSwitchStates();
+      startLiveChronograph();
+      await pullFromGoogleSheets(true);
     });
 
+    function switchTab(tabNum) {
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`tab-${i}`).classList.toggle('hidden', i !== tabNum);
+        const nav = document.getElementById(`nav-${i}`);
+        nav.className = i === tabNum ? "chrono-pusher flex-1 flex flex-col items-center py-1.5 text-white bg-red-600 rounded-lg font-bold" : "chrono-pusher flex-1 flex flex-col items-center py-1.5 text-zinc-400";
+      }
+      if (tabNum === 2) prefillManualByDate();
+    }
+
     function renderEmployeeDropdowns() {
-      const select = document.getElementById("globalEmployeeSelect");
-      select.innerHTML = employeeList.map(emp => `<option value="${emp.id}">${emp.id} // ${emp.name}</option>`).join('');
-      select.value = currentEmpId;
+      const sel = document.getElementById('globalEmployeeSelect');
+      if (!sel) return;
+      sel.innerHTML = employeeList.map(e => `<option value="${e.id}" class="bg-zinc-900 text-white">${e.id} • ${e.name}</option>`).join('');
+      sel.value = currentEmpId;
+    }
+
+    function getCurrentEmployee() {
+      return employeeList.find(e => e.id === currentEmpId) || employeeList[0];
     }
 
     function onEmployeeChange(id) {
       currentEmpId = id;
-      loadShiftPreference();
       loadTodayLiveStatus();
+      buildCutoffOptions();
       renderHistories();
       updateLiveEstimator();
-      prefillManualByDate();
     }
 
-    function getCurrentEmpObj() {
-      return employeeList.find(e => e.id === currentEmpId) || employeeList[0];
-    }
-
-    function switchTab(tabNum) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById(`tab-${tabNum}`).classList.remove('hidden');
-
-      for (let i = 1; i <= 4; i++) {
-        const navBtn = document.getElementById(`nav-${i}`);
-        if (i === tabNum) {
-          navBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 rounded-xl text-white bg-unit-signal font-bold transition-all";
-        } else {
-          navBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-white transition-all";
-        }
-      }
-      if (tabNum === 2) prefillManualByDate();
-      if (tabNum === 4) renderHistories();
-    }
-
-    function startLiveChronograph() {
-      const update = () => {
-        const now = new Date();
-        const timeStr = now.toTimeString().split(' ')[0];
-        const ms = Math.floor(now.getMilliseconds() / 100);
-        document.getElementById('liveClock').innerHTML = `${timeStr}<span class="text-lg opacity-70">.${ms}</span>`;
-        document.getElementById('currentDateDisplay').textContent = now.toLocaleDateString('th-TH', {
-          weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-        });
-
-        const activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
-        const activeIn = activeCheckins[currentEmpId];
-        const elapsedBar = document.getElementById('liveShiftElapsedBar');
-        const lcdTag = document.getElementById('lcdModeTag');
-
-        if (activeIn) {
-          elapsedBar.classList.remove('hidden');
-          lcdTag.textContent = "RTC // ON DUTY";
-          lcdTag.className = "bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded text-[8.5px] border border-amber-500/40";
-
-          const inDateTime = new Date(`${activeIn.date}T${activeIn.time}:00`);
-          const diffMs = Math.max(0, now - inDateTime);
-          const totalMins = Math.floor(diffMs / 60000);
-          const hrs = Math.floor(totalMins / 60);
-          const mins = totalMins % 60;
-          document.getElementById('liveElapsedText').textContent = `${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`;
-
-          const nowTimeStr = getLocalTimeStr(now);
-          const liveCalc = calculatePayroll(activeIn.shift, activeIn.dayType, activeIn.time, nowTimeStr, activeIn.workType);
-          const estCurrentPay = activeIn.dayType === 'REGULAR' && liveCalc.baseSalary === 0
-            ? (400 + liveCalc.shiftAllowance + liveCalc.totalMealAllowance + liveCalc.otPay)
-            : liveCalc.totalSalary;
-          document.getElementById('liveAccruedPay').textContent = `${fmtNum(estCurrentPay)} ฿`;
-        } else {
-          elapsedBar.classList.add('hidden');
-          lcdTag.textContent = "RTC // STANDBY";
-          lcdTag.className = "bg-emerald-500/15 text-emerald-300 px-1.5 py-0.5 rounded text-[8.5px] border border-emerald-500/30";
-        }
-      };
-      update();
-      setInterval(update, 100);
-    }
-
-    function saveShiftPreference() {
-      localStorage.setItem(`pref_shift_${currentEmpId}`, currentShift);
-      localStorage.setItem(`pref_daytype_${currentEmpId}`, currentDayType);
-    }
-
-    function loadShiftPreference() {
-      currentShift = localStorage.getItem(`pref_shift_${currentEmpId}`) || "DAY";
-      currentDayType = localStorage.getItem(`pref_daytype_${currentEmpId}`) || "REGULAR";
+    function setSwitchValue(group, val) {
+      if (group === 'shift') currentShift = val;
+      if (group === 'dayType') currentDayType = val;
+      if (group === 'workType') currentWorkType = val;
       renderSwitchStates();
+      updateLiveEstimator();
+    }
+
+    function renderSwitchStates() {
+      const active = "bg-red-600 text-white";
+      const inactive = "text-zinc-400";
+      document.getElementById('swShiftDay').className = `py-1 rounded font-bold transition ${currentShift === 'DAY' ? active : inactive}`;
+      document.getElementById('swShiftNight').className = `py-1 rounded font-bold transition ${currentShift === 'NIGHT' ? active : inactive}`;
+      document.getElementById('swDayReg').className = `py-1 rounded font-bold transition ${currentDayType === 'REGULAR' ? active : inactive}`;
+      document.getElementById('swDayHol').className = `py-1 rounded font-bold transition ${currentDayType === 'HOLIDAY' ? active : inactive}`;
+      document.getElementById('swModeFull').className = `py-1 rounded font-bold transition ${currentWorkType === 'FULL' ? active : inactive}`;
+      document.getElementById('swModeHalf').className = `py-1 rounded font-bold transition ${currentWorkType === 'HALF' ? active : inactive}`;
+      document.getElementById('shiftScheduleHint').textContent = currentShift === 'DAY' ? "SCHEDULE // 08:00 - 16:50 (DAY)" : "SCHEDULE // 20:00 - 04:50 (NIGHT +180฿)";
     }
 
     function timeToMins(tStr) {
@@ -1044,7 +453,7 @@
       return (h * 60) + m;
     }
 
-    // --- Core Payroll Calculation Engine ---
+    // Core Payroll Engine (Holiday = OT 2.0 / OT 3.0, 70 mins break deduction)
     function calculatePayroll(shift, dayType, checkInTime, checkOutTime, workType = 'FULL') {
       let otHours = 0, otRate = 1.5, otPay = 0, shiftAllowance = 0;
       let normalMeal = 10, otMeal = 0;
@@ -1054,926 +463,293 @@
       let outMins = timeToMins(checkOutTime);
       if (outMins < inMins) outMins += 1440;
 
-      let totalWorkedMinutes = 0;
-      let afterShiftOtHours = 0;
-
+      let totalWorkedMinutes = 0, afterShiftOtHours = 0;
       if (shift === 'DAY') {
-        const rawDuration = Math.max(0, outMins - inMins);
-        totalWorkedMinutes = Math.max(0, rawDuration - 70);
-        const cappedOutMins = outMins > 1150 ? 1150 : outMins;
-        if (cappedOutMins > 1030) afterShiftOtHours = (cappedOutMins - 1030) / 60;
+        totalWorkedMinutes = Math.max(0, (outMins - inMins) - 70);
+        const capped = outMins > 1150 ? 1150 : outMins;
+        if (capped > 1030) afterShiftOtHours = (capped - 1030) / 60;
       } else {
         shiftAllowance = 180;
-        const rawDuration = Math.max(0, outMins - inMins);
-        totalWorkedMinutes = Math.max(0, rawDuration - 70);
-        const cappedOutMins = outMins > 1870 ? 1870 : outMins;
-        if (cappedOutMins > 1750) afterShiftOtHours = (cappedOutMins - 1750) / 60;
+        totalWorkedMinutes = Math.max(0, (outMins - inMins) - 70);
+        const capped = outMins > 1870 ? 1870 : outMins;
+        if (capped > 1750) afterShiftOtHours = (capped - 1750) / 60;
       }
 
       const workedHours = Math.round((totalWorkedMinutes / 60) * 100) / 100;
       afterShiftOtHours = workType === 'HALF' ? 0 : Math.max(0, Math.round(afterShiftOtHours * 100) / 100);
 
       let baseSalary = 0;
-      let salaryNote = "";
-
       if (dayType === 'REGULAR') {
-        // วันปกติ: ฐานค่าแรง 400 บาท + OT 1.5 (75 บาท/ชม.)
         otRate = 1.5;
         otHours = afterShiftOtHours;
         otPay = Math.round(otHours * 75 * 100) / 100;
         if (otHours > 0) otMeal = 25;
-
-        if (workType === 'HALF') {
-          baseSalary = 200;
-          salaryNote = "ลาครึ่งวัน (200฿)";
-        } else if (workedHours < 8) {
-          baseSalary = 0;
-          salaryNote = "ทำงานไม่ถึง 8 ชม. (0฿)";
-        } else {
-          baseSalary = 400;
-          salaryNote = "เต็มวัน (400฿)";
-        }
+        if (workType === 'HALF') baseSalary = 200;
+        else if (workedHours >= 8) baseSalary = 400;
       } else {
-        // วันหยุด (HOLIDAY): ชั่วโมงทำงานปกติทั้งวันคือ OT 2.0 (ชม.ละ 100 บาท)
-        baseSalary = 0;
         if (workType === 'HALF') {
-          ot20Hours = 4;
-          ot20Pay = 400;
-          otRate = 2.0;
-          otHours = 4;
-          otPay = 400;
-          salaryNote = "วันหยุดครึ่งวัน (OT 2.0 = 400฿)";
+          ot20Hours = 4; ot20Pay = 400; otRate = 2.0; otHours = 4; otPay = 400;
         } else {
-          // ช่วงเวลาปกติในวันหยุด สูงสุด 8 ชม. คิดเป็น OT 2.0 (100 บาท/ชม.)
           ot20Hours = Math.min(8, Math.max(0, workedHours));
           ot20Pay = Math.round(ot20Hours * 100 * 100) / 100;
-
-          // ช่วงทำ OT หลังเลิกกะในวันหยุด คิดเป็น OT 3.0 (150 บาท/ชม.)
           ot30Hours = afterShiftOtHours;
           ot30Pay = Math.round(ot30Hours * 150 * 100) / 100;
-
           otHours = Math.round((ot20Hours + ot30Hours) * 100) / 100;
           otPay = Math.round((ot20Pay + ot30Pay) * 100) / 100;
           otRate = ot30Hours > 0 ? 3.0 : 2.0;
-
-          if (otHours >= 8) otMeal = 75;
-          else if (otHours >= 4) otMeal = 50;
-
-          salaryNote = `วันหยุด OT 2.0 (${ot20Hours} ชม. = ${ot20Pay}฿)` + (ot30Hours > 0 ? ` + OT 3.0 (${ot30Hours} ชม. = ${ot30Pay}฿)` : '');
+          if (otHours >= 8) otMeal = 75; else if (otHours >= 4) otMeal = 50;
         }
       }
 
       const totalMealAllowance = normalMeal + otMeal;
       const totalSalary = Math.round((baseSalary + otPay + shiftAllowance + totalMealAllowance) * 100) / 100;
-
-      return {
-        baseSalary,
-        salaryNote,
-        workedHours,
-        otHours,
-        otRate,
-        otPay,
-        ot20Hours,
-        ot20Pay,
-        ot30Hours,
-        ot30Pay,
-        shiftAllowance,
-        normalMeal,
-        otMeal,
-        totalMealAllowance,
-        totalSalary
-      };
+      return { baseSalary, workedHours, otHours, otRate, otPay, ot20Hours, ot20Pay, ot30Hours, ot30Pay, shiftAllowance, normalMeal, otMeal, totalMealAllowance, totalSalary };
     }
 
     function updateLiveEstimator() {
       const dummyIn = currentShift === 'DAY' ? '08:00' : '20:00';
       const dummyOut = currentShift === 'DAY' ? '17:00' : '05:00';
       const calc = calculatePayroll(currentShift, currentDayType, dummyIn, dummyOut, currentWorkType);
-
-      const baseOrHoliday = currentDayType === 'HOLIDAY' ? calc.otPay : calc.baseSalary;
+      const val = currentDayType === 'HOLIDAY' ? calc.otPay : calc.baseSalary;
       document.getElementById('estBaseLabel').textContent = currentDayType === 'HOLIDAY' ? "HOL OT 2.0" : "BASE";
-      document.getElementById('estBasePay').textContent = `${baseOrHoliday} ฿`;
+      document.getElementById('estBasePay').textContent = `${val} ฿`;
       document.getElementById('estAllowance').textContent = `${calc.shiftAllowance + calc.totalMealAllowance} ฿`;
       document.getElementById('estTotal').textContent = `${calc.totalSalary} ฿`;
     }
 
+    function startLiveChronograph() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('liveClock').innerHTML = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}<span class="text-xl text-[#FF1E38] font-bold">.${Math.floor(now.getMilliseconds()/100)}</span>`;
+        document.getElementById('currentDateDisplay').textContent = now.toLocaleDateString('th-TH', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+        
+        const activeIn = getActiveCheckInForCurrentEmp();
+        const bar = document.getElementById('liveShiftElapsedBar');
+        if (activeIn) {
+          bar.classList.remove('hidden');
+          const diffMs = Math.max(0, now - new Date(`${activeIn.date}T${activeIn.checkInTime}:00`));
+          const mins = Math.floor(diffMs / 60000);
+          document.getElementById('liveElapsedText').textContent = `${Math.floor(mins/60)}h ${mins%60}m`;
+          const liveCalc = calculatePayroll(activeIn.shift, activeIn.dayType, activeIn.checkInTime, `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`, activeIn.workType);
+          document.getElementById('liveAccruedPay').textContent = `${liveCalc.totalSalary} ฿`;
+        } else {
+          bar.classList.add('hidden');
+        }
+      }, 100);
+    }
+
+    function getNormalizedPayrollRecords() {
+      try { return JSON.parse(localStorage.getItem("payroll_records") || "[]"); } catch (e) { return []; }
+    }
+    function getActiveCheckInForCurrentEmp() {
+      try { return JSON.parse(localStorage.getItem("active_checkins") || "{}")[currentEmpId] || null; } catch (e) { return null; }
+    }
+
     function loadTodayLiveStatus() {
-      const today = getLocalDateStr();
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      const activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
-      
-      const todayRecord = records.find(r => r.id === currentEmpId && r.date === today);
-      const activeIn = activeCheckins[currentEmpId];
-
-      const inEl = document.getElementById('displayCheckInTime');
-      const outEl = document.getElementById('displayCheckOutTime');
-      const inText = document.getElementById('checkInStatusText');
-      const outText = document.getElementById('checkOutStatusText');
-      const badge = document.getElementById('dutyBadge');
-      const led = document.getElementById('statusLed');
-
-      if (todayRecord) {
-        inEl.textContent = todayRecord.checkIn || '--:--';
-        outEl.textContent = todayRecord.checkOut || '--:--';
-        inText.textContent = `เข้า (${todayRecord.checkIn})`;
-        outText.textContent = `ออก (${todayRecord.checkOut})`;
-        badge.textContent = "COMPLETED";
-        badge.className = "text-[8.5px] px-1.5 py-0.2 bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded font-extrabold";
-        led.className = "w-2 h-2 rounded-full bg-emerald-500 inline-block";
-      } else if (activeIn) {
-        inEl.textContent = activeIn.time;
-        outEl.textContent = '--:--';
-        inText.textContent = `กำลังทำงาน (${activeIn.time})`;
-        outText.textContent = 'กดเพื่อลงเวลาออก';
-        badge.textContent = "ON DUTY";
-        badge.className = "text-[8.5px] px-1.5 py-0.2 bg-unit-signal/20 text-unit-signal rounded font-extrabold";
-        led.className = "w-2 h-2 rounded-full bg-unit-signal led-active inline-block";
-      } else {
-        inEl.textContent = '--:--';
-        outEl.textContent = '--:--';
-        inText.textContent = 'บันทึกเวลาเข้างาน';
-        outText.textContent = 'คำนวณเวลาออกงาน';
-        badge.textContent = "STANDBY";
-        badge.className = "text-[8.5px] px-1.5 py-0.2 bg-zinc-200 dark:bg-zinc-800 rounded font-extrabold text-zinc-700 dark:text-zinc-300";
-        led.className = "w-2 h-2 rounded-full bg-emerald-500 led-active inline-block";
-      }
+      const activeIn = getActiveCheckInForCurrentEmp();
+      document.getElementById('btnCheckIn').disabled = Boolean(activeIn);
+      document.getElementById('btnCheckOut').disabled = !Boolean(activeIn);
+      document.getElementById('btnCheckOut').classList.toggle('opacity-50', !Boolean(activeIn));
+      const today = new Date().toISOString().slice(0,10);
+      const rec = getNormalizedPayrollRecords().find(r => r.id === currentEmpId && r.date === today);
+      document.getElementById('displayCheckInTime').textContent = activeIn ? activeIn.checkInTime : (rec ? rec.checkInTime : '--:--');
+      document.getElementById('displayCheckOutTime').textContent = rec ? rec.checkOutTime : '--:--';
     }
 
-    function handleLiveCheckIn() {
-      if (isPunchBusy) return;
-      const emp = getCurrentEmpObj();
+    async function handleLiveCheckIn() {
       const now = new Date();
-      const dateStr = getLocalDateStr(now);
-      const timeStr = getLocalTimeStr(now);
-
-      let activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
-      if (activeCheckins[emp.id]) {
-        showToast("พนักงานท่านนี้ลงเวลาเข้าค้างไว้แล้ว");
-        return;
-      }
-
-      isPunchBusy = true;
-      setTimeout(() => { isPunchBusy = false; }, 600);
-
-      activeCheckins[emp.id] = {
-        date: dateStr,
-        time: timeStr,
-        shift: currentShift,
-        dayType: currentDayType,
-        workType: currentWorkType
-      };
-
-      localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
-      playClick('confirm');
-      showToast("บันทึกเวลาเข้างานสำเร็จ");
+      const date = now.toISOString().slice(0,10);
+      const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const active = JSON.parse(localStorage.getItem("active_checkins") || "{}");
+      active[currentEmpId] = { id: currentEmpId, name: getCurrentEmployee().name, date, shift: currentShift, dayType: currentDayType, workType: currentWorkType, checkInTime: timeStr };
+      localStorage.setItem("active_checkins", JSON.stringify(active));
       loadTodayLiveStatus();
-
-      const lineMsg = `⏰ [CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)}\nเวลา: ${timeStr} น.`;
-      syncToGoogleSheets([], lineMsg);
+      showToast(`CHECK IN สำเร็จ (${timeStr})`);
+      enqueueOfflineAction({ action: "checkin_notify", ...active[currentEmpId] });
+      flushOfflineQueue(true);
     }
 
-    function handleLiveCheckOut() {
-      if (isPunchBusy) return;
-      const emp = getCurrentEmpObj();
-      let activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
-      const activeIn = activeCheckins[emp.id];
-
-      if (!activeIn) {
-        showToast("ยังไม่มีประวัติ Check In ค้างไว้");
-        return;
-      }
-
-      isPunchBusy = true;
-      setTimeout(() => { isPunchBusy = false; }, 600);
-
+    async function handleLiveCheckOut() {
+      const active = JSON.parse(localStorage.getItem("active_checkins") || "{}");
+      const inData = active[currentEmpId];
+      if (!inData) return;
       const now = new Date();
-      const dateStr = activeIn.date || getLocalDateStr(now);
-      const timeStr = getLocalTimeStr(now);
-
-      const calc = calculatePayroll(activeIn.shift, activeIn.dayType, activeIn.time, timeStr, activeIn.workType);
-      const recordObj = { id: emp.id, employeeName: emp.name, date: dateStr, shift: activeIn.shift, dayType: activeIn.dayType, workType: activeIn.workType, checkIn: activeIn.time, checkOut: timeStr, ...calc };
-
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      records = records.filter(r => !(r.id === emp.id && r.date === dateStr));
-      records.push(recordObj);
+      const outTimeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const calc = calculatePayroll(inData.shift, inData.dayType, inData.checkInTime, outTimeStr, inData.workType);
+      const record = { ...inData, checkOutTime: outTimeStr, ...calc, updatedAt: new Date().toISOString() };
+      
+      const records = getNormalizedPayrollRecords().filter(r => !(r.id === currentEmpId && r.date === record.date));
+      records.push(record);
       localStorage.setItem("payroll_records", JSON.stringify(records));
-
-      delete activeCheckins[emp.id];
-      localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
-
-      playClick('confirm');
-      showToast("ลงเวลาออก & คำนวณเงินสำเร็จ");
+      delete active[currentEmpId];
+      localStorage.setItem("active_checkins", JSON.stringify(active));
       loadTodayLiveStatus();
       renderHistories();
-
-      const lineMsg = `✅ [CHECK OUT & PAYROLL]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${activeIn.shift} / ${activeIn.dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${activeIn.time} - ${timeStr} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
-      syncToGoogleSheets([recordObj], lineMsg);
+      showToast(`CHECK OUT สำเร็จ (สุทธิ ${calc.totalSalary} ฿)`);
+      enqueueOfflineAction({ action: "save_record", record });
+      flushOfflineQueue(true);
     }
 
     function prefillManualByDate() {
-      const dateStr = document.getElementById('manualDate').value;
-      const badge = document.getElementById('manualExistingBadge');
-      if (!dateStr) return;
-
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      const existing = records.find(r => r.id === currentEmpId && r.date === dateStr);
-      if (existing) {
-        document.getElementById('manualShift').value = existing.shift || 'DAY';
-        document.getElementById('manualDayType').value = existing.dayType || 'REGULAR';
-        document.getElementById('manualWorkType').value = existing.workType || 'FULL';
-        document.getElementById('manualCheckIn').value = existing.checkIn || '';
-        document.getElementById('manualCheckOut').value = existing.checkOut || '';
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-      updateManualPreview();
+      document.getElementById('manualDate').value = new Date().toISOString().slice(0,10);
     }
-
     function updateManualPreview() {
-      const checkIn = document.getElementById('manualCheckIn').value;
-      const checkOut = document.getElementById('manualCheckOut').value;
-      const box = document.getElementById('manualPreviewBox');
-      if (!checkIn || !checkOut) {
-        box.classList.add('hidden');
-        return;
-      }
-      const shift = document.getElementById('manualShift').value;
-      const dayType = document.getElementById('manualDayType').value;
-      const workType = document.getElementById('manualWorkType').value;
-      const calc = calculatePayroll(shift, dayType, checkIn, checkOut, workType);
-
-      const detailEl = document.getElementById('manPrevDetail');
-      if (dayType === 'HOLIDAY') {
-        detailEl.textContent = `OT2.0: ${calc.ot20Hours}h` + (calc.ot30Hours > 0 ? ` + OT3.0: ${calc.ot30Hours}h` : '');
-      } else {
-        detailEl.textContent = `OT1.5: ${calc.otHours}h (${calc.workedHours}h)`;
-      }
-      document.getElementById('manPrevTotal').textContent = fmtNum(calc.totalSalary);
-      box.classList.remove('hidden');
+      const cin = document.getElementById('manualCheckIn').value, cout = document.getElementById('manualCheckOut').value;
+      if (!cin || !cout) return;
+      const calc = calculatePayroll(document.getElementById('manualShift').value, document.getElementById('manualDayType').value, cin, cout, document.getElementById('manualWorkType').value);
+      document.getElementById('manPrevDetail').textContent = `OT: ${calc.otHours}h (${calc.workedHours}h work)`;
+      document.getElementById('manPrevTotal').textContent = calc.totalSalary;
+      document.getElementById('manualPreviewBox').classList.remove('hidden');
     }
-
     function handleManualSubmit(e) {
       e.preventDefault();
-      const emp = getCurrentEmpObj();
-      const dateStr = document.getElementById('manualDate').value;
+      const date = document.getElementById('manualDate').value;
       const shift = document.getElementById('manualShift').value;
       const dayType = document.getElementById('manualDayType').value;
       const workType = document.getElementById('manualWorkType').value;
-      const checkIn = document.getElementById('manualCheckIn').value;
-      const checkOut = document.getElementById('manualCheckOut').value;
-
-      if (!dateStr || !checkIn || !checkOut) {
-        showToast("กรุณากรอกข้อมูลให้ครบถ้วน");
-        return;
-      }
-
-      const calc = calculatePayroll(shift, dayType, checkIn, checkOut, workType);
-      const recordObj = { id: emp.id, employeeName: emp.name, date: dateStr, shift, dayType, workType, checkIn, checkOut, ...calc };
-
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      records = records.filter(r => !(r.id === emp.id && r.date === dateStr));
-      records.push(recordObj);
+      const cin = document.getElementById('manualCheckIn').value;
+      const cout = document.getElementById('manualCheckOut').value;
+      const calc = calculatePayroll(shift, dayType, cin, cout, workType);
+      const record = { id: currentEmpId, name: getCurrentEmployee().name, date, shift, dayType, workType, checkInTime: cin, checkOutTime: cout, ...calc };
+      const records = getNormalizedPayrollRecords().filter(r => !(r.id === currentEmpId && r.date === date));
+      records.push(record);
       localStorage.setItem("payroll_records", JSON.stringify(records));
-
-      playClick('confirm');
-      showToast("บันทึกเวลาย้อนหลังสำเร็จ");
-      prefillManualByDate();
-      loadTodayLiveStatus();
       renderHistories();
-
-      const lineMsg = `📝 [MANUAL EDIT]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${checkIn} - ${checkOut} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
-      syncToGoogleSheets([recordObj], lineMsg);
+      showToast("บันทึกเวลาย้อนหลังสำเร็จ");
+      enqueueOfflineAction({ action: "save_record", record });
+      flushOfflineQueue(true);
     }
 
     function handleLeaveSubmit(e) {
       e.preventDefault();
-      const emp = getCurrentEmpObj();
-      const startDate = document.getElementById('leaveStartDate').value;
-      const endDate = document.getElementById('leaveEndDate').value;
-
-      if (endDate < startDate) {
-        showToast("วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่มลา");
-        return;
-      }
-
-      const leaveObj = {
-        id: emp.id,
-        employeeName: emp.name,
-        leaveType: document.getElementById('leaveType').value,
-        startDate,
-        endDate,
-        reason: document.getElementById('leaveReason').value.trim(),
-        createdAt: new Date().toISOString()
-      };
-
-      let leaves = JSON.parse(localStorage.getItem("leave_records") || "[]");
-      leaves.push(leaveObj);
-      localStorage.setItem("leave_records", JSON.stringify(leaves));
-
-      playClick('confirm');
-      showToast("ยื่นใบลางานสำเร็จ");
-      document.getElementById('leaveReason').value = "";
-      renderHistories();
-
-      const lineMsg = `🏖️ [LEAVE REQUEST]\nพนักงาน: ${emp.name} (${emp.id})\nประเภท: ${leaveObj.leaveType}\nช่วงวัน: ${formatThaiBE(leaveObj.startDate)} ถึง ${formatThaiBE(leaveObj.endDate)}\nเหตุผล: ${leaveObj.reason || '-'}`;
-      syncToGoogleSheets([], lineMsg, [leaveObj]);
-    }
-
-    function deleteRecord(empId, recordDate) {
-      if (!confirm(`ยืนยันการลบข้อมูลวันที่ ${formatThaiBE(recordDate)} ใช่หรือไม่?`)) return;
-
-      let records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      records = records.filter(r => !(r.id === empId && r.date === recordDate));
-      localStorage.setItem("payroll_records", JSON.stringify(records));
-
-      showToast("ลบข้อมูลสำเร็จ");
-      loadTodayLiveStatus();
-      renderHistories();
-
-      const payload = {
-        action: "deletePayroll",
-        id: empId,
-        date: recordDate,
-        sendLine: true,
-        channelAccessToken: localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN,
-        userId: localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID,
-        lineMessage: `🗑️ [DELETE RECORD]\nพนักงาน ID: ${empId}\nวันที่ลบ: ${formatThaiBE(recordDate)}`
-      };
-
-      fetch(localStorage.getItem("gas_url") || DEFAULT_GAS_URL, {
-        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
-      }).catch(err => console.error(err));
-    }
-
-    function syncToGoogleSheets(payrolls = [], lineMessage = '', leaves = [], payslip = null) {
-      const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
-      const lineToken = localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN;
-      const lineUserId = localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID;
-      const pill = document.getElementById('cloudSyncPill');
-      if (pill) pill.textContent = "SYNCING...";
-
-      const payload = {
-        sendLine: true,
-        channelAccessToken: lineToken,
-        userId: lineUserId,
-        lineMessage,
-        payrolls,
-        leaves,
-        payslip
-      };
-
-      return fetch(gasUrl, {
-        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
-      }).then(() => {
-        if (pill) pill.textContent = "CLOUD OK";
-        showToast("ซิงค์ข้อมูลเรียบร้อย");
-      }).catch(err => {
-        if (pill) pill.textContent = "OFFLINE";
-        console.error(err);
-      });
-    }
-
-    function pullFromGoogleSheets(silent = false) {
-      if (isPullingSheets) return;
-      const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
-      if (!gasUrl) {
-        if (!silent) showToast("ยังไม่ได้ตั้งค่า Google Apps Script URL");
-        return;
-      }
-
-      isPullingSheets = true;
-      const icon = document.getElementById('topSyncIcon');
-      const pill = document.getElementById('cloudSyncPill');
-      if (icon) icon.classList.add('fa-spin');
-      if (pill) pill.textContent = "SYNCING...";
-      if (!silent) showToast("กำลังดึงข้อมูลจาก Google Sheets...");
-
-      const url = `${gasUrl}${gasUrl.includes('?') ? '&' : '?'}action=getAllData`;
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.status === "success") {
-            if (Array.isArray(data.payrolls)) {
-              localStorage.setItem("payroll_records", JSON.stringify(data.payrolls));
-            }
-            if (Array.isArray(data.leaves)) {
-              localStorage.setItem("leave_records", JSON.stringify(data.leaves));
-            }
-            loadTodayLiveStatus();
-            renderHistories();
-            prefillManualByDate();
-            if (pill) pill.textContent = "CLOUD OK";
-            if (!silent) {
-              playClick('confirm');
-              showToast(`ซิงค์สำเร็จ (${(data.payrolls || []).length} รายการ)`);
-            }
-          } else {
-            if (pill) pill.textContent = "CHECK GAS";
-            if (!silent) showToast("ไม่พบข้อมูลหรือสิทธิ์การเข้าถึงไม่ถูกต้อง");
-          }
-        })
-        .catch(() => {
-          if (pill) pill.textContent = "LOCAL";
-          if (!silent) showToast("ไม่สามารถเชื่อมต่อ Google Sheets ได้");
-        })
-        .finally(() => {
-          isPullingSheets = false;
-          if (icon) icon.classList.remove('fa-spin');
-        });
+      showToast("ส่งใบลางานสำเร็จ");
+      e.target.reset();
     }
 
     function buildCutoffOptions() {
-      const select = document.getElementById('cutoffPeriodSelect');
-      const now = new Date();
-      const options = [];
-
-      for (let i = 0; i < 6; i++) {
-        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        const y = d.getFullYear(), m = d.getMonth();
-        const monthName = d.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
-        const lastDay = new Date(y, m + 1, 0).getDate();
-
-        options.push({ label: `งวด 16 - ${lastDay} ${monthName}`, start: `${y}-${String(m + 1).padStart(2, '0')}-16`, end: `${y}-${String(m + 1).padStart(2, '0')}-${lastDay}` });
-        options.push({ label: `งวด 1 - 15 ${monthName}`, start: `${y}-${String(m + 1).padStart(2, '0')}-01`, end: `${y}-${String(m + 1).padStart(2, '0')}-15` });
-      }
-
-      options.unshift({ label: 'แสดงทั้งหมด (All Records)', start: '2000-01-01', end: '2099-12-31' });
-      select.innerHTML = options.map(o => `<option value="${o.start}|${o.end}">${o.label}</option>`).join('');
-      select.selectedIndex = now.getDate() <= 15 ? 2 : 1;
+      const sel = document.getElementById('cutoffPeriodSelect');
+      if (!sel) return;
+      sel.innerHTML = `<option value="2000-01-01|2099-12-31">แสดงทั้งหมดทุกงวด (All Records)</option>`;
     }
 
     function renderHistories() {
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      let empRecords = records.filter(r => r.id === currentEmpId);
-
-      const cutoffSelect = document.getElementById('cutoffPeriodSelect');
-      if (cutoffSelect && cutoffSelect.value) {
-        const [start, end] = cutoffSelect.value.split('|');
-        empRecords = empRecords.filter(r => r.date >= start && r.date <= end);
-      }
-
-      empRecords.sort((a, b) => b.date.localeCompare(a.date));
-
-      const listEl = document.getElementById('payrollHistoryList');
-      let totalSalarySum = 0, totalOTSum = 0, totalMealsSum = 0;
-
-      if (empRecords.length === 0) {
-        listEl.innerHTML = `<p class="text-center text-xs text-zinc-500 py-5">ไม่พบประวัติในรอบตัดยอดนี้</p>`;
+      const list = document.getElementById('payrollHistoryList');
+      const rows = getNormalizedPayrollRecords().filter(r => r.id === currentEmpId);
+      let totalSal = 0, totalOT = 0, totalMeals = 0;
+      if (rows.length === 0) {
+        list.innerHTML = `<div class="text-center py-4 text-zinc-400 text-xs">ไม่มีบันทึกเวลา</div>`;
       } else {
-        listEl.innerHTML = empRecords.map((r) => {
-          totalSalarySum += (r.totalSalary || 0);
-          totalOTSum += (r.otHours || 0);
-          totalMealsSum += (r.totalMealAllowance || 0);
-
-          const holBadge = r.dayType === 'HOLIDAY'
-            ? `<span class="text-[8.5px] px-1.5 py-0.2 rounded font-mono bg-rose-200 text-rose-900">HOL 2.0</span>`
-            : '';
-
+        list.innerHTML = rows.map(r => {
+          totalSal += (r.totalSalary || 0); totalOT += (r.otHours || 0); totalMeals += (r.totalMealAllowance || 0);
           return `
-            <div class="bg-unit-well/70 dark:bg-unit-darkWell p-2.5 rounded-xl border border-unit-ink/15 dark:border-zinc-800 flex justify-between items-center text-xs">
-              <div onclick="openBreakdownByDate('${r.id}', '${r.date}')" class="cursor-pointer flex-1">
-                <div class="font-bold flex items-center gap-1.5">
-                  <span>${formatThaiBE(r.date)}</span>
-                  <span class="text-[8.5px] px-1.5 py-0.2 rounded font-mono ${r.shift === 'DAY' ? 'bg-amber-200 text-amber-900' : 'bg-indigo-200 text-indigo-900'}">${r.shift}</span>
-                  ${holBadge}
-                </div>
-                <div class="text-[10.5px] text-zinc-500 font-mono mt-0.5">${r.checkIn || '-'} - ${r.checkOut || '-'} | OT: ${r.otHours || 0}h</div>
-              </div>
-              <div class="text-right flex items-center gap-2">
-                <div onclick="openBreakdownByDate('${r.id}', '${r.date}')" class="cursor-pointer text-right">
-                  <div class="font-extrabold text-unit-signal text-sm font-mono">${fmtNum(r.totalSalary || 0)} ฿</div>
-                  <span class="text-[9.5px] text-zinc-400">รายละเอียด</span>
-                </div>
-                <button onclick="deleteRecord('${r.id}', '${r.date}')" aria-label="ลบรายการ" class="text-zinc-400 hover:text-rose-600 p-1 transition"><i class="fa-solid fa-trash-can"></i></button>
-              </div>
+            <div class="bg-zinc-900 border border-zinc-800 p-2.5 flex justify-between items-center text-xs">
+              <div><div class="font-mono font-bold">${r.date}</div><div class="text-[10px] text-zinc-400">${r.checkInTime} - ${r.checkOutTime} (${r.shift})</div></div>
+              <div class="font-mono font-bold text-red-500">${r.totalSalary} ฿</div>
             </div>
           `;
         }).join('');
       }
-
-      document.getElementById('summaryTotalSalary').textContent = `${fmtNum(totalSalarySum)} ฿`;
-      document.getElementById('summaryTotalRecords').textContent = `${empRecords.length} รายการ`;
-      document.getElementById('summaryTotalOT').textContent = `${totalOTSum.toFixed(1)} ชม.`;
-      document.getElementById('summaryTotalMeals').textContent = `${fmtNum(totalMealsSum)} ฿`;
-
-      const leaves = JSON.parse(localStorage.getItem("leave_records") || "[]")
-        .filter(l => l.id === currentEmpId)
-        .sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''));
-      const leaveListEl = document.getElementById('leaveHistoryList');
-      leaveListEl.innerHTML = leaves.length ? leaves.map(l => `
-        <div class="bg-unit-well/70 dark:bg-unit-darkWell p-2.5 rounded-xl border border-unit-ink/15 dark:border-zinc-800 text-xs">
-          <div class="flex justify-between font-bold">
-            <span>${l.leaveType}</span>
-            <span class="text-amber-600 font-mono">${formatThaiBE(l.startDate)}${l.endDate && l.endDate !== l.startDate ? ' - ' + formatThaiBE(l.endDate) : ''}</span>
-          </div>
-          <div class="text-[10.5px] text-zinc-500 mt-0.5">เหตุผล: ${l.reason || '-'}</div>
-        </div>
-      `).join('') : `<p class="text-center text-xs text-zinc-500 py-3">ยังไม่มีประวัติการลา</p>`;
-    }
-
-    function exportCSV() {
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]").filter(r => r.id === currentEmpId);
-      if (records.length === 0) {
-        showToast("ไม่มีข้อมูลสำหรับ Export CSV");
-        return;
-      }
-
-      let csv = "\uFEFFID,EmployeeName,Date,Shift,DayType,CheckIn,CheckOut,BaseSalary,OTHours,OTRate,OTPay,ShiftAllowance,MealAllowance,TotalSalary\n";
-      records.forEach(r => {
-        csv += `"${r.id}","${r.employeeName}","${r.date}","${r.shift}","${r.dayType}","${r.checkIn}","${r.checkOut}",${r.baseSalary},${r.otHours},${r.otRate},${r.otPay},${r.shiftAllowance},${r.totalMealAllowance},${r.totalSalary}\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `PK_Payroll_${currentEmpId}_${getLocalDateStr()}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast("ดาวน์โหลดไฟล์ CSV สำเร็จ");
-    }
-
-    function openBreakdownByDate(empId, dateStr) {
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]");
-      const item = records.find(r => r.id === empId && r.date === dateStr);
-      if (!item) return;
-
-      let otBreakdownHtml = '';
-      if (item.dayType === 'HOLIDAY') {
-        const h20 = item.ot20Hours ?? Math.min(8, item.otHours || 0);
-        const p20 = item.ot20Pay ?? (h20 * 100);
-        const h30 = item.ot30Hours ?? Math.max(0, (item.otHours || 0) - 8);
-        const p30 = item.ot30Pay ?? (h30 * 150);
-        otBreakdownHtml = `
-          <div class="flex justify-between"><span>OT 2.0 วันหยุด (${h20} ชม.):</span> <span class="font-bold font-mono text-unit-signal">+${fmtNum(p20)} ฿</span></div>
-          ${h30 > 0 ? `<div class="flex justify-between"><span>OT 3.0 วันหยุด (${h30} ชม.):</span> <span class="font-bold font-mono text-unit-signal">+${fmtNum(p30)} ฿</span></div>` : ''}
-        `;
-      } else {
-        otBreakdownHtml = `
-          <div class="flex justify-between"><span>ค่าแรงปกติ:</span> <span class="font-bold font-mono">${fmtNum(item.baseSalary)} ฿</span></div>
-          <div class="flex justify-between"><span>OT 1.5 (${item.otHours} ชม.):</span> <span class="font-bold font-mono text-unit-signal">+${fmtNum(item.otPay)} ฿</span></div>
-        `;
-      }
-
-      const content = document.getElementById('modalContent');
-      content.innerHTML = `
-        <div class="bg-unit-well dark:bg-unit-darkWell p-2.5 rounded-xl space-y-1 border border-unit-ink/15">
-          <div class="font-bold">${item.employeeName} (${formatThaiBE(item.date)})</div>
-          <div>กะการทำงาน: <span class="font-bold">${item.shift === 'DAY' ? 'กลางวัน' : 'กลางคืน'}</span></div>
-          <div>ประเภทวัน: <span class="font-bold">${item.dayType === 'REGULAR' ? 'วันปกติ' : 'วันหยุด (OT 2.0)'}</span></div>
-          <div>เวลาจริง: <span class="font-mono font-bold">${item.checkIn} - ${item.checkOut} (${item.workedHours} ชม.)</span></div>
-        </div>
-        <div class="space-y-1.5 pt-1">
-          ${otBreakdownHtml}
-          <div class="flex justify-between"><span>ค่ากะกลางคืน:</span> <span class="font-bold font-mono">+${fmtNum(item.shiftAllowance)} ฿</span></div>
-          <div class="flex justify-between"><span>ค่าอาหารรวม:</span> <span class="font-bold font-mono">+${fmtNum(item.totalMealAllowance)} ฿</span></div>
-          <div class="border-t border-unit-ink/15 pt-2 flex justify-between font-bold text-sm text-unit-signal">
-            <span>รวมรายได้สุทธิ:</span> <span class="font-mono">${fmtNum(item.totalSalary)} ฿</span>
-          </div>
-        </div>
-      `;
-      document.getElementById('breakdownModal').classList.remove('hidden');
-    }
-
-    function closeBreakdownModal() { document.getElementById('breakdownModal').classList.add('hidden'); }
-
-    // --- ระบบสลิปเงินเดือน ---
-    function getSlipAdjKey() {
-      const period = document.getElementById('cutoffPeriodSelect')?.value || 'ALL';
-      return `slip_adj_${currentEmpId}_${period}`;
-    }
-
-    function getDefaultSlipAdj(autoSocSec = 0) {
-      const saved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null");
-      return {
-        diligence: saved?.diligence ?? 0,
-        hazard: saved?.hazard ?? 0,
-        bonus: saved?.bonus ?? 0,
-        otherIncome: saved?.otherIncome ?? 0,
-        socSec: saved?.socSec ?? autoSocSec,
-        uniform: saved?.uniform ?? 0,
-        otherDed: saved?.otherDed ?? 0,
-        studentLoan: saved?.studentLoan ?? 0,
-        baseYTDEarnings: saved?.baseYTDEarnings ?? 43625.00,
-        baseYTDSocial: saved?.baseYTDSocial ?? 1200.00
-      };
-    }
-
-    function toggleSlipEditor() {
-      document.getElementById('slipEditorPanel').classList.toggle('hidden');
-    }
-
-    function saveCustomHolidays() {
-      localStorage.setItem("custom_company_holidays", document.getElementById('customHolidaysInput').value.trim());
-      renderPayslipContent(false);
-    }
-
-    function saveAndRefreshPayslip() {
-      const adj = {
-        diligence: parseFloat(document.getElementById('adjDiligence').value) || 0,
-        hazard: parseFloat(document.getElementById('adjHazard').value) || 0,
-        bonus: parseFloat(document.getElementById('adjBonus').value) || 0,
-        otherIncome: parseFloat(document.getElementById('adjOtherIncome').value) || 0,
-        socSec: parseFloat(document.getElementById('adjSocSec').value) || 0,
-        uniform: parseFloat(document.getElementById('adjUniform').value) || 0,
-        otherDed: parseFloat(document.getElementById('adjOtherDed').value) || 0,
-        studentLoan: parseFloat(document.getElementById('adjStudentLoan').value) || 0,
-        baseYTDEarnings: parseFloat(document.getElementById('baseYTDEarnings').value) || 0,
-        baseYTDSocial: parseFloat(document.getElementById('baseYTDSocial').value) || 0
-      };
-      localStorage.setItem(getSlipAdjKey(), JSON.stringify(adj));
-      renderPayslipContent(false);
-    }
-
-    function resetSlipAdjustments() {
-      localStorage.removeItem(getSlipAdjKey());
-      renderPayslipContent(true);
-      showToast("รีเซ็ตค่าปรับปรุงสลิปแล้ว");
+      document.getElementById('summaryTotalSalary').textContent = `${totalSal.toFixed(2)} ฿`;
+      document.getElementById('summaryTotalOT').textContent = `${totalOT.toFixed(1)} ชม.`;
+      document.getElementById('summaryTotalMeals').textContent = `${totalMeals.toFixed(2)} ฿`;
     }
 
     function openPayslipModal() {
-      renderPayslipContent(true);
+      const emp = getCurrentEmployee();
+      const rows = getNormalizedPayrollRecords().filter(r => r.id === currentEmpId);
+      let sumBase = 0, sumOT = 0, sumMeal = 0, sumTotal = 0;
+      rows.forEach(r => { sumBase += (r.baseSalary || 0); sumOT += (r.otPay || 0); sumMeal += (r.totalMealAllowance || 0); sumTotal += (r.totalSalary || 0); });
+      
+      document.getElementById('payslipContentArea').innerHTML = `
+        <div class="text-center font-bold text-base mb-2">ใบจ่ายเงินเดือน (E-PaySlip)</div>
+        <div class="border-b pb-2 text-[11px] grid grid-cols-2 gap-1">
+          <div>รหัส: <b>${emp.id}</b></div><div>ชื่อ: <b>${emp.name}</b></div>
+          <div>แผนก: <b>${emp.dept}</b></div><div>บัญชี: <b>${emp.bankAcc}</b></div>
+        </div>
+        <div class="py-2 space-y-1">
+          <div class="flex justify-between"><span>ค่าแรงพื้นฐาน/วันหยุด:</span><span>${sumBase.toFixed(2)} ฿</span></div>
+          <div class="flex justify-between"><span>ค่าล่วงเวลา (OT):</span><span>${sumOT.toFixed(2)} ฿</span></div>
+          <div class="flex justify-between"><span>ค่าอาหาร/ค่ากะ:</span><span>${sumMeal.toFixed(2)} ฿</span></div>
+          <div class="flex justify-between font-bold border-t pt-1 text-sm"><span>รวมสุทธิ:</span><span>${sumTotal.toFixed(2)} ฿</span></div>
+        </div>
+      `;
       document.getElementById('payslipModal').classList.remove('hidden');
     }
-
-    function renderPayslipContent(syncInputs = true) {
-      const emp = getCurrentEmpObj();
-      const records = JSON.parse(localStorage.getItem("payroll_records") || "[]").filter(r => r.id === currentEmpId);
-      const cutoffSelect = document.getElementById('cutoffPeriodSelect');
-      const periodLabelText = cutoffSelect?.options[cutoffSelect.selectedIndex]?.text || 'งวดปัจจุบัน';
-
-      let startStr = '', endStr = '';
-      let empRecords = records;
-      if (cutoffSelect && cutoffSelect.value) {
-        [startStr, endStr] = cutoffSelect.value.split('|');
-        empRecords = records.filter(r => r.date >= startStr && r.date <= endStr);
-      }
-
-      const sortedDates = empRecords.map(r => r.date).sort().reverse();
-      const latestRecordDate = sortedDates[0] || '';
-      const payDateInfo = computeScheduledPayDate(startStr, endStr, latestRecordDate);
-
-      let workDaysCount = 0;
-      let sumBase = 0, sumOT15 = 0, sumOT20 = 0, sumOT30 = 0, sumShift = 0, sumMeal = 0, sumOTMeal = 0;
-      let minsOT15 = 0, minsOT20 = 0, minsOT30 = 0;
-
-      empRecords.forEach(r => {
-        if (r.dayType !== 'HOLIDAY') {
-          workDaysCount += (r.workType === 'HALF' ? 0.5 : 1);
-        }
-        sumBase += (r.baseSalary || 0);
-        sumShift += (r.shiftAllowance || 0);
-        sumMeal += (r.normalMeal || 10);
-        sumOTMeal += (r.otMeal || 0);
-
-        if (r.dayType === 'HOLIDAY') {
-          const h20 = r.ot20Hours ?? Math.min(8, r.otHours || 0);
-          const p20 = r.ot20Pay ?? (h20 * 100);
-          const h30 = r.ot30Hours ?? Math.max(0, (r.otHours || 0) - 8);
-          const p30 = r.ot30Pay ?? (h30 * 150);
-
-          sumOT20 += p20;
-          minsOT20 += Math.round(h20 * 60);
-          sumOT30 += p30;
-          minsOT30 += Math.round(h30 * 60);
-        } else {
-          const otMins = Math.round((r.otHours || 0) * 60);
-          sumOT15 += (r.otPay || 0);
-          minsOT15 += otMins;
-        }
-      });
-
-      const baseEarnings = sumBase + sumOT15 + sumOT20 + sumOT30 + sumShift + sumMeal + sumOTMeal;
-      const autoSocSec = baseEarnings > 0 ? Math.min(Math.round(baseEarnings * 0.05), 200.00) : 0.00;
-      const adj = getDefaultSlipAdj(autoSocSec);
-
-      if (syncInputs) {
-        document.getElementById('adjDiligence').value = adj.diligence;
-        document.getElementById('adjHazard').value = adj.hazard;
-        document.getElementById('adjBonus').value = adj.bonus;
-        document.getElementById('adjOtherIncome').value = adj.otherIncome;
-        document.getElementById('adjSocSec').value = adj.socSec;
-        document.getElementById('adjUniform').value = adj.uniform;
-        document.getElementById('adjOtherDed').value = adj.otherDed;
-        document.getElementById('adjStudentLoan').value = adj.studentLoan;
-        document.getElementById('baseYTDEarnings').value = adj.baseYTDEarnings;
-        document.getElementById('baseYTDSocial').value = adj.baseYTDSocial;
-        document.getElementById('customHolidaysInput').value = localStorage.getItem("custom_company_holidays") || "";
-      }
-
-      const hintEl = document.getElementById('payDateRuleHint');
-      if (hintEl) {
-        hintEl.textContent = payDateInfo.shifted
-          ? `${payDateInfo.periodLabel} → ตรงวันหยุด (${formatThaiBE(payDateInfo.originalDateStr)}) เลื่อนเป็น ${formatThaiBE(payDateInfo.payDateStr)}`
-          : `${payDateInfo.periodLabel} → วันทำการปกติ (${formatThaiBE(payDateInfo.payDateStr)})`;
-      }
-
-      const totalEarnings = Math.round((baseEarnings + adj.diligence + adj.hazard + adj.bonus + adj.otherIncome) * 100) / 100;
-      const totalDeductions = Math.round((adj.uniform + adj.socSec + adj.otherDed + adj.studentLoan) * 100) / 100;
-      const netPay = Math.round((totalEarnings - totalDeductions) * 100) / 100;
-
-      const ytdEarningsTotal = Math.round((adj.baseYTDEarnings + totalEarnings) * 100) / 100;
-      const ytdSocialTotal = Math.round((adj.baseYTDSocial + adj.socSec) * 100) / 100;
-
-      latestRenderedSlipSnapshot = {
-        emp,
-        periodLabelText,
-        payDateBE: formatThaiBE(payDateInfo.payDateStr),
-        workDaysCount,
-        sumBase,
-        sumOT15,
-        minsOT15,
-        sumOT20,
-        minsOT20,
-        sumOT30,
-        minsOT30,
-        sumShift,
-        totalMeals: sumMeal + sumOTMeal,
-        adj,
-        totalEarnings,
-        totalDeductions,
-        netPay,
-        ytdEarningsTotal,
-        ytdSocialTotal
-      };
-
-      document.getElementById('payslipHeaderInfo').innerHTML = `
-        <div>รหัส <span class="font-bold ml-1">${emp.id}</span></div>
-        <div>ชื่อสกุล <span class="font-bold ml-1">${emp.name}</span></div>
-        <div>แผนก <span class="font-bold ml-1">${emp.dept}</span></div>
-        <div>วันเริ่มงาน <span class="font-bold ml-1">${emp.startDate}</span></div>
-        <div>เลขที่บัญชี <span class="font-bold ml-1">${emp.bankAcc}</span></div>
-      `;
-
-      const genEarnRow = (title, qty, amt) => `
-        <tr>
-          <td class="py-0.5 px-1.5 border-r border-black">${title}</td>
-          <td class="py-0.5 px-1 text-right border-r border-black">${qty}</td>
-          <td class="py-0.5 px-1.5 text-right">${fmtNum(amt)}</td>
-        </tr>
-      `;
-
-      const genDedRow = (title, amt) => `
-        <tr>
-          <td class="py-0.5 px-1.5 border-r border-black">${title}</td>
-          <td class="py-0.5 px-1.5 text-right">${fmtNum(amt)}</td>
-        </tr>
-      `;
-
-      document.getElementById('payslipEarningsBody').innerHTML = 
-        genEarnRow('อัตราเงินเดือน', '', 400) +
-        genEarnRow('เงินเดือน', fmtNum(workDaysCount), sumBase) +
-        genEarnRow('ค่าล่วงเวลา1เท่า', '0.00', 0) +
-        genEarnRow('ค่าล่วงเวลา 1.5เท่า', fmtNum(minsOT15), sumOT15) +
-        genEarnRow('ค่าล่วงเวลา 2 เท่า', fmtNum(minsOT20), sumOT20) +
-        genEarnRow('ค่าล่วงเวลา 3 เท่า', fmtNum(minsOT30), sumOT30) +
-        genEarnRow('ค่ากะ', '', sumShift) +
-        genEarnRow('ค่าอาหารโอที', '', sumOTMeal) +
-        genEarnRow('เบี้ยขยัน', '', adj.diligence) +
-        genEarnRow('ลาป่วย/พักร้อน/ลากิจ', '', 0) +
-        genEarnRow('วันหยุดประเพณี', '', 0) +
-        genEarnRow('ค่าแรงตกจ่าย', '', 0) +
-        genEarnRow('ค่าแรง 75%/อื่นๆ', '', adj.otherIncome) +
-        genEarnRow('ค่าอาหารกลางวัน', '', sumMeal) +
-        genEarnRow('Bonus/ค่ารถ', '', adj.bonus) +
-        genEarnRow('ค่าเสี่ยงภัย', '', adj.hazard);
-
-      document.getElementById('payslipDeductionsBody').innerHTML = 
-        genDedRow('หักค่าชุดฟอร์ม', adj.uniform) +
-        genDedRow('หักสมทบประกันสังคม', adj.socSec) +
-        genDedRow('ค่าตรวจร่างกาย', 0) +
-        genDedRow('หักค่าอื่นๆ', adj.otherDed) +
-        genDedRow('หักกยศ./กรอ', adj.studentLoan) +
-        genDedRow('หักอายัดตามกรมบังคับคดี', 0);
-
-      document.getElementById('payslipTotalEarnings').textContent = fmtNum(totalEarnings);
-      document.getElementById('payslipTotalDeductions').textContent = fmtNum(totalDeductions);
-      document.getElementById('payslipPayDate').textContent = formatThaiBE(payDateInfo.payDateStr);
-      
-      document.getElementById('payslipYTDEarnings').textContent = fmtNum(ytdEarningsTotal);
-      document.getElementById('payslipYTDSocial').textContent = fmtNum(ytdSocialTotal);
-      document.getElementById('payslipNetPay').textContent = fmtNum(netPay);
-
-      const stamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 12);
-      document.getElementById('payslipRefID').textContent = `E_PaySlip ID : ${stamp}(PROVIDE POWER OUTSOURCING CO., LTD.)`;
-    }
-
-    function sendPayslipToLine() {
-      if (isLineSlipSending) return;
-      renderPayslipContent(false);
-      const s = latestRenderedSlipSnapshot;
-      if (!s) return;
-
-      isLineSlipSending = true;
-      const btn = document.getElementById('btnSendSlipLine');
-      const originalHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่ง...`;
-
-      const incomeLines = [
-        `• เงินเดือน (${s.workDaysCount} วัน): ${fmtNum(s.sumBase)} ฿`
-      ];
-      if (s.sumOT15 > 0) incomeLines.push(`• OT 1.5x (${s.minsOT15} นาที): ${fmtNum(s.sumOT15)} ฿`);
-      if (s.sumOT20 > 0) incomeLines.push(`• OT 2.0x (${s.minsOT20} นาที): ${fmtNum(s.sumOT20)} ฿`);
-      if (s.sumOT30 > 0) incomeLines.push(`• OT 3.0x (${s.minsOT30} นาที): ${fmtNum(s.sumOT30)} ฿`);
-      if (s.sumShift > 0) incomeLines.push(`• ค่ากะกลางคืน: ${fmtNum(s.sumShift)} ฿`);
-      if (s.totalMeals > 0) incomeLines.push(`• ค่าอาหารรวม: ${fmtNum(s.totalMeals)} ฿`);
-      if (s.adj.diligence > 0) incomeLines.push(`• เบี้ยขยัน: ${fmtNum(s.adj.diligence)} ฿`);
-      if (s.adj.hazard > 0) incomeLines.push(`• ค่าเสี่ยงภัย: ${fmtNum(s.adj.hazard)} ฿`);
-      if (s.adj.bonus > 0) incomeLines.push(`• Bonus/ค่ารถ: ${fmtNum(s.adj.bonus)} ฿`);
-      if (s.adj.otherIncome > 0) incomeLines.push(`• ค่าแรง 75%/อื่นๆ: ${fmtNum(s.adj.otherIncome)} ฿`);
-
-      const dedLines = [];
-      if (s.adj.socSec > 0) dedLines.push(`• หักประกันสังคม: ${fmtNum(s.adj.socSec)} ฿`);
-      if (s.adj.uniform > 0) dedLines.push(`• หักค่าชุดฟอร์ม: ${fmtNum(s.adj.uniform)} ฿`);
-      if (s.adj.studentLoan > 0) dedLines.push(`• หัก กยศ./กรอ: ${fmtNum(s.adj.studentLoan)} ฿`);
-      if (s.adj.otherDed > 0) dedLines.push(`• หักค่าอื่นๆ: ${fmtNum(s.adj.otherDed)} ฿`);
-      if (dedLines.length === 0) dedLines.push(`• ไม่มีรายการหัก (0.00 ฿)`);
-
-      const lineMsg = [
-        `🧾 [E-PAYSLIP // ใบจ่ายเงินเดือน]`,
-        `บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด`,
-        `━━━━━━━━━━━━━━━━━━`,
-        `พนักงาน: ${s.emp.name} (${s.emp.id})`,
-        `แผนก: ${s.emp.dept} | บัญชี: ${s.emp.bankAcc}`,
-        `รอบตัดยอด: ${s.periodLabelText}`,
-        `📅 วันที่จ่าย: ${s.payDateBE}`,
-        `━━━━━━━━━━━━━━━━━━`,
-        `➕ รายได้ (รวม ${fmtNum(s.totalEarnings)} ฿)`,
-        ...incomeLines,
-        `━━━━━━━━━━━━━━━━━━`,
-        `➖ รายการหัก (รวม ${fmtNum(s.totalDeductions)} ฿)`,
-        ...dedLines,
-        `━━━━━━━━━━━━━━━━━━`,
-        `💰 เงินรับสุทธิ: ${fmtNum(s.netPay)} ฿`,
-        `📊 เงินได้สะสมต่อปี: ${fmtNum(s.ytdEarningsTotal)} ฿`,
-        `🛡️ ประกันสังคมต่อปี: ${fmtNum(s.ytdSocialTotal)} ฿`
-      ].join('\n');
-
-      const slipRecord = {
-        id: s.emp.id,
-        employeeName: s.emp.name,
-        periodLabel: s.periodLabelText,
-        payDate: s.payDateBE,
-        workDays: s.workDaysCount,
-        totalEarnings: s.totalEarnings,
-        totalDeductions: s.totalDeductions,
-        netPay: s.netPay,
-        ytdEarnings: s.ytdEarningsTotal,
-        ytdSocial: s.ytdSocialTotal
-      };
-
-      playClick('confirm');
-      syncToGoogleSheets([], lineMsg, [], slipRecord).finally(() => {
-        showToast("ส่งสรุปสลิปเงินเดือน & บันทึกลงชีตสำเร็จ");
-        setTimeout(() => {
-          isLineSlipSending = false;
-          btn.disabled = false;
-          btn.innerHTML = originalHtml;
-        }, 800);
-      });
-    }
-
     function closePayslipModal() { document.getElementById('payslipModal').classList.add('hidden'); }
+
+    function enqueueOfflineAction(payload) {
+      const q = JSON.parse(localStorage.getItem("offline_sync_queue") || "[]");
+      q.push({ payload });
+      localStorage.setItem("offline_sync_queue", JSON.stringify(q));
+      updateQueueBadge();
+    }
+    function updateQueueBadge() {
+      const pill = document.getElementById('cloudSyncPill');
+      if (!pill) return;
+      const q = JSON.parse(localStorage.getItem("offline_sync_queue") || "[]");
+      pill.textContent = q.length > 0 ? `QUEUE (${q.length})` : "AEGIS OK";
+    }
+    async function flushOfflineQueue(silent = true) {
+      const q = JSON.parse(localStorage.getItem("offline_sync_queue") || "[]");
+      if (q.length === 0) return;
+      const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
+      const remaining = [];
+      for (const item of q) {
+        try {
+          const res = await fetch(gasUrl, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(item.payload) });
+          const data = await res.json();
+          if (!data || data.status === "error") remaining.push(item);
+        } catch (e) { remaining.push(item); }
+      }
+      localStorage.setItem("offline_sync_queue", JSON.stringify(remaining));
+      updateQueueBadge();
+      if (!silent) showToast(remaining.length === 0 ? "ซิงค์คิวสำเร็จ" : `เหลือค้างส่ง ${remaining.length} รายการ`);
+    }
+
+    async function pullFromGoogleSheets(silent = false) {
+      const icon = document.getElementById('topSyncIcon');
+      if (icon) icon.classList.add('fa-spin');
+      try {
+        await flushOfflineQueue(true);
+        const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
+        const res = await fetch(`${gasUrl}?action=get_all&t=${Date.now()}`);
+        const data = await res.json();
+        if (data && data.status === "success") {
+          if (Array.isArray(data.employees) && data.employees.length > 0) {
+            employeeList = data.employees;
+            localStorage.setItem("cached_employees", JSON.stringify(employeeList));
+            renderEmployeeDropdowns();
+          }
+          if (Array.isArray(data.records)) {
+            localStorage.setItem("payroll_records", JSON.stringify(data.records));
+          }
+          renderHistories();
+          if (!silent) showToast("ดึงข้อมูลสำเร็จ");
+        }
+      } catch (e) {
+        if (!silent) showToast("โหมดออฟไลน์: ใช้ข้อมูลในหน่วยความจำ");
+      } finally {
+        if (icon) icon.classList.remove('fa-spin');
+      }
+    }
 
     function openConfigModal() {
       document.getElementById('gasUrlInput').value = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
-      document.getElementById('lineTokenInput').value = localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN;
-      document.getElementById('lineUserIdInput').value = localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID;
       document.getElementById('configModal').classList.remove('hidden');
     }
-
     function closeConfigModal() { document.getElementById('configModal').classList.add('hidden'); }
-
     function saveConfigSettings() {
-      localStorage.setItem("gas_url", document.getElementById('gasUrlInput').value.trim());
-      localStorage.setItem("line_token", document.getElementById('lineTokenInput').value.trim());
-      localStorage.setItem("line_user_id", document.getElementById('lineUserIdInput').value.trim());
+      const url = document.getElementById('gasUrlInput').value.trim();
+      if (url) localStorage.setItem("gas_url", url);
       closeConfigModal();
-      showToast("บันทึกการตั้งค่าเรียบร้อย");
+      showToast("บันทึก URL สำเร็จ");
+      pullFromGoogleSheets(false);
     }
 
-    let toastTimeout;
     function showToast(msg) {
-      const toast = document.getElementById('toast');
-      clearTimeout(toastTimeout);
-      document.getElementById('toastMsg').textContent = msg;
-      toast.classList.remove('hidden');
-      toastTimeout = setTimeout(() => toast.classList.add('hidden'), 2500);
-    }
-
-    function clearLocalStorageData() {
-      if (confirm("คุณต้องการล้างประวัติบันทึกเวลาทั้งหมดในอุปกรณ์นี้ใช่หรือไม่?")) {
-        localStorage.removeItem("payroll_records");
-        localStorage.removeItem("leave_records");
-        localStorage.removeItem("active_checkins");
-        loadTodayLiveStatus();
-        renderHistories();
-        showToast("ล้างข้อมูลในเครื่องเรียบร้อย");
-      }
+      const t = document.getElementById('toast'), m = document.getElementById('toastMsg');
+      m.textContent = msg; t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 2800);
     }
   </script>
 </body>
