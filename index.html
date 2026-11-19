@@ -51,7 +51,6 @@
       overflow-x: hidden;
     }
 
-    /* Carbon Hex-Grid Tactical Background */
     .hex-bg {
       background-color: #05070A;
       background-image:
@@ -66,7 +65,6 @@
     .font-hud { font-family: 'Orbitron', sans-serif; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-    /* Chamfered Armor Frame */
     .chamfer-box {
       clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
     }
@@ -87,7 +85,6 @@
       overflow: hidden;
     }
 
-    /* Scanline Sweep Effect */
     .scanline-overlay::after {
       content: "";
       position: absolute;
@@ -103,7 +100,6 @@
       100% { transform: translateY(340%); }
     }
 
-    /* Counter-Rotating Radar Rings */
     @keyframes spinCW {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
@@ -121,13 +117,11 @@
       animation: spinCCW 16s linear infinite;
     }
 
-    /* Sapphire Glare */
     .sapphire-glare {
       background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 20%), rgba(255,255,255,0.09) 0%, transparent 55%);
       pointer-events: none;
     }
 
-    /* Dark Dropdown & Input Fix */
     .valk-field {
       background-color: #0B0F17;
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -155,7 +149,6 @@
       transform: scale(0.97);
     }
 
-    /* Ignition Slide Track */
     .slide-track {
       position: relative;
       height: 50px;
@@ -184,7 +177,6 @@
     }
     .chevron-anim { animation: chevronPulse 1.3s infinite; }
 
-    /* A5 Payslip Print Formatting */
     .a5-payslip-sheet {
       font-family: 'Sarabun', sans-serif;
       color: #000000;
@@ -202,7 +194,6 @@
 </head>
 <body class="hex-bg state-standby min-h-screen pb-24 select-none">
 
-  <!-- Boot-Up Diagnostic Overlay -->
   <div id="bootOverlay" class="fixed inset-0 z-[100] bg-[#05070A] flex flex-col items-center justify-center p-6 transition-opacity duration-300">
     <div class="w-full max-w-xs space-y-3 font-mono text-xs">
       <div class="flex items-center justify-between text-cyan-400 border-b border-cyan-500/30 pb-1.5">
@@ -218,15 +209,11 @@
     </div>
   </div>
 
-  <!-- Constellation Particle Canvas -->
   <canvas id="constellationCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-65"></canvas>
 
-  <!-- Top Telemetry Header -->
   <header class="sticky top-0 z-30 bg-[#05070A]/92 backdrop-blur-md border-b border-white/10 px-3 py-2.5 no-print" style="padding-top: calc(env(safe-area-inset-top, 0px) + 0.55rem);">
     <div class="max-w-lg mx-auto space-y-2.5">
       <div class="flex items-center justify-between gap-2">
-
-        <!-- โลโก้ + PROVIDE POWER + LINKED + เวลา กะ/OT -->
         <div class="flex items-center gap-2.5 min-w-0">
           <div class="relative w-10 h-10 bg-black/90 rounded-lg flex items-center justify-center shrink-0">
             <span class="absolute top-0 inset-x-2.5 h-[1.5px] bg-red-500"></span>
@@ -250,7 +237,6 @@
           </div>
         </div>
 
-        <!-- ปุ่มควบคุมมุมขวา -->
         <div class="flex items-center gap-1 shrink-0">
           <button onclick="pullFromGoogleSheets(false)" title="ซิงค์ข้อมูล" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-cyan-400 text-xs">
             <i id="topSyncIcon" class="fa-solid fa-rotate"></i>
@@ -268,7 +254,6 @@
         </div>
       </div>
 
-      <!-- Employee Selector Bar -->
       <div class="flex items-center gap-2">
         <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="valk-field w-full text-xs font-bold tracking-wide"></select>
         <span id="dutyBadge" class="chamfer-sm text-[9.5px] px-2.5 py-1 bg-zinc-800 border border-zinc-700 font-bold text-zinc-200 shrink-0">STANDBY</span>
@@ -276,18 +261,13 @@
     </div>
   </header>
 
-  <!-- Main Cockpit Content -->
   <main class="relative z-10 max-w-lg mx-auto px-3 pt-3 space-y-3">
 
-    <!-- TAB 1: CHRONO REACTOR & IGNITION HUD -->
     <section id="tab-1" class="tab-content space-y-3">
-
-      <!-- 3D Tilt Chrono Reactor Card -->
       <div id="chronoTiltCard" class="armor-frame chamfer-box transition-transform duration-150">
         <div class="armor-inner scanline-overlay chamfer-box p-4">
           <div id="sapphireGlare" class="sapphire-glare absolute inset-0"></div>
 
-          <!-- Top Status Strip -->
           <div class="flex items-center justify-between text-[10px] mb-2">
             <div id="currentDateDisplay" class="font-bold text-zinc-300 flex items-center gap-1.5">
               <i class="fa-regular fa-calendar text-cyan-400"></i>
@@ -296,7 +276,6 @@
             <span id="lcdModeTag" class="chamfer-sm bg-cyan-500/15 text-cyan-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-500/40 tracking-wider">CORE READY</span>
           </div>
 
-          <!-- Multi-Ring SVG Reactor Gauge -->
           <div class="relative w-56 h-56 mx-auto my-1 flex items-center justify-center">
             <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_16px_rgba(0,240,255,0.22)]">
               <circle cx="120" cy="120" r="112" fill="none" stroke="rgba(0,240,255,0.25)" stroke-width="1.2" stroke-dasharray="18 8 4 8" class="radar-ring-cw"/>
@@ -318,7 +297,6 @@
               </g>
             </svg>
 
-            <!-- Center Digital Readout -->
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
               <span class="font-hud text-[8.5px] tracking-[0.25em] text-zinc-400">CHRONO TIME</span>
               <div id="liveClock" class="font-mono font-extrabold text-2xl tracking-tight text-white my-0.5">00:00:00<span class="text-xs text-red-500">.0</span></div>
@@ -326,7 +304,6 @@
             </div>
           </div>
 
-          <!-- Live Shift Elapsed & Accrued Pay Bar -->
           <div id="liveShiftElapsedBar" class="hidden chamfer-sm bg-black/75 border border-red-500/40 px-3 py-2 mb-3 flex items-center justify-between text-xs">
             <div>
               <span class="text-[9.5px] text-zinc-400 block">ระยะเวลาเข้ากะปัจจุบัน</span>
@@ -338,7 +315,6 @@
             </div>
           </div>
 
-          <!-- In / Out Time Readout Boxes -->
           <div class="grid grid-cols-2 gap-2 mb-3">
             <div class="chamfer-sm bg-black/65 border border-white/10 p-2.5 flex items-center justify-between">
               <div>
@@ -356,7 +332,6 @@
             </div>
           </div>
 
-          <!-- Slide Ignition Track -->
           <div class="space-y-1">
             <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-black/90 border border-emerald-500/45 flex items-center justify-center select-none">
               <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-emerald-600/40 to-emerald-500/70"></div>
@@ -378,14 +353,13 @@
         </div>
       </div>
 
-      <!-- Shift & OT Telemetry Panel -->
       <div class="armor-frame chamfer-box">
         <div class="armor-inner chamfer-box p-3.5 space-y-3">
           <div class="flex items-center justify-between border-b border-white/10 pb-2">
             <span class="font-hud font-bold text-[10.5px] tracking-wider text-cyan-400"><i class="fa-solid fa-sliders mr-1.5"></i>SHIFT & OT TELEMETRY</span>
             <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">AUTO</button>
           </div>
-<!-- Shift / DayType / WorkType Switches -->
+
           <div class="grid grid-cols-3 gap-2">
             <div class="bg-black/60 p-1 chamfer-sm border border-white/10 grid grid-cols-2 gap-1">
               <button id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px] transition">DAY</button>
@@ -401,7 +375,6 @@
             </div>
           </div>
 
-          <!-- OT Simulator Scrubber -->
           <div class="chamfer-sm bg-black/65 border border-white/10 p-2.5 space-y-1.5">
             <div class="flex items-center justify-between text-[10px]">
               <span class="text-zinc-400 flex items-center gap-1.5">
@@ -416,7 +389,6 @@
             <input id="otSimScrubber" type="range" min="0" max="140" step="5" value="0" oninput="onSimScrubberChange(this.value)" class="w-full accent-red-500 cursor-pointer h-1.5 bg-zinc-800 rounded-lg">
           </div>
 
-          <!-- Live Estimator Readouts -->
           <div class="grid grid-cols-3 gap-2 text-center">
             <div class="chamfer-sm bg-black/70 border border-white/10 p-2">
               <div id="estBaseLabel" class="text-[8.5px] font-hud text-zinc-400">BASE PAY</div>
@@ -435,7 +407,6 @@
       </div>
     </section>
 
-    <!-- TAB 2: MANUAL TIME & OT INPUT -->
     <section id="tab-2" class="tab-content hidden space-y-3">
       <div class="armor-frame chamfer-box">
         <div class="armor-inner chamfer-box p-4 space-y-3">
@@ -504,7 +475,6 @@
       </div>
     </section>
 
-    <!-- TAB 3: LEAVE REQUEST -->
     <section id="tab-3" class="tab-content hidden space-y-3">
       <div class="armor-frame chamfer-box">
         <div class="armor-inner chamfer-box p-4 space-y-3">
@@ -547,7 +517,6 @@
       </div>
     </section>
 
-    <!-- TAB 4: PAYROLL SUMMARY & E-PAYSLIP -->
     <section id="tab-4" class="tab-content hidden space-y-3">
       <div class="armor-frame chamfer-box">
         <div class="armor-inner chamfer-box p-3.5 space-y-3">
@@ -565,7 +534,6 @@
 
           <select id="cutoffPeriodSelect" onchange="renderHistories()" class="valk-field w-full text-xs font-bold"></select>
 
-          <!-- Cycle Target Progress -->
           <div class="chamfer-sm bg-black/65 border border-white/10 p-2.5 space-y-1">
             <div class="flex justify-between text-[10px]">
               <span class="text-zinc-400">ความคืบหน้ารายได้รอบงวด (เทียบเป้า 10,000 ฿)</span>
@@ -576,7 +544,6 @@
             </div>
           </div>
 
-          <!-- Summary Metrics -->
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div class="chamfer-sm bg-black/70 border border-white/10 p-2.5">
               <div class="text-[9.5px] text-zinc-400">ยอดรวมรอบตัดยอด</div>
@@ -596,7 +563,6 @@
             </div>
           </div>
 
-          <!-- Daily Bar Chart -->
           <div id="dailyChartPanel" class="hidden chamfer-sm bg-black/70 border border-white/10 p-2.5 space-y-1.5">
             <div class="text-[9.5px] text-zinc-400 flex justify-between">
               <span>กราฟรายได้รายวัน (แตะแท่งเพื่อดูบิล)</span>
@@ -605,13 +571,11 @@
             <div id="dailyBarsContainer" class="h-24 flex items-end gap-1 pt-2 overflow-x-auto"></div>
           </div>
 
-          <!-- Payroll History List -->
           <div class="space-y-1.5">
             <div class="text-[10.5px] font-bold text-zinc-300">ประวัติการลงเวลาและรายได้</div>
             <div id="payrollHistoryList" class="space-y-2 max-h-72 overflow-y-auto pr-0.5"></div>
           </div>
 
-          <!-- Leave History List -->
           <div class="space-y-1.5 pt-2 border-t border-white/10">
             <div class="text-[10.5px] font-bold text-amber-400">ประวัติการลา</div>
             <div id="leaveHistoryList" class="space-y-1.5 max-h-40 overflow-y-auto pr-0.5"></div>
@@ -621,7 +585,6 @@
     </section>
   </main>
 
-  <!-- Bottom Cockpit Navigation Bar -->
   <nav class="fixed bottom-0 inset-x-0 z-30 bg-[#05070A]/95 backdrop-blur-md border-t border-white/10 px-2 py-1.5 no-print" style="padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.35rem);">
     <div class="max-w-lg mx-auto flex items-center gap-1.5 text-[10px]">
       <button id="nav-1" onclick="switchTab(1)" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-white bg-red-600 font-bold transition-all shadow-[0_0_15px_rgba(255,30,39,0.55)]">
@@ -643,7 +606,6 @@
     </div>
   </nav>
 
-  <!-- Daily Breakdown Modal -->
   <div id="breakdownModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="armor-frame chamfer-box w-full max-w-sm">
       <div class="armor-inner chamfer-box p-4 space-y-3 text-xs">
@@ -657,7 +619,6 @@
     </div>
   </div>
 
-  <!-- A5 Payslip Modal -->
   <div id="payslipModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto no-print">
     <div class="bg-zinc-950 border border-zinc-800 rounded-xl w-full max-w-4xl max-h-[94vh] overflow-y-auto p-3 sm:p-4 space-y-3 my-auto">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2.5">
@@ -678,7 +639,6 @@
         </div>
       </div>
 
-      <!-- Slip Adjustments Drawer -->
       <div id="slipEditorPanel" class="hidden bg-zinc-900/95 border border-zinc-700/80 rounded-lg p-3 space-y-2.5 text-xs">
         <div class="flex items-center justify-between">
           <span class="font-bold text-amber-400">ปรับปรุงรายได้ / รายการหัก / ยอดสะสม YTD</span>
@@ -738,74 +698,86 @@
         </div>
       </div>
 
-      <!-- A5 Sheet Container -->
       <div class="overflow-x-auto bg-zinc-800/60 p-2 rounded-lg">
-        <div id="payslipCaptureContent" class="a5-payslip-sheet bg-white text-black w-[840px] mx-auto p-5 border border-black shadow-md text-[12px] leading-snug">
-          <div class="text-center font-bold text-[15px] mb-2">ใบจ่ายเงินเดือน (PAYSLIP)</div>
-          <div class="flex justify-between items-start border-b border-black pb-2 mb-2">
-            <div>
-              <div class="font-bold text-[13px]">บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</div>
-              <div class="text-[11px]">PROVIDE POWER OUTSOURCING CO., LTD.</div>
-            </div>
-            <div id="payslipRefID" class="text-[10px] font-mono text-right"></div>
+        <div id="payslipCaptureContent" class="a5-payslip-sheet bg-white text-black w-[840px] mx-auto p-4 border border-black shadow-md text-[11.5px] leading-tight">
+          <div class="text-center font-bold text-[14px] leading-snug mb-2">
+            <div>ใบจ่ายเงินเดือน</div>
+            <div>บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</div>
           </div>
 
-          <div id="payslipHeaderInfo" class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 border-b border-black pb-2 mb-2 text-[11.5px]"></div>
+          <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 mb-2 px-0.5 text-[11px]">
+            <div><span class="font-bold">รหัส</span> <span id="empSlipId" class="ml-1 font-mono">50001024</span></div>
+            <div><span class="font-bold">ชื่อสกุล</span> <span id="empSlipName" class="ml-1 font-bold">นายพันธกานต์  จูมจันทร์</span></div>
+            <div><span class="font-bold">แผนก</span> <span id="empSlipDept" class="ml-1">MAT</span></div>
+            <div><span class="font-bold">วันเริ่มงาน</span> <span id="empSlipStart" class="ml-1 font-mono">2026-08-03</span></div>
+            <div><span class="font-bold">เลขที่บัญชี</span> <span id="empSlipAcc" class="ml-1 font-mono">5052911817</span></div>
+          </div>
 
-          <div class="grid grid-cols-2 border border-black mb-2">
-            <!-- Earnings -->
-            <div class="border-r border-black flex flex-col">
-              <div class="bg-gray-100 font-bold text-center py-1 border-b border-black text-[11.5px]">รายได้ (EARNINGS)</div>
-              <table class="w-full text-[11px] flex-1">
+          <div class="flex items-stretch gap-2">
+            <div class="flex-1 border border-black flex flex-col justify-between">
+              <table class="w-full border-collapse text-[10.5px]">
                 <thead>
-                  <tr class="border-b border-black bg-gray-50">
-                    <th class="py-0.5 px-2 text-left border-r border-black">รายการ</th>
-                    <th class="py-0.5 px-1.5 text-right border-r border-black w-16">วัน/นาที</th>
-                    <th class="py-0.5 px-2 text-right w-24">จำนวนเงิน</th>
+                  <tr class="border-b border-black font-bold">
+                    <th class="py-1 px-2 text-center border-r border-black">รายได้</th>
+                    <th class="py-1 px-1.5 text-center border-r border-black w-16">จำนวน</th>
+                    <th class="py-1 px-2 text-center border-r border-black w-20">จำนวนเงิน</th>
+                    <th class="py-1 px-2 text-center border-r border-black">รายการหัก</th>
+                    <th class="py-1 px-2 text-center w-20">จำนวนเงิน</th>
                   </tr>
                 </thead>
-                <tbody id="payslipEarningsBody"></tbody>
+                <tbody id="payslipMainTableBody"></tbody>
               </table>
-              <div class="flex justify-between font-bold px-2 py-1 border-t border-black bg-gray-100 text-[11.5px]">
-                <span>รวมรายได้</span>
-                <span id="payslipTotalEarnings" class="font-mono">0.00</span>
+
+              <div class="grid grid-cols-5 border-t border-black font-bold text-[11px]">
+                <div class="col-span-2 py-1 px-2 border-r border-black">รวมเงินได้</div>
+                <div id="payslipTotalEarnings" class="py-1 px-2 text-right font-mono border-r border-black">0.00</div>
+                <div class="py-1 px-2 border-r border-black">รวมรายการหัก</div>
+                <div id="payslipTotalDeductions" class="py-1 px-2 text-right font-mono">0.00</div>
               </div>
             </div>
 
-            <!-- Deductions -->
-            <div class="flex flex-col">
-              <div class="bg-gray-100 font-bold text-center py-1 border-b border-black text-[11.5px]">รายการหัก (DEDUCTIONS)</div>
-              <table class="w-full text-[11px] flex-1">
-                <thead>
-                  <tr class="border-b border-black bg-gray-50">
-                    <th class="py-0.5 px-2 text-left border-r border-black">รายการหัก</th>
-                    <th class="py-0.5 px-2 text-right w-24">จำนวนเงิน</th>
-                  </tr>
-                </thead>
-                <tbody id="payslipDeductionsBody"></tbody>
-              </table>
-              <div class="flex justify-between font-bold px-2 py-1 border-t border-black bg-gray-100 text-[11.5px]">
-                <span>รวมรายการหัก</span>
-                <span id="payslipTotalDeductions" class="font-mono">0.00</span>
+            <div class="w-36 border border-black flex flex-col justify-between text-center text-[10.5px]">
+              <div class="border-b border-black">
+                <div class="font-bold py-1 border-b border-black">วันที่จ่าย</div>
+                <div id="payslipPayDate" class="py-1.5 font-mono font-semibold">-</div>
+              </div>
+              <div class="border-b border-black">
+                <div class="font-bold py-1 border-b border-black">เงินได้สะสมต่อปี</div>
+                <div id="payslipYTDEarnings" class="py-1.5 font-mono">0.00</div>
+              </div>
+              <div class="border-b border-black">
+                <div class="font-bold py-1 border-b border-black">ภาษีสะสมต่อปี</div>
+                <div id="payslipYTDTax" class="py-1.5 font-mono">0.00</div>
+              </div>
+              <div class="border-b border-black">
+                <div class="font-bold py-1 border-b border-black">เงินสะสมกองทุนต่อปี</div>
+                <div id="payslipYTDFund" class="py-1.5 font-mono">0.00</div>
+              </div>
+              <div class="border-b border-black">
+                <div class="font-bold py-1 border-b border-black">ค่าลดหย่อนอื่นๆ</div>
+                <div id="payslipYTDAllowance" class="py-1.5 font-mono">0.00</div>
+              </div>
+              <div class="border-b border-black">
+                <div class="font-bold py-1 border-b border-black">เงินประกันสังคมต่อปี</div>
+                <div id="payslipYTDSocial" class="py-1.5 font-mono">0.00</div>
+              </div>
+              <div class="flex-1 flex flex-col justify-between">
+                <div class="font-bold py-1 border-b border-black">เงินรับสุทธิ</div>
+                <div id="payslipNetPay" class="py-2 font-mono font-extrabold text-sm flex-1 flex items-center justify-center">0.00</div>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-3 gap-2 border border-black p-2 bg-gray-50 text-[11px] items-center">
-            <div>
-              <div>วันที่จ่าย: <strong id="payslipPayDate" class="font-mono">-</strong></div>
-              <div>เงินได้สะสมต่อปี: <strong id="payslipYTDEarnings" class="font-mono">0.00</strong></div>
-              <div>ประกันสังคมสะสมต่อปี: <strong id="payslipYTDSocial" class="font-mono">0.00</strong></div>
-            </div>
-            <div class="col-span-2 text-right border-l border-black pl-3">
-              <div class="text-[11px] font-bold">เงินรับสุทธิ (NET PAY)</div>
-              <div id="payslipNetPay" class="font-mono font-extrabold text-xl">0.00</div>
+          <div class="mt-1.5 space-y-2">
+            <div id="payslipRefID" class="text-[9.5px] font-mono text-black"></div>
+            <div class="flex items-center gap-2 text-[11px] pt-1">
+              <span>ลงชื่อพนักงาน</span>
+              <span class="inline-block w-48 border-b border-black"></span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Mobile Fallback Image Box -->
       <div id="mobileSlipImageFallback" class="hidden bg-zinc-900 border border-cyan-500/40 rounded-lg p-3 text-center space-y-2">
         <div class="text-[11px] text-cyan-300 font-bold">หากไฟล์ไม่เข้าอัลบั้มอัตโนมัติ ให้แตะค้างที่รูปด้านล่างเพื่อบันทึก</div>
         <img id="mobileSlipFallbackImgTag" src="" alt="A5 Payslip Preview" class="max-w-full mx-auto rounded border border-zinc-700">
@@ -813,7 +785,6 @@
     </div>
   </div>
 
-  <!-- Config Modal -->
   <div id="configModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="armor-frame chamfer-box w-full max-w-md">
       <div class="armor-inner chamfer-box p-4 space-y-3 text-xs">
@@ -850,14 +821,14 @@
     </div>
   </div>
 
-  <!-- Toast Notification -->
   <div id="toast" class="hidden fixed top-20 inset-x-0 z-[90] flex justify-center px-4 pointer-events-none no-print">
     <div class="chamfer-sm bg-zinc-900/95 border border-cyan-500/50 text-white px-4 py-2 text-xs font-bold shadow-lg flex items-center gap-2">
       <i class="fa-solid fa-bolt text-cyan-400"></i>
       <span id="toastMsg">พร้อมใช้งาน</span>
     </div>
   </div>
-<script>
+
+  <script>
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzIC7PtGt_PeyQ7Co1GTiC0Ev6dPfDSiGhhyHClbKL1yMzUCTmeju8JKOYAtNGJZaB7/exec";
     const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
@@ -1604,8 +1575,6 @@
       initSlideIgnition();
 
       if (!localStorage.getItem("gas_url")) localStorage.setItem("gas_url", DEFAULT_GAS_URL);
-      if (!localStorage.getItem("line_token")) localStorage.setItem("line_token", DEFAULT_LINE_TOKEN);
-      if (!localStorage.getItem("line_user_id")) localStorage.setItem("line_user_id", DEFAULT_LINE_USER_ID);
 
       renderEmployeeDropdowns();
       startLiveChronograph();
@@ -2174,6 +2143,29 @@
       syncToGoogleSheets([], lineMsg, [leaveObj]);
     }
 
+    function getActiveLineConfig() {
+      const gasUrl = (localStorage.getItem("gas_url") || DEFAULT_GAS_URL).trim();
+      const customToken = (localStorage.getItem("custom_line_token") || "").trim();
+      const customUserId = (localStorage.getItem("custom_line_user_id") || "").trim();
+      return {
+        gasUrl,
+        lineToken: customToken || DEFAULT_LINE_TOKEN,
+        lineUserId: customUserId || DEFAULT_LINE_USER_ID
+      };
+    }
+
+    function postToGasWebhook(payloadObj) {
+      const { gasUrl } = getActiveLineConfig();
+      if (!gasUrl) return Promise.reject(new Error("Missing GAS URL"));
+
+      return fetch(gasUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payloadObj)
+      });
+    }
+
     function deleteRecord(empId, recordDate) {
       if (!confirm(`ยืนยันการลบข้อมูลวันที่ ${formatThaiBE(recordDate)} ใช่หรือไม่?`)) return;
 
@@ -2190,49 +2182,58 @@
       loadTodayLiveStatus();
       renderHistories();
 
+      const { lineToken, lineUserId } = getActiveLineConfig();
       const payload = {
         action: "deletePayroll",
         id: targetId,
         date: recordDate,
         sendLine: true,
-        channelAccessToken: localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN,
-        userId: localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID,
+        channelAccessToken: lineToken,
+        userId: lineUserId,
         lineMessage: `🗑️ [DELETE RECORD]\nพนักงาน ID: ${targetId}\nวันที่ลบ: ${formatThaiBE(recordDate)}`
       };
 
-      fetch(localStorage.getItem("gas_url") || DEFAULT_GAS_URL, {
-        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
-      }).catch(err => console.error(err));
+      postToGasWebhook(payload).catch(err => console.error(err));
     }
 
     function syncToGoogleSheets(payrolls = [], lineMessage = '', leaves = [], payslip = null) {
-      const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
-      const lineToken = localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN;
-      const lineUserId = localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID;
+      const { gasUrl, lineToken, lineUserId } = getActiveLineConfig();
       const pill = document.getElementById('cloudSyncPill');
       if (pill) pill.textContent = "SYNCING...";
 
+      if (!gasUrl) {
+        if (pill) pill.textContent = "NO GAS";
+        showToast("ยังไม่ได้ตั้งค่า Google Apps Script URL");
+        return Promise.resolve();
+      }
+
+      const shouldSendLine = Boolean(lineMessage && lineMessage.trim());
       const payload = {
-        sendLine: true,
+        action: "syncAll",
+        sendLine: shouldSendLine,
         channelAccessToken: lineToken,
         userId: lineUserId,
-        lineMessage, payrolls, leaves, payslip
+        lineMessage: shouldSendLine ? lineMessage.trim() : "",
+        payrolls,
+        leaves,
+        payslip
       };
 
-      return fetch(gasUrl, {
-        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
-      }).then(() => {
-        if (pill) pill.textContent = "LINKED";
-        showToast("ซิงค์ข้อมูลเรียบร้อย");
-      }).catch(err => {
-        if (pill) pill.textContent = "OFFLINE";
-        console.error(err);
-      });
+      return postToGasWebhook(payload)
+        .then(() => {
+          if (pill) pill.textContent = "LINKED";
+          showToast(shouldSendLine ? "ส่งข้อมูลและแจ้งเตือน LINE แล้ว" : "ซิงค์ข้อมูลเรียบร้อย");
+        })
+        .catch(err => {
+          if (pill) pill.textContent = "OFFLINE";
+          console.error(err);
+          showToast("ส่งข้อมูลไม่สำเร็จ");
+        });
     }
 
     function pullFromGoogleSheets(silent = false) {
       if (isPullingSheets) return;
-      const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
+      const { gasUrl } = getActiveLineConfig();
       if (!gasUrl) {
         if (!silent) showToast("ยังไม่ได้ตั้งค่า Google Apps Script URL");
         return;
@@ -2836,55 +2837,52 @@
         ytdEarningsTotal, ytdSocialTotal
       };
 
-      document.getElementById('payslipHeaderInfo').innerHTML = `
-        <div><span class="font-bold">รหัส</span> <span class="ml-1">${emp.id}</span></div>
-        <div><span class="font-bold">ชื่อสกุล</span> <span class="ml-1">${emp.name}</span></div>
-        <div><span class="font-bold">แผนก</span> <span class="ml-1">${emp.dept}</span></div>
-        <div><span class="font-bold">วันเริ่มงาน</span> <span class="ml-1">${emp.startDate}</span></div>
-        <div><span class="font-bold">เลขที่บัญชี</span> <span class="ml-1">${emp.bankAcc}</span></div>
-      `;
+      document.getElementById('empSlipId').textContent = emp.id;
+      document.getElementById('empSlipName').textContent = emp.name;
+      document.getElementById('empSlipDept').textContent = emp.dept;
+      document.getElementById('empSlipStart').textContent = emp.startDate;
+      document.getElementById('empSlipAcc').textContent = emp.bankAcc;
 
-      const genEarnRow = (title, qty, amt) => `
-        <tr>
-          <td class="py-[1.5px] px-2 border-r border-black">${title}</td>
-          <td class="py-[1.5px] px-1.5 text-right border-r border-black">${qty}</td>
-          <td class="py-[1.5px] px-2 text-right">${fmtNum(amt)}</td>
-        </tr>
-      `;
+      const earnRows = [
+        ['อัตราเงินเดือน', '', 400],
+        ['เงินเดือน', fmtNum(workDaysCount), sumBase],
+        ['ค่าล่วงเวลา1เท่า', '0.00', 0],
+        ['ค่าล่วงเวลา 1.5เท่า', fmtNum(minsOT15), sumOT15],
+        ['ค่าล่วงเวลา 2 เท่า', fmtNum(minsOT20), sumOT20],
+        ['ค่าล่วงเวลา 3 เท่า', fmtNum(minsOT30), sumOT30],
+        ['ค่ากะ', '', sumShift],
+        ['ค่าอาหารโอที', '', sumOTMeal],
+        ['เบี้ยขยัน', '', adj.diligence],
+        ['ลาป่วย/พักร้อน/ลากิจ', '', 0],
+        ['วันหยุดประเพณี', '', 0],
+        ['ค่าแรงตกจ่าย', '', 0],
+        ['ค่าแรง 75%/อื่นๆ', '', adj.otherIncome],
+        ['ค่าอาหารกลางวัน', '', sumMeal],
+        ['Bonus/ค่ารถ', '', adj.bonus],
+        ['ค่าเสี่ยงภัย', '', adj.hazard]
+      ];
 
-      const genDedRow = (title, amt) => `
-        <tr>
-          <td class="py-[1.5px] px-2 border-r border-black">${title}</td>
-          <td class="py-[1.5px] px-2 text-right">${fmtNum(amt)}</td>
-        </tr>
-      `;
+      const dedRows = [
+        ['หักค่าชุดฟอร์ม', adj.uniform],
+        ['หักสมทบประกันสังคม', adj.socSec],
+        ['ค่าตรวจร่างกาย', 0],
+        ['หักค่าอื่นๆ', adj.otherDed],
+        ['หักกยศ./กรอ', adj.studentLoan],
+        ['หักอายัดตามกรมบังคับคดี', 0]
+      ];
 
-      document.getElementById('payslipEarningsBody').innerHTML =
-        genEarnRow('อัตราเงินเดือน', '', 400) +
-        genEarnRow('เงินเดือน', fmtNum(workDaysCount), sumBase) +
-        genEarnRow('ค่าล่วงเวลา1เท่า', '0.00', 0) +
-        genEarnRow('ค่าล่วงเวลา 1.5เท่า', fmtNum(minsOT15), sumOT15) +
-        genEarnRow('ค่าล่วงเวลา 2 เท่า', fmtNum(minsOT20), sumOT20) +
-        genEarnRow('ค่าล่วงเวลา 3 เท่า', fmtNum(minsOT30), sumOT30) +
-        genEarnRow('ค่ากะ', '', sumShift) +
-        genEarnRow('ค่าอาหารโอที', '', sumOTMeal) +
-        genEarnRow('เบี้ยขยัน', '', adj.diligence) +
-        genEarnRow('ลาป่วย/พักร้อน/ลากิจ', '', 0) +
-        genEarnRow('วันหยุดประเพณี', '', 0) +
-        genEarnRow('ค่าแรงตกจ่าย', '', 0) +
-        genEarnRow('ค่าแรง 75%/อื่นๆ', '', adj.otherIncome) +
-        genEarnRow('ค่าอาหารกลางวัน', '', sumMeal) +
-        genEarnRow('Bonus/ค่ารถ', '', adj.bonus) +
-        genEarnRow('ค่าเสี่ยงภัย', '', adj.hazard);
-
-      document.getElementById('payslipDeductionsBody').innerHTML =
-        genDedRow('หักค่าชุดฟอร์ม', adj.uniform) +
-        genDedRow('หักสมทบประกันสังคม', adj.socSec) +
-        genDedRow('ค่าตรวจร่างกาย', 0) +
-        genDedRow('หักค่าอื่นๆ', adj.otherDed) +
-        genDedRow('หักกยศ./กรอ', adj.studentLoan) +
-        genDedRow('หักอายัดตามกรมบังคับคดี', 0) +
-        `<tr class="h-full"><td class="border-r border-black"></td><td></td></tr>`;
+      document.getElementById('payslipMainTableBody').innerHTML = earnRows.map((row, idx) => {
+        const ded = dedRows[idx];
+        return `
+          <tr class="border-b border-black/25 last:border-b-0">
+            <td class="py-[2px] px-2 border-r border-black">${row[0]}</td>
+            <td class="py-[2px] px-1.5 text-right font-mono border-r border-black">${row[1]}</td>
+            <td class="py-[2px] px-2 text-right font-mono border-r border-black">${fmtNum(row[2])}</td>
+            <td class="py-[2px] px-2 border-r border-black">${ded ? ded[0] : ''}</td>
+            <td class="py-[2px] px-2 text-right font-mono">${ded ? fmtNum(ded[1]) : ''}</td>
+          </tr>
+        `;
+      }).join('');
 
       document.getElementById('payslipTotalEarnings').textContent = fmtNum(totalEarnings);
       document.getElementById('payslipTotalDeductions').textContent = fmtNum(totalDeductions);
@@ -2976,18 +2974,33 @@
     function closePayslipModal() { document.getElementById('payslipModal').classList.add('hidden'); }
 
     function openConfigModal() {
-      document.getElementById('gasUrlInput').value = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
-      document.getElementById('lineTokenInput').value = localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN;
-      document.getElementById('lineUserIdInput').value = localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID;
+      const cfg = getActiveLineConfig();
+      document.getElementById('gasUrlInput').value = cfg.gasUrl;
+      document.getElementById('lineTokenInput').value = cfg.lineToken;
+      document.getElementById('lineUserIdInput').value = cfg.lineUserId;
       document.getElementById('configModal').classList.remove('hidden');
     }
 
     function closeConfigModal() { document.getElementById('configModal').classList.add('hidden'); }
 
     function saveConfigSettings() {
-      localStorage.setItem("gas_url", document.getElementById('gasUrlInput').value.trim());
-      localStorage.setItem("line_token", document.getElementById('lineTokenInput').value.trim());
-      localStorage.setItem("line_user_id", document.getElementById('lineUserIdInput').value.trim());
+      const gasUrl = document.getElementById('gasUrlInput').value.trim();
+      const lineToken = document.getElementById('lineTokenInput').value.trim();
+      const lineUserId = document.getElementById('lineUserIdInput').value.trim();
+
+      localStorage.setItem("gas_url", gasUrl || DEFAULT_GAS_URL);
+      if (lineToken && lineToken !== DEFAULT_LINE_TOKEN) {
+        localStorage.setItem("custom_line_token", lineToken);
+      } else {
+        localStorage.removeItem("custom_line_token");
+      }
+
+      if (lineUserId && lineUserId !== DEFAULT_LINE_USER_ID) {
+        localStorage.setItem("custom_line_user_id", lineUserId);
+      } else {
+        localStorage.removeItem("custom_line_user_id");
+      }
+
       closeConfigModal();
       showToast("บันทึกการตั้งค่าเรียบร้อย");
       pullFromGoogleSheets(false);
