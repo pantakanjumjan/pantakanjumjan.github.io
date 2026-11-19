@@ -3,1180 +3,861 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Provide Power // VALKYRIE CHRONO-OVERDRIVE MK-IX</title>
-
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="ProvidePower">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#07090D">
-  <link id="appleTouchIconLink" rel="apple-touch-icon" sizes="180x180" href="">
-  <link id="faviconLink" rel="icon" type="image/png" href="">
-
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ลงเวลา & OT">
+  <link id="appleTouchIcon" rel="apple-touch-icon" href="">
+  <link id="faviconIcon" rel="icon" type="image/png" href="">
+  <meta name="theme-color" content="#05070A">
+  <title>ระบบลงเวลา & OT | PROVIDE POWER CHRONO HUD</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Orbitron:wght@700;800;900&family=Sarabun:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script>
-    const COMPANY_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 225" fill="none">
-      <path fill="#FF1E27" d="M68 18 H192 L222 70 H112 L94 101 H54 L36 70 Z"/>
-      <path fill="#FF1E27" d="M29 82 L47 51 L65 82 L41 124 L23 93 Z"/>
-      <path fill="#FF1E27" d="M77 82 H115 L74 153 L55 120 Z"/>
-      <path fill="#FF1E27" d="M128 82 H229 L246 112 H111 L82 162 L101 195 H159 L174 169 H126 L142 141 H231 L182 225 H82 L42 156 L84 82 Z"/>
-    </svg>`;
-    const COMPANY_LOGO_URI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(COMPANY_LOGO_SVG);
-
-    function applyCompanyLogos() {
-      document.querySelectorAll('.company-logo-slot').forEach(el => {
-        el.src = COMPANY_LOGO_URI;
-      });
-    }
-
-    (function generateAppIcons() {
-      window.addEventListener('DOMContentLoaded', applyCompanyLogos);
-      const img = new Image();
-      img.onload = function () {
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = 512;
-          canvas.height = 512;
-          const ctx = canvas.getContext('2d');
-
-          const grad = ctx.createLinearGradient(0, 0, 512, 512);
-          grad.addColorStop(0, '#16181F');
-          grad.addColorStop(1, '#050608');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, 512, 512);
-
-          ctx.strokeStyle = 'rgba(255, 30, 39, 0.75)';
-          ctx.lineWidth = 10;
-          ctx.strokeRect(22, 22, 468, 468);
-
-          ctx.shadowColor = 'rgba(255, 30, 39, 0.85)';
-          ctx.shadowBlur = 28;
-          ctx.drawImage(img, 96, 110, 320, 277);
-
-          const pngUrl = canvas.toDataURL('image/png');
-          document.getElementById('appleTouchIconLink').href = pngUrl;
-          document.getElementById('faviconLink').href = pngUrl;
-        } catch (e) {}
-      };
-      img.src = COMPANY_LOGO_URI;
-    })();
+    tailwind.config = { darkMode: 'class' }
   </script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['IBM Plex Sans Thai', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-            hud: ['Orbitron', 'Chakra Petch', 'sans-serif'],
-            mech: ['Chakra Petch', 'IBM Plex Sans Thai', 'sans-serif'],
-            slip: ['Sarabun', 'sans-serif'],
-          },
-          colors: {
-            valk: {
-              bg: '#050608',
-              panel: '#0B0D12',
-              red: '#FF1E27',
-              cyan: '#00F0FF',
-              amber: '#FFB800',
-              emerald: '#00FF94'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
-    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    html, body {
-      min-height: 100%;
-      margin: 0;
-      padding: 0;
+    :root {
+      --valk-obsidian: #05070A;
+      --valk-armor: #0E121A;
+      --valk-panel: #141923;
+      --valk-red: #FF1E27;
+      --valk-cyan: #00F0FF;
+      --valk-amber: #F59E0B;
+      --valk-emerald: #00FF94;
+      --aura-primary: #00F0FF;
+      --aura-glow: rgba(0, 240, 255, 0.28);
     }
+
+    body.state-standby {
+      --aura-primary: #00F0FF;
+      --aura-glow: rgba(0, 240, 255, 0.25);
+    }
+    body.state-onduty {
+      --aura-primary: #FF1E27;
+      --aura-glow: rgba(255, 30, 39, 0.35);
+    }
+    body.state-overdrive {
+      --aura-primary: #F59E0B;
+      --aura-glow: rgba(245, 158, 11, 0.42);
+    }
+
     body {
-      font-family: 'IBM Plex Sans Thai', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-      background-color: #050608;
-      color: #F4F4F6;
+      font-family: 'Chakra Petch', sans-serif;
+      background-color: var(--valk-obsidian);
+      color: #F4F6FA;
+      -webkit-tap-highlight-color: transparent;
       overflow-x: hidden;
-      transition: background-color 0.25s ease, color 0.25s ease;
-    }
-    input, textarea, select { user-select: auto; }
-
-    /* =========================================================
-       iOS SAFE AREA & PWA STANDALONE HEADER PROTECTION
-       ========================================================= */
-    header.valk-header {
-      padding-top: calc(max(env(safe-area-inset-top, 0px), 12px) + 0.5rem) !important;
-      padding-bottom: 0.65rem !important;
-    }
-    @media all and (display-mode: standalone) {
-      header.valk-header {
-        padding-top: calc(max(env(safe-area-inset-top, 48px), 48px) + 0.4rem) !important;
-      }
-    }
-    nav.valk-dock {
-      bottom: calc(max(env(safe-area-inset-bottom, 0px), 12px) + 0.35rem) !important;
-    }
-    main.valk-main {
-      padding-bottom: calc(max(env(safe-area-inset-bottom, 0px), 16px) + 6.5rem) !important;
     }
 
-    /* =========================================================
-       UNIFIED FORM INPUT / SELECT GEOMETRY FOR iOS & ANDROID
-       ========================================================= */
-    .valk-field {
-      height: 38px;
-      min-height: 38px;
-      line-height: 1.25;
-      padding: 0 0.65rem;
-      border-radius: 0.5rem;
-      border: 1.5px solid #3F3F46;
-      background-color: rgba(0, 0, 0, 0.72);
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-    .valk-field:focus {
-      border-color: #FF1E27;
-      box-shadow: 0 0 0 2px rgba(255, 30, 39, 0.22);
-    }
-    input[type="date"].valk-field,
-    input[type="time"].valk-field {
-      -webkit-appearance: none;
-      appearance: none;
-      display: block;
-      padding-top: 0.45rem;
-      padding-bottom: 0.45rem;
-    }
-    select.valk-field {
-      padding-right: 1.85rem;
+    /* Carbon Hex-Grid Tactical Background */
+    .hex-bg {
+      background-color: #05070A;
+      background-image:
+        radial-gradient(circle at 50% 18%, var(--aura-glow) 0%, transparent 58%),
+        radial-gradient(#1b2434 1px, transparent 1px),
+        radial-gradient(#131a26 1px, #05070A 1px);
+      background-size: 100% 100%, 24px 24px, 24px 24px;
+      background-position: 0 0, 0 0, 12px 12px;
+      transition: background-image 0.5s ease;
     }
 
-    /* =========================================================
-       MECHA CHAMFERED CUT-CORNER ARCHITECTURE
-       ========================================================= */
+    .font-hud { font-family: 'Orbitron', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Chamfered Armor Frame */
     .chamfer-box {
-      clip-path: polygon(
-        14px 0, calc(100% - 14px) 0,
-        100% 14px, 100% calc(100% - 14px),
-        calc(100% - 14px) 100%, 14px 100%,
-        0 calc(100% - 14px), 0 14px
-      );
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
     }
     .chamfer-sm {
-      clip-path: polygon(
-        8px 0, calc(100% - 8px) 0,
-        100% 8px, 100% calc(100% - 8px),
-        calc(100% - 8px) 100%, 8px 100%,
-        0 calc(100% - 8px), 0 8px
-      );
-    }
-
-    /* =========================================================
-       VALKYRIE HEX-GRID + CARBON + LASER TELEMETRY STAGE
-       ========================================================= */
-    .valk-stage {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-      background: radial-gradient(circle at 50% 18%, #16090D 0%, #050608 74%);
-    }
-
-    .hex-grid-overlay {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(30deg, rgba(255, 30, 39, 0.045) 12%, transparent 12.5%, transparent 87%, rgba(255, 30, 39, 0.045) 87.5%, rgba(255, 30, 39, 0.045)),
-        linear-gradient(150deg, rgba(255, 30, 39, 0.045) 12%, transparent 12.5%, transparent 87%, rgba(255, 30, 39, 0.045) 87.5%, rgba(255, 30, 39, 0.045)),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.025) 1px, transparent 1px);
-      background-size: 40px 70px, 40px 70px, 24px 24px;
-      opacity: 0.9;
-    }
-
-    .crt-scanlines {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.2) 0px,
-        rgba(0, 0, 0, 0.2) 1px,
-        transparent 1px,
-        transparent 3px
-      );
-      opacity: 0.5;
-    }
-
-    @keyframes radar-sweep {
-      0% { transform: translateY(-100%); opacity: 0; }
-      30% { opacity: 0.38; }
-      100% { transform: translateY(100vh); opacity: 0; }
-    }
-    .laser-sweep-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #FF1E27, #00F0FF, #FF1E27, transparent);
-      box-shadow: 0 0 18px #FF1E27;
-      animation: radar-sweep 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
-
-    #constellationCanvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.75;
-    }
-
-    /* =========================================================
-       3D GYRO TILT + TITANIUM-CARBON ARMOR CHASSIS
-       ========================================================= */
-    .tilt-stage {
-      perspective: 1100px;
-    }
-    .tilt-card {
-      transform-style: preserve-3d;
-      transition: transform 0.14s ease-out;
+      clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
     }
 
     .armor-frame {
-      position: relative;
-      background: linear-gradient(145deg, rgba(255, 30, 39, 0.45) 0%, rgba(45, 52, 68, 0.65) 45%, rgba(0, 240, 255, 0.35) 100%);
       padding: 1px;
+      background: linear-gradient(135deg, var(--aura-primary) 0%, rgba(255,255,255,0.12) 48%, rgba(255,30,39,0.45) 100%);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+      transition: background 0.4s ease;
     }
+
     .armor-inner {
-      background: linear-gradient(180deg, rgba(16, 19, 27, 0.96) 0%, rgba(8, 10, 15, 0.98) 100%);
-      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(20, 25, 35, 0.96) 0%, rgba(10, 13, 19, 0.98) 100%);
+      position: relative;
+      overflow: hidden;
     }
 
-    .reactor-chamber {
-      background:
-        radial-gradient(circle at 50% 44%, rgba(255, 30, 39, 0.18) 0%, rgba(7, 9, 13, 0.98) 68%),
-        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 4px, transparent 4px, transparent 8px);
-    }
-
-    .sapphire-glare {
+    /* Scanline Sweep Effect */
+    .scanline-overlay::after {
+      content: "";
       position: absolute;
       inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 240, 255, 0.06) 50%, transparent 100%);
+      height: 35%;
+      animation: scanSweep 5.5s linear infinite;
       pointer-events: none;
-      background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 20%), rgba(255, 255, 255, 0.11) 0%, transparent 62%);
-      z-index: 2;
     }
 
-    @keyframes spin-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes spin-ccw { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-    .ring-spin-cw { transform-origin: 120px 120px; animation: spin-cw 30s linear infinite; }
-    .ring-spin-ccw { transform-origin: 120px 120px; animation: spin-ccw 20s linear infinite; }
-
-    .tactile-btn {
-      transition: transform 0.08s ease, filter 0.12s ease, box-shadow 0.15s ease;
-    }
-    .tactile-btn:active {
-      transform: scale(0.96);
+    @keyframes scanSweep {
+      0% { transform: translateY(-120%); }
+      100% { transform: translateY(340%); }
     }
 
-    .hw-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23FF1E27'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.6rem center;
-      background-size: 0.85rem;
+    /* Counter-Rotating Radar Rings */
+    @keyframes spinCW {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes spinCCW {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+    .radar-ring-cw {
+      transform-origin: 120px 120px;
+      animation: spinCW 24s linear infinite;
+    }
+    .radar-ring-ccw {
+      transform-origin: 120px 120px;
+      animation: spinCCW 16s linear infinite;
     }
 
-    /* Interactive OT Scrubber Slider */
-    input[type="range"].chrono-scrubber {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 6px;
-      background: linear-gradient(90deg, #10B981 0%, #FFB800 50%, #FF1E27 100%);
-      border-radius: 999px;
+    /* Sapphire Glare */
+    .sapphire-glare {
+      background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 20%), rgba(255,255,255,0.09) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    /* Dark Dropdown & Input Fix */
+    .valk-field {
+      background-color: #0B0F17;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #F4F6FA;
+      border-radius: 6px;
+      padding: 0.45rem 0.65rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .valk-field:focus {
+      border-color: var(--valk-cyan);
+      box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2);
       outline: none;
     }
-    input[type="range"].chrono-scrubber::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
-      background: #0F1218;
-      border: 2.5px solid #FF1E27;
-      box-shadow: 0 0 12px rgba(255, 30, 39, 0.85);
-      cursor: pointer;
+    select,
+    select option {
+      background-color: #0E121A !important;
+      color: #F4F6FA !important;
     }
 
-    /* Slide-to-Engage Ignition Track */
+    .tactile-btn {
+      transition: transform 0.12s ease, filter 0.15s ease;
+      cursor: pointer;
+    }
+    .tactile-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Ignition Slide Track */
     .slide-track {
       position: relative;
-      height: 54px;
+      height: 50px;
       overflow: hidden;
-      touch-action: pan-y;
     }
     .slide-fill {
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
+      top: 0; left: 0; bottom: 0;
       width: 0%;
       pointer-events: none;
-      transition: width 0.05s linear;
     }
     .slide-thumb {
       position: absolute;
-      top: 4px;
-      left: 4px;
-      width: 52px;
-      height: 46px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: 4px; left: 4px;
+      width: 48px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
       cursor: grab;
       z-index: 10;
       touch-action: none;
     }
     .slide-thumb:active { cursor: grabbing; }
 
-    @keyframes chevron-pulse {
-      0%, 100% { opacity: 0.25; transform: translateX(0); }
-      50% { opacity: 0.95; transform: translateX(4px); }
+    @keyframes chevronPulse {
+      0%, 100% { opacity: 0.35; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(4px); }
     }
-    .chevron-anim { animation: chevron-pulse 1.4s infinite ease-in-out; }
+    .chevron-anim { animation: chevronPulse 1.3s infinite; }
 
-    /* =========================================================
-       DAYTIME TACTICAL TITANIUM GUNMETAL HUD (COOL, SLEEK & ANTI-GLARE)
-       ========================================================= */
-    html:not(.dark) body { background-color: #1D232C; color: #F1F5F9; }
-    html:not(.dark) .valk-stage {
-      background: radial-gradient(circle at 50% 18%, #333D4D 0%, #181D26 85%);
-    }
-    html:not(.dark) .hex-grid-overlay {
-      background-image:
-        linear-gradient(30deg, rgba(0, 240, 255, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(0, 240, 255, 0.05) 87.5%, rgba(0, 240, 255, 0.05)),
-        linear-gradient(150deg, rgba(255, 30, 39, 0.04) 12%, transparent 12.5%, transparent 87%, rgba(255, 30, 39, 0.04) 87.5%, rgba(255, 30, 39, 0.04)),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      opacity: 0.95;
-    }
-    html:not(.dark) .crt-scanlines { opacity: 0.14; }
-    html:not(.dark) header.valk-header {
-      background-color: rgba(27, 33, 43, 0.96) !important;
-      border-bottom-color: rgba(255, 30, 39, 0.6) !important;
-      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
-    }
-    html:not(.dark) header.valk-header h1 { color: #F8FAFC !important; }
-    html:not(.dark) .header-ctrl-btn {
-      background-color: #2A3240 !important;
-      border-color: #475569 !important;
-      color: #F1F5F9 !important;
-    }
-    html:not(.dark) .pilot-bar {
-      background-color: #252C38 !important;
-      border-color: #475569 !important;
-    }
-    html:not(.dark) .pilot-bar select {
-      color: #F8FAFC !important;
-    }
-    html:not(.dark) .pilot-bar select option {
-      background-color: #1E242E !important;
-      color: #F8FAFC !important;
-    }
-    html:not(.dark) .armor-frame {
-      background: linear-gradient(145deg, rgba(255, 30, 39, 0.55) 0%, rgba(100, 116, 139, 0.7) 48%, rgba(0, 240, 255, 0.45) 100%) !important;
-    }
-    html:not(.dark) .armor-inner {
-      background: linear-gradient(180deg, rgba(39, 47, 60, 0.96) 0%, rgba(28, 34, 44, 0.98) 100%) !important;
-      color: #F1F5F9 !important;
-    }
-    html:not(.dark) .reactor-chamber {
-      background:
-        radial-gradient(circle at 50% 44%, rgba(0, 240, 255, 0.12) 0%, rgba(30, 36, 46, 0.98) 70%),
-        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 4px, transparent 4px, transparent 8px) !important;
-    }
-    html:not(.dark) .chrono-center-box {
-      background-color: rgba(15, 19, 26, 0.94) !important;
-      border-color: rgba(0, 240, 255, 0.45) !important;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-    }
-    html:not(.dark) .armor-inner .text-white { color: #F8FAFC !important; }
-    html:not(.dark) .armor-inner .text-zinc-400,
-    html:not(.dark) .armor-inner .text-zinc-300 { color: #CBD5E1 !important; }
-    html:not(.dark) .armor-inner .border-zinc-800 { border-color: #475569 !important; }
-    html:not(.dark) .valk-field {
-      background-color: #1B212B !important;
-      border: 1.5px solid #475569 !important;
-      color: #F8FAFC !important;
-    }
-    html:not(.dark) .valk-field:focus {
-      background-color: #141921 !important;
-      border-color: #00F0FF !important;
-    }
-    html:not(.dark) .valk-field option {
-      background-color: #1E242E !important;
-      color: #F8FAFC !important;
-    }
-    html:not(.dark) .armor-inner .bg-black\/60,
-    html:not(.dark) .armor-inner .bg-black\/65,
-    html:not(.dark) .armor-inner .bg-black\/70,
-    html:not(.dark) .armor-inner .bg-black\/75,
-    html:not(.dark) .armor-inner .bg-black\/80,
-    html:not(.dark) .armor-inner .bg-black\/85 {
-      background-color: rgba(20, 25, 33, 0.85) !important;
-      border-color: #475569 !important;
-      color: #F1F5F9 !important;
-    }
-
-    /* =========================================================
-       A5 LANDSCAPE PAYSLIP SHEET STYLING (IMAGE & PRINT)
-       ========================================================= */
+    /* A5 Payslip Print Formatting */
     .a5-payslip-sheet {
       font-family: 'Sarabun', sans-serif;
-      font-style: italic;
       color: #000000;
-      background-color: #ffffff;
     }
-
-    @page { size: A5 landscape; margin: 5mm; }
     @media print {
-      body { background: #fff !important; color: #000 !important; }
-      .valk-stage, .no-print { display: none !important; }
-      body * { visibility: hidden !important; }
-      #payslipCaptureContent, #payslipCaptureContent * { visibility: visible !important; }
+      body * { visibility: hidden; }
+      #payslipCaptureContent, #payslipCaptureContent * { visibility: visible; }
       #payslipCaptureContent {
-        position: fixed !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 200mm !important;
-        height: auto !important;
-        padding: 4mm 6mm !important;
-        margin: 0 !important;
-        background: #fff !important;
-        color: #000 !important;
-        box-shadow: none !important;
+        position: fixed; left: 0; top: 0; width: 210mm; height: 148mm;
+        margin: 0; padding: 8mm; box-shadow: none;
       }
+      .no-print { display: none !important; }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="hex-bg state-standby min-h-screen pb-24 select-none">
 
-  <!-- VALKYRIE HEX-GRID + LASER + CONSTELLATION TELEMETRY STAGE -->
-  <div class="valk-stage no-print" aria-hidden="true">
-    <div class="hex-grid-overlay"></div>
-    <div class="crt-scanlines"></div>
-    <div class="laser-sweep-line"></div>
-    <canvas id="constellationCanvas"></canvas>
+  <!-- Boot-Up Diagnostic Overlay -->
+  <div id="bootOverlay" class="fixed inset-0 z-[100] bg-[#05070A] flex flex-col items-center justify-center p-6 transition-opacity duration-300">
+    <div class="w-full max-w-xs space-y-3 font-mono text-xs">
+      <div class="flex items-center justify-between text-cyan-400 border-b border-cyan-500/30 pb-1.5">
+        <span class="font-hud font-bold tracking-widest">VALKYRIE OS v4.2</span>
+        <span class="animate-pulse text-[10px]">BOOTING...</span>
+      </div>
+      <div id="bootLogLines" class="space-y-1 text-[10.5px] text-zinc-400 min-h-[54px]">
+        <div>&gt; INITIALIZING COCKPIT HUD...</div>
+      </div>
+      <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800">
+        <div id="bootProgressBar" class="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-red-500 transition-all duration-200" style="width: 15%"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- Top Mecha HUD Header Bar -->
-  <header class="valk-header sticky top-0 z-30 bg-[#07090D]/95 backdrop-blur-xl border-b border-red-600/45 px-3.5 no-print">
-    <div class="max-w-md mx-auto space-y-2">
-      <div class="flex justify-between items-center gap-2">
+  <!-- Constellation Particle Canvas -->
+  <canvas id="constellationCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-65"></canvas>
+
+  <!-- Top Telemetry Header -->
+  <header class="sticky top-0 z-30 bg-[#05070A]/92 backdrop-blur-md border-b border-white/10 px-3 py-2.5 no-print" style="padding-top: calc(env(safe-area-inset-top, 0px) + 0.55rem);">
+    <div class="max-w-lg mx-auto space-y-2.5">
+      <div class="flex items-center justify-between gap-2">
+
+        <!-- โลโก้ + PROVIDE POWER + LINKED + เวลา กะ/OT -->
         <div class="flex items-center gap-2.5 min-w-0">
-          <div class="chamfer-sm w-9 h-9 bg-zinc-950 flex items-center justify-center border border-red-500/80 shadow-[0_0_16px_rgba(255,30,39,0.5)] shrink-0">
-            <img alt="Provide Power Logo" class="company-logo-slot w-6 h-5 object-contain">
+          <div class="relative w-10 h-10 bg-black/90 rounded-lg flex items-center justify-center shrink-0">
+            <span class="absolute top-0 inset-x-2.5 h-[1.5px] bg-red-500"></span>
+            <span class="absolute bottom-0 inset-x-2.5 h-[1.5px] bg-red-500"></span>
+            <span class="absolute left-0 inset-y-2.5 w-[1.5px] bg-red-500"></span>
+            <span class="absolute right-0 inset-y-2.5 w-[1.5px] bg-red-500"></span>
+            <svg viewBox="0 0 64 64" class="w-6 h-6">
+              <path d="M18 14 H48 L44 22 H24 L28 28 H45 L41 35 H24 L20 27 L16 21 Z" fill="#FF1E27"/>
+              <path d="M19 37 H31 L27 44 H42 L44 39 H34 L37 33 H52 L46 50 H21 L17 43 Z" fill="#FF1E27"/>
+            </svg>
           </div>
+
           <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <h1 class="font-hud font-black text-xs tracking-wider text-white truncate">PROVIDE POWER</h1>
-              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-500 border border-emerald-500/50">LINKED</span>
+            <div class="flex items-center gap-2">
+              <span class="font-hud font-black text-[13px] sm:text-sm tracking-wider text-white truncate">PROVIDE POWER</span>
+              <span id="cloudSyncPill" style="clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%);" class="px-2.5 py-[1px] bg-emerald-950/90 border border-emerald-500/60 text-emerald-400 font-mono font-bold text-[9px] tracking-wider shrink-0">LINKED</span>
             </div>
-            <p class="font-mono text-[9px] text-cyan-400 font-bold tracking-widest">SHIFT 08:00-16:50 // OT 17:10-19:10</p>
+            <div id="headerShiftSchedule" class="font-mono font-bold text-[9.5px] sm:text-[10px] tracking-wide text-cyan-400 truncate mt-0.5">
+              SHIFT 08:00-16:50 // OT 17:10-19:10
+            </div>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 shrink-0">
-          <button onclick="toggleAudio()" id="audioToggleBtn" aria-label="สลับเสียง" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300">
-            <i class="fa-solid fa-volume-high text-[11px]" id="audioIcon"></i>
+        <!-- ปุ่มควบคุมมุมขวา -->
+        <div class="flex items-center gap-1 shrink-0">
+          <button onclick="pullFromGoogleSheets(false)" title="ซิงค์ข้อมูล" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-cyan-400 text-xs">
+            <i id="topSyncIcon" class="fa-solid fa-rotate"></i>
           </button>
-          <button onclick="cycleThemeMode()" aria-label="สลับโหมดสี" class="header-ctrl-btn tactile-btn chamfer-sm h-7 px-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 flex items-center gap-1 text-[9.5px] font-hud font-bold text-zinc-200">
-            <i id="themeIcon" class="fa-solid fa-shield-halved text-[10px] text-cyan-400"></i>
-            <span id="themeLabel">AUTO</span>
+          <button onclick="cycleThemeMode()" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 flex items-center gap-1">
+            <i id="themeIcon" class="fa-solid fa-moon text-[10px] text-red-500"></i>
+            <span id="themeLabel" class="font-hud text-[9px] font-bold text-zinc-300">AUTO</span>
           </button>
-          <button onclick="pullFromGoogleSheets(false)" id="btnTopSync" title="ซิงค์ข้อมูลกับ Google Sheets" aria-label="ซิงค์ข้อมูล" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-900 hover:bg-cyan-600 border border-cyan-500/50 flex items-center justify-center text-cyan-400 hover:text-white">
-            <i class="fa-solid fa-arrows-rotate text-[11px]" id="topSyncIcon"></i>
+          <button id="audioToggleBtn" onclick="toggleAudio()" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200">
+            <i id="audioIcon" class="fa-solid fa-volume-high text-[11px]"></i>
           </button>
-          <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-950 hover:bg-red-600 border border-red-500/70 flex items-center justify-center text-red-500 hover:text-white">
-            <i class="fa-solid fa-microchip text-[11px]"></i>
+          <button onclick="openConfigModal()" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white">
+            <i class="fa-solid fa-gear text-[11px]"></i>
           </button>
         </div>
       </div>
 
-      <!-- Pilot Identification Bar -->
-      <div class="pilot-bar chamfer-sm flex items-center gap-2 bg-[#0F1219] border border-zinc-800/90 px-2.5 py-1.5">
-        <span class="text-[9px] font-hud font-bold text-red-500 tracking-wider shrink-0">PILOT //</span>
-        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="hw-select flex-1 bg-transparent font-bold text-xs text-white outline-none truncate cursor-pointer pr-5">
-        </select>
-        <span id="dutyBadge" class="chamfer-sm text-[9.5px] px-2.5 py-0.5 bg-zinc-800 border border-zinc-700 font-bold text-zinc-200 shrink-0">STANDBY</span>
+      <!-- Employee Selector Bar -->
+      <div class="flex items-center gap-2">
+        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="valk-field w-full text-xs font-bold tracking-wide"></select>
+        <span id="dutyBadge" class="chamfer-sm text-[9.5px] px-2.5 py-1 bg-zinc-800 border border-zinc-700 font-bold text-zinc-200 shrink-0">STANDBY</span>
       </div>
     </div>
   </header>
 
-  <!-- Main Cockpit Viewport -->
-  <main class="valk-main relative z-10 flex-1 max-w-md w-full mx-auto px-3.5 py-3.5 space-y-3.5 no-print">
+  <!-- Main Cockpit Content -->
+  <main class="relative z-10 max-w-lg mx-auto px-3 pt-3 space-y-3">
 
-    <!-- TAB 1: HYBRID 3D GYRO CHRONO-REACTOR + INTERACTIVE OT SIMULATOR -->
-    <section id="tab-1" class="tab-content space-y-3.5">
-      
-      <!-- 3D Gyroscope Tilt Mecha Armor Chassis -->
-      <div class="tilt-stage">
-        <div id="chronoTiltCard" class="armor-frame chamfer-box tilt-card shadow-[0_14px_38px_rgba(0,0,0,0.45)]">
-          <div class="armor-inner reactor-chamber chamfer-box p-4 font-mono space-y-3 relative overflow-hidden">
-            <div id="sapphireGlare" class="sapphire-glare"></div>
+    <!-- TAB 1: CHRONO REACTOR & IGNITION HUD -->
+    <section id="tab-1" class="tab-content space-y-3">
 
-            <!-- Top Telemetry Status Line -->
-            <div class="flex justify-between items-center text-[10px] border-b border-red-500/25 pb-2 relative z-10">
-              <span id="currentDateDisplay" class="font-bold text-zinc-300 flex items-center gap-1.5">
-                <i class="fa-solid fa-satellite-dish text-red-500 text-[9px]"></i>
-                <span>--/--/----</span>
-              </span>
-              <span id="lcdModeTag" class="chamfer-sm bg-cyan-500/15 text-cyan-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-500/40 tracking-wider">CORE READY</span>
+      <!-- 3D Tilt Chrono Reactor Card -->
+      <div id="chronoTiltCard" class="armor-frame chamfer-box transition-transform duration-150">
+        <div class="armor-inner scanline-overlay chamfer-box p-4">
+          <div id="sapphireGlare" class="sapphire-glare absolute inset-0"></div>
+
+          <!-- Top Status Strip -->
+          <div class="flex items-center justify-between text-[10px] mb-2">
+            <div id="currentDateDisplay" class="font-bold text-zinc-300 flex items-center gap-1.5">
+              <i class="fa-regular fa-calendar text-cyan-400"></i>
+              <span>--/--/----</span>
             </div>
+            <span id="lcdModeTag" class="chamfer-sm bg-cyan-500/15 text-cyan-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-500/40 tracking-wider">CORE READY</span>
+          </div>
 
-            <!-- Dual-Core Arc Reactor + 60-Tick Chronograph Bezel + Sweeping Second Hand -->
-            <div class="relative flex flex-col items-center justify-center py-0.5 z-10">
-              <div class="relative w-[238px] h-[238px] flex items-center justify-center">
-                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 240 240">
-                  <defs>
-                    <linearGradient id="reactorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#00FF94"/>
-                      <stop offset="50%" stop-color="#FFB800"/>
-                      <stop offset="100%" stop-color="#FF1E27"/>
-                    </linearGradient>
-                  </defs>
+          <!-- Multi-Ring SVG Reactor Gauge -->
+          <div class="relative w-56 h-56 mx-auto my-1 flex items-center justify-center">
+            <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_16px_rgba(0,240,255,0.22)]">
+              <circle cx="120" cy="120" r="112" fill="none" stroke="rgba(0,240,255,0.25)" stroke-width="1.2" stroke-dasharray="18 8 4 8" class="radar-ring-cw"/>
+              <circle cx="120" cy="120" r="103" fill="none" stroke="rgba(255,30,39,0.35)" stroke-width="1.5" stroke-dasharray="36 14" class="radar-ring-ccw"/>
+              <g id="chronoTicksGroup"></g>
+              <circle cx="120" cy="120" r="90" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
+              <circle id="reactorProgressArc" cx="120" cy="120" r="90" fill="none" stroke="url(#reactorGrad)" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="565.48" stroke-dashoffset="565.48" transform="rotate(-90 120 120)" style="transition: stroke-dashoffset 0.35s ease;"/>
+              <defs>
+                <linearGradient id="reactorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00F0FF"/>
+                  <stop offset="55%" stop-color="#FF1E27"/>
+                  <stop offset="100%" stop-color="#F59E0B"/>
+                </linearGradient>
+              </defs>
+              <g id="chronoSecondHand">
+                <line x1="120" y1="120" x2="120" y2="26" stroke="#FF1E27" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="120" cy="120" r="3.5" fill="#FF1E27"/>
+              </g>
+            </svg>
 
-                  <!-- Outer Rotating Telemetry Ring -->
-                  <g class="ring-spin-cw">
-                    <circle cx="120" cy="120" r="115" fill="none" stroke="rgba(255,30,39,0.45)" stroke-width="1.5" stroke-dasharray="16 8 3 8"/>
-                  </g>
-
-                  <!-- 60 Precision Chronograph Bezel Ticks -->
-                  <g id="chronoTicksGroup"></g>
-
-                  <!-- Inner Counter-Rotating Ring -->
-                  <g class="ring-spin-ccw">
-                    <circle cx="120" cy="120" r="80" fill="none" stroke="rgba(0,240,255,0.35)" stroke-width="1.2" stroke-dasharray="6 6"/>
-                  </g>
-
-                  <!-- Shift Progress Track & Fill (r=92, circ=578.05) -->
-                  <circle cx="120" cy="120" r="92" fill="none" stroke="rgba(148,163,184,0.25)" stroke-width="6.5"/>
-                  <circle id="reactorProgressArc" cx="120" cy="120" r="92" fill="none" stroke="url(#reactorGrad)" stroke-width="6.5"
-                    stroke-linecap="round" stroke-dasharray="578.05" stroke-dashoffset="578.05"
-                    transform="rotate(-90 120 120)" style="transition: stroke-dashoffset 0.35s ease;"/>
-
-                  <!-- Sweeping 10Hz Chronograph Second Hand -->
-                  <g id="chronoSecondHand" transform="rotate(0 120 120)">
-                    <line x1="120" y1="138" x2="120" y2="20" stroke="#FF1E27" stroke-width="1.7" stroke-linecap="round"/>
-                    <circle cx="120" cy="120" r="3.5" fill="#FF1E27" stroke="#050608" stroke-width="1.2"/>
-                  </g>
-                </svg>
-
-                <!-- Center Digital Clock & Telemetry Pills -->
-                <div class="chrono-center-box relative z-10 text-center flex flex-col items-center bg-[#07090E]/92 px-3.5 py-2 rounded-2xl border border-white/15 backdrop-blur-sm shadow-lg">
-                  <span class="font-hud text-[8px] tracking-[0.22em] text-zinc-400 uppercase mb-0.5">CHRONO CORE</span>
-                  <div class="font-hud text-[24px] font-black tracking-wider leading-none text-white drop-shadow-[0_0_12px_rgba(255,30,39,0.5)]" id="liveClock">
-                    00:00:00<span class="text-xs text-red-500 font-bold">.0</span>
-                  </div>
-                  <div class="flex items-center gap-1.5 mt-1.5">
-                    <span id="reactorLiveBadge" class="px-2 py-0.5 rounded bg-black/80 border border-zinc-800 text-[9.5px] font-mono font-bold text-zinc-300">
-                      0% SHIFT
-                    </span>
-                    <span id="otRateGaugePill" class="px-1.5 py-0.5 rounded bg-red-600/20 border border-red-500/50 text-[9.5px] font-mono font-extrabold text-red-400">
-                      1.5X
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Live Elapsed & Accrued Pay Bar (Visible when ON DUTY) -->
-              <div id="liveShiftElapsedBar" class="hidden w-full mt-1 pt-2.5 border-t border-red-500/25 flex justify-between items-center text-[10.5px] px-1">
-                <span class="text-amber-400 font-bold flex items-center gap-1.5">
-                  <i class="fa-solid fa-fire-flame-curved"></i>
-                  <span>ELAPSED: <span id="liveElapsedText" class="text-white">00h 00m</span></span>
-                </span>
-                <span class="text-cyan-400 font-bold">ACCRUED: <span id="liveAccruedPay" class="text-emerald-400 font-extrabold">0.00 ฿</span></span>
-              </div>
+            <!-- Center Digital Readout -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+              <span class="font-hud text-[8.5px] tracking-[0.25em] text-zinc-400">CHRONO TIME</span>
+              <div id="liveClock" class="font-mono font-extrabold text-2xl tracking-tight text-white my-0.5">00:00:00<span class="text-xs text-red-500">.0</span></div>
+              <span id="reactorLiveBadge" class="px-2.5 py-0.5 rounded bg-black/85 border border-zinc-800 text-[9.5px] font-mono font-bold text-zinc-400">0% SHIFT</span>
             </div>
+          </div>
 
-            <!-- Tactical Cockpit Mode Selectors -->
-            <div class="space-y-2 pt-2 border-t border-zinc-800/90 text-[10px] relative z-10">
-              <div class="grid grid-cols-2 gap-2.5">
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="text-zinc-400 text-[8.5px] font-hud tracking-wider">SHIFT MODE</span>
-                    <button type="button" id="btnAutoShiftMode" onclick="enableAutoShiftMode()" title="เปิดโหมดสลับกะอัตโนมัติตามเวลา" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">AUTO</button>
-                  </div>
-                  <div class="chamfer-sm grid grid-cols-2 bg-black/85 p-0.5 border border-zinc-800">
-                    <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px] transition">DAY</button>
-                    <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 font-hud font-bold text-[10px] transition">NIGHT</button>
-                  </div>
-                </div>
-                <div>
-                  <span class="block text-zinc-400 text-[8.5px] font-hud mb-1 tracking-wider">RATE MULTIPLIER</span>
-                  <div class="chamfer-sm grid grid-cols-2 bg-black/85 p-0.5 border border-zinc-800">
-                    <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 font-hud font-bold text-[10px] transition">REG 1.5</button>
-                    <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 font-hud font-bold text-[10px] transition">HOL 2.0</button>
-                  </div>
-                </div>
-              </div>
+          <!-- Live Shift Elapsed & Accrued Pay Bar -->
+          <div id="liveShiftElapsedBar" class="hidden chamfer-sm bg-black/75 border border-red-500/40 px-3 py-2 mb-3 flex items-center justify-between text-xs">
+            <div>
+              <span class="text-[9.5px] text-zinc-400 block">ระยะเวลาเข้ากะปัจจุบัน</span>
+              <span id="liveElapsedText" class="font-mono font-bold text-cyan-400">00h 00m</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[9.5px] text-zinc-400 block">รายได้สะสมเรียลไทม์</span>
+              <span id="liveAccruedPay" class="font-mono font-extrabold text-emerald-400">0.00 ฿</span>
+            </div>
+          </div>
 
+          <!-- In / Out Time Readout Boxes -->
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="chamfer-sm bg-black/65 border border-white/10 p-2.5 flex items-center justify-between">
               <div>
-                <span class="block text-zinc-400 text-[8.5px] font-hud mb-1 tracking-wider">DUTY ALLOCATION</span>
-                <div class="chamfer-sm grid grid-cols-2 bg-black/85 p-0.5 border border-zinc-800">
-                  <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 font-hud font-bold text-[10px] transition">FULL SHIFT (8H)</button>
-                  <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 font-hud font-bold text-[10px] transition">HALF LEAVE</button>
-                </div>
+                <div class="text-[9px] font-hud text-zinc-400">TIME IN</div>
+                <div id="displayCheckInTime" class="font-mono font-bold text-base text-emerald-400">--:--</div>
+              </div>
+              <span id="checkInStatusText" class="text-[10px] font-bold text-zinc-400">เข้างาน</span>
+            </div>
+            <div class="chamfer-sm bg-black/65 border border-white/10 p-2.5 flex items-center justify-between">
+              <div>
+                <div class="text-[9px] font-hud text-zinc-400">TIME OUT</div>
+                <div id="displayCheckOutTime" class="font-mono font-bold text-base text-red-400">--:--</div>
+              </div>
+              <span id="checkOutStatusText" class="text-[10px] font-bold text-zinc-400">ออกงาน</span>
+            </div>
+          </div>
+
+          <!-- Slide Ignition Track -->
+          <div class="space-y-1">
+            <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-black/90 border border-emerald-500/45 flex items-center justify-center select-none">
+              <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-emerald-600/40 to-emerald-500/70"></div>
+              <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-emerald-400 pointer-events-none pl-8">
+                <span>SLIDE TO CHECK IN</span><span class="chevron-anim text-xs">&gt;&gt;&gt;</span>
+              </div>
+              <div id="ignitionSlideThumb" class="slide-thumb chamfer-sm bg-gradient-to-br from-emerald-400 to-emerald-700 text-black shadow-[0_0_18px_rgba(0,255,148,0.6)]">
+                <i class="fa-solid fa-angles-right text-base"></i>
+              </div>
+            </div>
+            <div class="flex justify-between items-center px-1">
+              <span id="ignitionStatusHint" class="font-hud text-[9px] text-emerald-400 tracking-wider">SLIDE TO ENGAGE</span>
+              <div class="flex gap-2">
+                <button onclick="handleLiveCheckIn()" class="text-[9.5px] text-zinc-400 hover:text-emerald-400 underline">กดเข้างาน</button>
+                <button onclick="handleLiveCheckOut()" class="text-[9.5px] text-zinc-400 hover:text-red-400 underline">กดออกงาน</button>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Interactive OT Scrubber Simulator Strip -->
-      <div class="armor-frame chamfer-sm">
-        <div class="armor-inner chamfer-sm p-3 space-y-2.5">
-          <div class="flex justify-between items-center text-[10px] font-mono">
-            <span class="text-cyan-400 font-bold flex items-center gap-1.5">
-              <i class="fa-solid fa-sliders text-red-500"></i>
-              <span>OT SIMULATOR // ออก <strong id="simOutTimeLabel" class="text-amber-400">16:50 (เลิกปกติ)</strong></span>
-            </span>
-            <button type="button" onclick="resetSimScrubber()" class="text-[9px] font-hud text-zinc-400 hover:text-white underline">RESET</button>
-          </div>
-
-          <input type="range" id="otSimScrubber" min="0" max="140" step="10" value="0" oninput="onSimScrubberChange(this.value)" class="chrono-scrubber">
-
-          <div class="grid grid-cols-3 gap-2 text-center font-mono">
-            <div class="chamfer-sm bg-black/65 p-2 border border-zinc-800/90">
-              <span id="estBaseLabel" class="block text-[8.5px] text-zinc-400">BASE PAY</span>
-              <span id="estBasePay" class="text-xs font-extrabold text-white">400 ฿</span>
-            </div>
-            <div class="chamfer-sm bg-black/65 p-2 border border-zinc-800/90">
-              <span class="block text-[8.5px] text-zinc-400">ALLOWANCE</span>
-              <span id="estAllowance" class="text-xs font-extrabold text-cyan-400">10 ฿</span>
-            </div>
-            <div class="chamfer-sm bg-black/65 p-2 border border-red-500/35">
-              <span class="block text-[8.5px] text-zinc-400">EST. NET</span>
-              <span id="estTotal" class="text-xs font-extrabold text-red-400">410 ฿</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide-to-Engage Tactical Ignition Control + Quick Tap Fallback -->
+      <!-- Shift & OT Telemetry Panel -->
       <div class="armor-frame chamfer-box">
-        <div class="armor-inner chamfer-box p-3 space-y-2.5">
-          <div class="flex justify-between items-center text-[10px] font-mono">
-            <span class="text-zinc-400">IN: <strong id="displayCheckInTime" class="text-emerald-400 text-xs">--:--</strong></span>
-            <span id="ignitionStatusHint" class="font-hud text-[9px] text-emerald-400 tracking-wider">SLIDE TO ENGAGE</span>
-            <span class="text-zinc-400">OUT: <strong id="displayCheckOutTime" class="text-red-400 text-xs">--:--</strong></span>
+        <div class="armor-inner chamfer-box p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <span class="font-hud font-bold text-[10.5px] tracking-wider text-cyan-400"><i class="fa-solid fa-sliders mr-1.5"></i>SHIFT & OT TELEMETRY</span>
+            <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">AUTO</button>
+          </div>
+<!-- Shift / DayType / WorkType Switches -->
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-black/60 p-1 chamfer-sm border border-white/10 grid grid-cols-2 gap-1">
+              <button id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px] transition">DAY</button>
+              <button id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 font-hud font-bold text-[10px] transition">NIGHT</button>
+            </div>
+            <div class="bg-black/60 p-1 chamfer-sm border border-white/10 grid grid-cols-2 gap-1">
+              <button id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 font-hud font-bold text-[10px] transition">REG</button>
+              <button id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 font-hud font-bold text-[10px] transition">HOL</button>
+            </div>
+            <div class="bg-black/60 p-1 chamfer-sm border border-white/10 grid grid-cols-2 gap-1">
+              <button id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 font-hud font-bold text-[10px] transition">FULL</button>
+              <button id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 font-hud font-bold text-[10px] transition">HALF</button>
+            </div>
           </div>
 
-          <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-black/90 border border-emerald-500/45 flex items-center justify-center select-none">
-            <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-emerald-600/40 to-emerald-500/70"></div>
-            <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-emerald-400 pointer-events-none pl-8">
-              <span>SLIDE TO CHECK IN</span>
-              <span class="chevron-anim text-xs">&gt;&gt;&gt;</span>
+          <!-- OT Simulator Scrubber -->
+          <div class="chamfer-sm bg-black/65 border border-white/10 p-2.5 space-y-1.5">
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="text-zinc-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-gauge-high text-red-400"></i>
+                จำลองเวลาเลิก &amp; OT: <strong id="simOutTimeLabel" class="font-mono text-cyan-400">16:50 (เลิกปกติ)</strong>
+              </span>
+              <div class="flex items-center gap-1.5">
+                <span id="otRateGaugePill" class="px-1.5 py-[1px] rounded bg-red-500/20 border border-red-500/40 font-mono font-bold text-[9px] text-red-400">1.5X</span>
+                <button onclick="resetSimScrubber()" class="text-[9px] text-zinc-400 hover:text-white underline">รีเซ็ต</button>
+              </div>
             </div>
-            <div id="ignitionSlideThumb" class="slide-thumb chamfer-sm bg-gradient-to-br from-emerald-400 to-emerald-700 text-black shadow-[0_0_18px_rgba(0,255,148,0.6)]">
-              <i class="fa-solid fa-angles-right text-base font-black"></i>
-            </div>
+            <input id="otSimScrubber" type="range" min="0" max="140" step="5" value="0" oninput="onSimScrubberChange(this.value)" class="w-full accent-red-500 cursor-pointer h-1.5 bg-zinc-800 rounded-lg">
           </div>
 
-          <div class="grid grid-cols-2 gap-2 pt-0.5">
-            <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="tactile-btn chamfer-sm py-2 px-3 bg-emerald-950/80 hover:bg-emerald-700 border border-emerald-500/45 text-emerald-300 hover:text-white flex items-center justify-between text-[10.5px] font-hud font-bold">
-              <span><i class="fa-solid fa-right-to-bracket mr-1"></i>IN NOW</span>
-              <span id="checkInStatusText" class="font-sans text-[9px] opacity-85 truncate max-w-[68px]">เข้างาน</span>
-            </button>
-            <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="tactile-btn chamfer-sm py-2 px-3 bg-red-950/80 hover:bg-red-700 border border-red-500/45 text-red-300 hover:text-white flex items-center justify-between text-[10.5px] font-hud font-bold">
-              <span><i class="fa-solid fa-right-from-bracket mr-1"></i>OUT NOW</span>
-              <span id="checkOutStatusText" class="font-sans text-[9px] opacity-85 truncate max-w-[68px]">ออกงาน</span>
-            </button>
+          <!-- Live Estimator Readouts -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="chamfer-sm bg-black/70 border border-white/10 p-2">
+              <div id="estBaseLabel" class="text-[8.5px] font-hud text-zinc-400">BASE PAY</div>
+              <div id="estBasePay" class="font-mono font-extrabold text-xs text-white mt-0.5">400 ฿</div>
+            </div>
+            <div class="chamfer-sm bg-black/70 border border-white/10 p-2">
+              <div class="text-[8.5px] font-hud text-zinc-400">ALLOWANCE</div>
+              <div id="estAllowance" class="font-mono font-extrabold text-xs text-cyan-400 mt-0.5">10 ฿</div>
+            </div>
+            <div class="chamfer-sm bg-black/70 border border-red-500/35 p-2">
+              <div class="text-[8.5px] font-hud text-zinc-400">EST. TOTAL</div>
+              <div id="estTotal" class="font-mono font-extrabold text-xs text-emerald-400 mt-0.5">410 ฿</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: Manual Edit -->
-    <section id="tab-2" class="tab-content hidden space-y-3.5">
+    <!-- TAB 2: MANUAL TIME & OT INPUT -->
+    <section id="tab-2" class="tab-content hidden space-y-3">
       <div class="armor-frame chamfer-box">
-        <div class="armor-inner chamfer-box p-3.5 space-y-3">
-          <div class="border-b border-zinc-800 pb-2.5 flex items-center justify-between">
-            <div class="flex items-center space-x-2.5">
-              <div class="chamfer-sm w-7 h-7 bg-red-600 text-white flex items-center justify-center text-xs shrink-0">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </div>
-              <div>
-                <h2 class="font-hud font-bold text-xs tracking-wide text-white">MANUAL OVERRIDE</h2>
-                <p class="text-[10px] text-zinc-400">บันทึกเวลาย้อนหลัง (08:00-16:50 | OT 17:10-19:10)</p>
-              </div>
-            </div>
-            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-400 px-2 py-0.5 border border-amber-500/40">EXISTING</span>
+        <div class="armor-inner chamfer-box p-4 space-y-3">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <h2 class="font-hud font-bold text-xs tracking-wider text-cyan-400"><i class="fa-solid fa-clock-rotate-left mr-1.5"></i>MANUAL TIME &amp; OT</h2>
+            <span id="manualExistingBadge" class="hidden text-[9.5px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">มีข้อมูลเดิมในระบบ</span>
           </div>
 
-          <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-3 text-xs">
-            <div class="grid grid-cols-2 gap-2.5">
+          <form onsubmit="handleManualSubmit(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="block text-[10.5px] text-zinc-400 mb-1">วันที่ทำงาน</label>
+              <input id="manualDate" type="date" onchange="prefillManualByDate()" required class="valk-field w-full font-mono text-xs">
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
               <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">วันที่ต้องการบันทึก</label>
-                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="valk-field w-full font-mono text-xs outline-none">
+                <label class="block text-[10.5px] text-zinc-400 mb-1">กะการทำงาน</label>
+                <select id="manualShift" onchange="updateManualPreview()" class="valk-field w-full text-xs font-bold">
+                  <option value="DAY">กลางวัน (DAY)</option>
+                  <option value="NIGHT">กลางคืน (NIGHT)</option>
+                </select>
               </div>
               <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">สถานะการทำงาน</label>
-                <select id="manualWorkType" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
-                  <option value="FULL">เต็มวัน (8 ชม.)</option>
-                  <option value="HALF">ลาครึ่งวัน (ครึ่งกะ)</option>
+                <label class="block text-[10.5px] text-zinc-400 mb-1">ประเภทวัน</label>
+                <select id="manualDayType" onchange="updateManualPreview()" class="valk-field w-full text-xs font-bold">
+                  <option value="REGULAR">วันปกติ</option>
+                  <option value="HOLIDAY">วันหยุด (2.0x)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10.5px] text-zinc-400 mb-1">รูปแบบงาน</label>
+                <select id="manualWorkType" onchange="updateManualPreview()" class="valk-field w-full text-xs font-bold">
+                  <option value="FULL">เต็มวัน</option>
+                  <option value="HALF">ครึ่งวัน</option>
                 </select>
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2.5">
+            <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">กะการทำงาน</label>
-                <select id="manualShift" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
-                  <option value="DAY">กลางวัน (08:00-16:50)</option>
-                  <option value="NIGHT">กลางคืน (20:00-04:50)</option>
-                </select>
+                <label class="block text-[10.5px] text-zinc-400 mb-1">เวลาเข้างาน</label>
+                <input id="manualCheckIn" type="time" onchange="updateManualPreview()" required class="valk-field w-full font-mono text-xs">
               </div>
               <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทวัน</label>
-                <select id="manualDayType" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
-                  <option value="REGULAR">วันปกติ (OT 1.5)</option>
-                  <option value="HOLIDAY">วันหยุด (OT 2.0)</option>
-                </select>
+                <label class="block text-[10.5px] text-zinc-400 mb-1">เวลาออกงาน</label>
+                <input id="manualCheckOut" type="time" onchange="updateManualPreview()" required class="valk-field w-full font-mono text-xs">
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2.5">
+            <div id="manualPreviewBox" class="hidden chamfer-sm bg-black/75 border border-cyan-500/40 p-2.5 flex items-center justify-between">
               <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาเข้า</label>
-                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="valk-field w-full font-mono text-xs outline-none">
+                <div class="text-[9.5px] text-zinc-400">สรุปชั่วโมง &amp; OT</div>
+                <div id="manPrevDetail" class="font-mono font-bold text-xs text-cyan-400">-</div>
               </div>
-              <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาออก</label>
-                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="valk-field w-full font-mono text-xs outline-none">
+              <div class="text-right">
+                <div class="text-[9.5px] text-zinc-400">รายได้โดยประมาณ</div>
+                <div class="font-mono font-extrabold text-sm text-emerald-400"><span id="manPrevTotal">0.00</span> ฿</div>
               </div>
             </div>
 
-            <div id="manualPreviewBox" class="hidden chamfer-sm bg-black/85 text-cyan-400 font-mono px-3 py-2 border border-cyan-500/40 flex justify-between items-center text-[11px]">
-              <span id="manPrevDetail">OT: 0h (0h)</span>
-              <span class="font-extrabold text-xs text-white">สุทธิ <span id="manPrevTotal" class="text-red-400">0</span> ฿</span>
-            </div>
-
-            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-[0_4px_15px_rgba(255,30,39,0.4)] mt-1">
-              คำนวณ & บันทึกย้อนหลัง
+            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-hud font-bold text-xs tracking-wider shadow-[0_0_16px_rgba(255,30,39,0.45)]">
+              <i class="fa-solid fa-floppy-disk mr-1.5"></i>บันทึกเวลาย้อนหลัง &amp; ซิงค์
             </button>
           </form>
         </div>
       </div>
     </section>
 
-    <!-- TAB 3: Leave Form -->
-    <section id="tab-3" class="tab-content hidden space-y-3.5">
+    <!-- TAB 3: LEAVE REQUEST -->
+    <section id="tab-3" class="tab-content hidden space-y-3">
       <div class="armor-frame chamfer-box">
-        <div class="armor-inner chamfer-box p-3.5 space-y-3">
-          <div class="border-b border-zinc-800 pb-2.5 flex items-center space-x-2.5">
-            <div class="chamfer-sm w-7 h-7 bg-amber-500 text-black flex items-center justify-center text-xs shrink-0">
-              <i class="fa-solid fa-calendar-minus"></i>
-            </div>
-            <div>
-              <h2 class="font-hud font-bold text-xs tracking-wide text-white">LEAVE DISPATCH</h2>
-              <p class="text-[10px] text-zinc-400">บันทึกการลางานและส่งแจ้งเตือนเข้า LINE</p>
-            </div>
-          </div>
+        <div class="armor-inner chamfer-box p-4 space-y-3">
+          <h2 class="font-hud font-bold text-xs tracking-wider text-amber-400 border-b border-white/10 pb-2">
+            <i class="fa-solid fa-calendar-xmark mr-1.5"></i>LEAVE REQUEST // ยื่นใบลา
+          </h2>
 
-          <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-3 text-xs">
+          <form onsubmit="handleLeaveSubmit(event)" class="space-y-3 text-xs">
             <div>
-              <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทการลา</label>
-              <select id="leaveType" required class="valk-field hw-select w-full text-xs outline-none">
-                <option value="ลากิจ">ลากิจ (Personal Leave)</option>
-                <option value="ลาป่วย">ลาป่วย (Sick Leave)</option>
-                <option value="ลาพักร้อน">ลาพักร้อน (Annual Leave)</option>
-                <option value="ลาอื่นๆ">ลาอื่นๆ</option>
+              <label class="block text-[10.5px] text-zinc-400 mb-1">ประเภทการลา</label>
+              <select id="leaveType" class="valk-field w-full text-xs font-bold">
+                <option value="ลาป่วย">ลาป่วย</option>
+                <option value="ลากิจ">ลากิจ</option>
+                <option value="ลาพักร้อน">ลาพักร้อน</option>
+                <option value="ขาดงาน/อื่นๆ">ขาดงาน/อื่นๆ</option>
               </select>
             </div>
-            <div class="grid grid-cols-2 gap-2.5">
+
+            <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ตั้งแต่วันที่</label>
-                <input type="date" id="leaveStartDate" required class="valk-field w-full font-mono text-xs outline-none">
+                <label class="block text-[10.5px] text-zinc-400 mb-1">ตั้งแต่วันที่</label>
+                <input id="leaveStartDate" type="date" required class="valk-field w-full font-mono text-xs">
               </div>
               <div>
-                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ถึงวันที่</label>
-                <input type="date" id="leaveEndDate" required class="valk-field w-full font-mono text-xs outline-none">
+                <label class="block text-[10.5px] text-zinc-400 mb-1">ถึงวันที่</label>
+                <input id="leaveEndDate" type="date" required class="valk-field w-full font-mono text-xs">
               </div>
             </div>
+
             <div>
-              <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เหตุผลการลา</label>
-              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="valk-field w-full text-xs outline-none">
+              <label class="block text-[10.5px] text-zinc-400 mb-1">เหตุผลการลา</label>
+              <input id="leaveReason" type="text" placeholder="ระบุเหตุผล (ถ้ามี)" class="valk-field w-full text-xs">
             </div>
-            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs mt-1">
-              ส่งใบลางาน
+
+            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-hud font-bold text-xs tracking-wider shadow-[0_0_16px_rgba(245,158,11,0.4)]">
+              <i class="fa-solid fa-paper-plane mr-1.5"></i>ส่งคำขอลา &amp; แจ้งเตือน LINE
             </button>
           </form>
         </div>
       </div>
-      <div class="space-y-2">
-        <h3 class="text-[10.5px] font-mono font-bold text-zinc-400 px-1">ประวัติการลาล่าสุด</h3>
-        <div id="leaveHistoryList" class="space-y-2"></div>
-      </div>
     </section>
 
-    <!-- TAB 4: Telemetry Dashboard & Payslip -->
+    <!-- TAB 4: PAYROLL SUMMARY & E-PAYSLIP -->
     <section id="tab-4" class="tab-content hidden space-y-3">
-      <div class="armor-frame chamfer-sm">
-        <div class="armor-inner chamfer-sm p-3 space-y-2.5">
-          <div class="flex flex-wrap justify-between items-center gap-1.5">
-            <label class="text-[11px] font-bold text-zinc-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-filter text-red-500"></i> รอบตัดยอด
-            </label>
-            <div class="flex gap-1.5">
-              <button onclick="pullFromGoogleSheets(false)" class="tactile-btn chamfer-sm bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 text-[10px] font-bold flex items-center gap-1">
-                <i class="fa-solid fa-cloud-arrow-down"></i> ดึงข้อมูล
+      <div class="armor-frame chamfer-box">
+        <div class="armor-inner chamfer-box p-3.5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
+            <span class="font-hud font-bold text-[10.5px] tracking-wider text-cyan-400"><i class="fa-solid fa-file-invoice-dollar mr-1.5"></i>PAYROLL SUMMARY</span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="openPayslipModal()" class="tactile-btn chamfer-sm px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px]">
+                <i class="fa-solid fa-receipt mr-1"></i>สลิป A5
               </button>
-              <button onclick="exportCSV()" class="tactile-btn chamfer-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-2.5 py-1 text-[10px] font-mono font-bold flex items-center gap-1">
-                <i class="fa-solid fa-file-csv text-cyan-400"></i> CSV
-              </button>
-              <button onclick="openPayslipModal()" class="tactile-btn chamfer-sm bg-red-600 hover:bg-red-500 text-white px-2.5 py-1 text-[10px] font-bold flex items-center gap-1 shadow-[0_0_12px_rgba(255,30,39,0.5)]">
-                <i class="fa-solid fa-file-invoice-dollar"></i> ออกสลิป
+              <button onclick="exportCSV()" class="tactile-btn chamfer-sm px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-zinc-200 font-bold text-[10px]">
+                <i class="fa-solid fa-file-csv mr-1"></i>CSV
               </button>
             </div>
           </div>
-          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="valk-field hw-select w-full text-xs font-bold outline-none">
-          </select>
-        </div>
-      </div>
 
-      <!-- Telemetry Summary & Cycle Target Meter -->
-      <div class="grid grid-cols-2 gap-2.5 font-mono">
-        <div class="col-span-2 armor-frame chamfer-box">
-          <div class="armor-inner chamfer-box p-3.5 relative overflow-hidden space-y-2">
-            <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-24 h-20 opacity-10 pointer-events-none">
-            <div class="flex justify-between items-center">
-              <span class="text-[10.5px] font-sans text-zinc-400">ยอดรวมค่าแรง + OT ในรอบนี้</span>
-              <span class="text-[10px] font-sans bg-red-500/20 border border-red-500/40 px-2.5 py-0.5 rounded-full text-red-400 font-bold" id="summaryTotalRecords">0 รายการ</span>
+          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="valk-field w-full text-xs font-bold"></select>
+
+          <!-- Cycle Target Progress -->
+          <div class="chamfer-sm bg-black/65 border border-white/10 p-2.5 space-y-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-zinc-400">ความคืบหน้ารายได้รอบงวด (เทียบเป้า 10,000 ฿)</span>
+              <span id="cycleTargetPct" class="font-mono font-bold text-emerald-400">0%</span>
             </div>
-            <div class="text-2xl font-extrabold text-white tracking-tight relative z-10" id="summaryTotalSalary">0.00 ฿</div>
-            <div class="space-y-1 pt-1">
-              <div class="flex justify-between text-[9px] text-zinc-400">
-                <span>CYCLE BENCHMARK (10,000 ฿)</span>
-                <span id="cycleTargetPct" class="text-cyan-400 font-bold">0%</span>
-              </div>
-              <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800">
-                <div id="cycleTargetBar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-red-600 transition-all duration-500" style="width: 0%"></div>
-              </div>
+            <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+              <div id="cycleTargetBar" class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
             </div>
           </div>
-        </div>
 
-        <div class="armor-frame chamfer-sm">
-          <div class="armor-inner chamfer-sm p-3">
-            <span class="text-[10px] font-sans text-zinc-400 block font-semibold">ชั่วโมง OT รวม</span>
-            <span class="text-base font-extrabold text-amber-400" id="summaryTotalOT">0.0 ชม.</span>
+          <!-- Summary Metrics -->
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="chamfer-sm bg-black/70 border border-white/10 p-2.5">
+              <div class="text-[9.5px] text-zinc-400">ยอดรวมรอบตัดยอด</div>
+              <div id="summaryTotalSalary" class="font-mono font-extrabold text-sm text-emerald-400 mt-0.5">0.00 ฿</div>
+            </div>
+            <div class="chamfer-sm bg-black/70 border border-white/10 p-2.5">
+              <div class="text-[9.5px] text-zinc-400">จำนวนวันที่บันทึก</div>
+              <div id="summaryTotalRecords" class="font-mono font-extrabold text-sm text-white mt-0.5">0 รายการ</div>
+            </div>
+            <div class="chamfer-sm bg-black/70 border border-white/10 p-2.5">
+              <div class="text-[9.5px] text-zinc-400">ชั่วโมง OT รวม</div>
+              <div id="summaryTotalOT" class="font-mono font-extrabold text-sm text-amber-400 mt-0.5">0.0 ชม.</div>
+            </div>
+            <div class="chamfer-sm bg-black/70 border border-white/10 p-2.5">
+              <div class="text-[9.5px] text-zinc-400">ค่ากะ + ค่าอาหารรวม</div>
+              <div id="summaryTotalMeals" class="font-mono font-extrabold text-sm text-cyan-400 mt-0.5">0.00 ฿</div>
+            </div>
+          </div>
+
+          <!-- Daily Bar Chart -->
+          <div id="dailyChartPanel" class="hidden chamfer-sm bg-black/70 border border-white/10 p-2.5 space-y-1.5">
+            <div class="text-[9.5px] text-zinc-400 flex justify-between">
+              <span>กราฟรายได้รายวัน (แตะแท่งเพื่อดูบิล)</span>
+              <span class="text-cyan-400 font-mono">MAX 15D</span>
+            </div>
+            <div id="dailyBarsContainer" class="h-24 flex items-end gap-1 pt-2 overflow-x-auto"></div>
+          </div>
+
+          <!-- Payroll History List -->
+          <div class="space-y-1.5">
+            <div class="text-[10.5px] font-bold text-zinc-300">ประวัติการลงเวลาและรายได้</div>
+            <div id="payrollHistoryList" class="space-y-2 max-h-72 overflow-y-auto pr-0.5"></div>
+          </div>
+
+          <!-- Leave History List -->
+          <div class="space-y-1.5 pt-2 border-t border-white/10">
+            <div class="text-[10.5px] font-bold text-amber-400">ประวัติการลา</div>
+            <div id="leaveHistoryList" class="space-y-1.5 max-h-40 overflow-y-auto pr-0.5"></div>
           </div>
         </div>
-        <div class="armor-frame chamfer-sm">
-          <div class="armor-inner chamfer-sm p-3">
-            <span class="text-[10px] font-sans text-zinc-400 block font-semibold">ค่าอาหารรวม</span>
-            <span class="text-base font-extrabold text-cyan-400" id="summaryTotalMeals">0.00 ฿</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Interactive Daily Earnings Bar Chart -->
-      <div id="dailyChartPanel" class="armor-frame chamfer-sm hidden">
-        <div class="armor-inner chamfer-sm p-3 space-y-2">
-          <div class="flex justify-between items-center text-[9.5px] font-hud text-zinc-400">
-            <span><i class="fa-solid fa-chart-simple text-red-500 mr-1"></i>DAILY PAY TELEMETRY</span>
-            <span class="text-cyan-400">TAP BAR FOR DETAIL</span>
-          </div>
-          <div id="dailyBarsContainer" class="flex items-end gap-1.5 h-20 pt-3 px-1 overflow-x-auto"></div>
-        </div>
-      </div>
-
-      <!-- History Records List -->
-      <div class="space-y-2">
-        <div class="flex justify-between items-center px-1">
-          <h3 class="text-[11px] font-bold text-zinc-400">ประวัติบันทึกเวลา</h3>
-          <button onclick="clearLocalStorageData()" class="text-[10px] text-red-400 hover:underline font-semibold">ล้างประวัติในเครื่อง</button>
-        </div>
-        <div id="payrollHistoryList" class="space-y-2"></div>
       </div>
     </section>
-
   </main>
 
-  <!-- Floating Mecha Wing Bottom Navigation Dock -->
-  <nav class="valk-dock fixed left-1/2 -translate-x-1/2 w-[calc(100%-1.75rem)] max-w-sm z-40 no-print">
-    <div class="chamfer-box bg-[#0A0C12]/95 backdrop-blur-xl border border-red-500/55 p-1 flex justify-between shadow-[0_12px_35px_rgba(0,0,0,0.85)]">
-      <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-white bg-red-600 font-bold transition-all">
-        <i class="fa-solid fa-gauge-high text-xs"></i>
-        <span class="text-[10px] mt-0.5">บันทึกสด</span>
+  <!-- Bottom Cockpit Navigation Bar -->
+  <nav class="fixed bottom-0 inset-x-0 z-30 bg-[#05070A]/95 backdrop-blur-md border-t border-white/10 px-2 py-1.5 no-print" style="padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.35rem);">
+    <div class="max-w-lg mx-auto flex items-center gap-1.5 text-[10px]">
+      <button id="nav-1" onclick="switchTab(1)" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-white bg-red-600 font-bold transition-all shadow-[0_0_15px_rgba(255,30,39,0.55)]">
+        <i class="fa-solid fa-gauge text-xs mb-0.5"></i>
+        <span>HUD</span>
       </button>
-      <button onclick="switchTab(2)" id="nav-2" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-white transition-all">
-        <i class="fa-solid fa-pen-to-square text-xs"></i>
-        <span class="text-[10px] mt-0.5">ย้อนหลัง</span>
+      <button id="nav-2" onclick="switchTab(2)" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-white transition-all">
+        <i class="fa-solid fa-pen-to-square text-xs mb-0.5"></i>
+        <span>MANUAL</span>
       </button>
-      <button onclick="switchTab(3)" id="nav-3" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-white transition-all">
-        <i class="fa-solid fa-calendar-minus text-xs"></i>
-        <span class="text-[10px] mt-0.5">วันลา</span>
+      <button id="nav-3" onclick="switchTab(3)" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-white transition-all">
+        <i class="fa-solid fa-calendar-plus text-xs mb-0.5"></i>
+        <span>LEAVE</span>
       </button>
-      <button onclick="switchTab(4)" id="nav-4" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-white transition-all">
-        <i class="fa-solid fa-chart-pie text-xs"></i>
-        <span class="text-[10px] mt-0.5">สรุปผล</span>
+      <button id="nav-4" onclick="switchTab(4)" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-white transition-all">
+        <i class="fa-solid fa-wallet text-xs mb-0.5"></i>
+        <span>SLIP</span>
       </button>
     </div>
   </nav>
 
-  <!-- Breakdown Modal -->
-  <div id="breakdownModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4 no-print">
-    <div class="armor-frame chamfer-box w-full max-w-xs">
-      <div class="armor-inner chamfer-box p-4 space-y-3">
-        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
-          <h3 class="font-hud font-bold text-xs text-white">TELEMETRY BREAKDOWN</h3>
-          <button onclick="closeBreakdownModal()" class="text-zinc-400 hover:text-red-500 p-1"><i class="fa-solid fa-xmark"></i></button>
+  <!-- Daily Breakdown Modal -->
+  <div id="breakdownModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="armor-frame chamfer-box w-full max-w-sm">
+      <div class="armor-inner chamfer-box p-4 space-y-3 text-xs">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+          <span class="font-hud font-bold text-cyan-400">DAILY PAYROLL BREAKDOWN</span>
+          <button onclick="closeBreakdownModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
         </div>
-        <div id="modalContent" class="space-y-1.5 text-xs text-zinc-200"></div>
-        <button onclick="closeBreakdownModal()" class="chamfer-sm w-full bg-red-600 text-white font-bold py-2 text-xs">ปิดหน้าต่าง</button>
+        <div id="modalContent" class="space-y-2"></div>
+        <button onclick="closeBreakdownModal()" class="tactile-btn chamfer-sm w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold">ปิดหน้าต่าง</button>
       </div>
     </div>
   </div>
 
-  <!-- Payslip Printable & A5 Landscape Image Export Modal -->
-  <div id="payslipModal" class="fixed inset-0 z-50 bg-black/85 hidden flex items-start sm:items-center justify-center p-2 overflow-y-auto">
-    <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl space-y-2.5 p-4 sm:p-5 my-auto relative text-slate-900 text-xs" id="printablePayslipArea">
-      
-      <!-- Toolbar -->
-      <div id="payslipToolbar" class="flex flex-wrap justify-between items-center border-b border-slate-200 pb-2.5 gap-2 no-print">
-        <span class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
-          <i class="fa-solid fa-file-invoice-dollar text-red-600"></i> ใบจ่ายเงินเดือน (ขนาด A5 แนวนอน)
-        </span>
-        <div class="flex flex-wrap items-center gap-1.5">
-          <button onclick="toggleSlipEditor()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1">
-            <i class="fa-solid fa-sliders text-red-600"></i> ปรับยอดเพิ่ม/หัก
+  <!-- A5 Payslip Modal -->
+  <div id="payslipModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto no-print">
+    <div class="bg-zinc-950 border border-zinc-800 rounded-xl w-full max-w-4xl max-h-[94vh] overflow-y-auto p-3 sm:p-4 space-y-3 my-auto">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="font-hud font-bold text-xs text-emerald-400">E-PAYSLIP (A5)</span>
+          <button onclick="toggleSlipEditor()" class="tactile-btn px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-cyan-400 text-[10.5px] font-bold">
+            <i class="fa-solid fa-sliders mr-1"></i>ปรับปรุงรายการ / ยอดสะสม
           </button>
-          <button id="btnSaveSlipImg" onclick="savePayslipAsImage()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
-            <i class="fa-solid fa-image"></i> บันทึกรูปภาพ (A5)
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="btnSaveSlipImg" onclick="savePayslipAsImage()" class="tactile-btn px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-white text-[10.5px] font-bold">
+            <i class="fa-solid fa-image mr-1"></i>บันทึกรูป A5
           </button>
-          <button id="btnSendSlipLine" onclick="sendPayslipToLine()" class="bg-[#06C755] hover:bg-[#05B34C] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
-            <i class="fa-brands fa-line text-sm"></i> ส่งเข้า LINE
+          <button id="btnSendSlipLine" onclick="sendPayslipToLine()" class="tactile-btn px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[10.5px] font-bold">
+            <i class="fa-brands fa-line mr-1"></i>ส่ง LINE &amp; ชีต
           </button>
-          <button onclick="window.print()" class="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
-            <i class="fa-solid fa-print"></i> พิมพ์ A5
-          </button>
-          <button onclick="closePayslipModal()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-base"></i></button>
+          <button onclick="closePayslipModal()" class="tactile-btn px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[10.5px] font-bold">ปิด</button>
         </div>
       </div>
 
-      <!-- Slip Adjustment Panel -->
-      <div id="slipEditorPanel" class="hidden bg-slate-50 border border-slate-300 rounded-xl p-3 space-y-2.5 text-[11px] no-print">
-        <div class="flex justify-between items-center font-bold text-slate-700 border-b border-slate-200 pb-1">
-          <span>ปรับปรุงรายการเพิ่ม / รายการหัก / ยอดสะสมยกมา</span>
-          <button onclick="resetSlipAdjustments()" class="text-rose-600 hover:underline text-[10px]">รีเซ็ตงวดนี้</button>
+      <!-- Slip Adjustments Drawer -->
+      <div id="slipEditorPanel" class="hidden bg-zinc-900/95 border border-zinc-700/80 rounded-lg p-3 space-y-2.5 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-amber-400">ปรับปรุงรายได้ / รายการหัก / ยอดสะสม YTD</span>
+          <button onclick="resetSlipAdjustments()" class="text-[10px] text-red-400 hover:underline">รีเซ็ตเป็นอัตโนมัติ</button>
         </div>
+        <div id="autoBonusRuleHint" class="text-[10px] text-cyan-300 bg-black/60 p-2 rounded border border-cyan-500/20"></div>
+        <div id="payDateRuleHint" class="text-[10px] text-zinc-400"></div>
+
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <div>
-            <label class="block text-slate-500">เบี้ยขยัน (บาท)</label>
-            <input type="number" step="0.01" id="adjDiligence" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">เบี้ยขยัน</label>
+            <input id="adjDiligence" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
           <div>
-            <label class="block text-slate-500">ค่าเสี่ยงภัย (บาท)</label>
-            <input type="number" step="0.01" id="adjHazard" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">ค่าเสี่ยงภัย</label>
+            <input id="adjHazard" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
           <div>
-            <label class="block text-slate-500">Bonus/ค่ารถ (บาท)</label>
-            <input type="number" step="0.01" id="adjBonus" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">Bonus / ค่ารถ</label>
+            <input id="adjBonus" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
           <div>
-            <label class="block text-slate-500">ค่าแรง 75%/อื่นๆ</label>
-            <input type="number" step="0.01" id="adjOtherIncome" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">ค่าแรง 75% / อื่นๆ</label>
+            <input id="adjOtherIncome" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
           <div>
-            <label class="block text-slate-500">หักสมทบประกันสังคม</label>
-            <input type="number" step="0.01" id="adjSocSec" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">หักประกันสังคม</label>
+            <input id="adjSocSec" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
           <div>
-            <label class="block text-slate-500">หักค่าชุดฟอร์ม</label>
-            <input type="number" step="0.01" id="adjUniform" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">หักค่าชุดฟอร์ม</label>
+            <input id="adjUniform" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
           <div>
-            <label class="block text-slate-500">หักค่าอื่นๆ</label>
-            <input type="number" step="0.01" id="adjOtherDed" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">หัก กยศ. / กรอ.</label>
+            <input id="adjStudentLoan" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
           <div>
-            <label class="block text-slate-500">หัก กยศ./กรอ</label>
-            <input type="number" step="0.01" id="adjStudentLoan" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <label class="text-[10px] text-zinc-400 block">หักค่าอื่นๆ</label>
+            <input id="adjOtherDed" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
-          <div class="col-span-2">
-            <label class="block text-indigo-700 font-semibold">เงินได้สะสมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDEarnings" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-zinc-800">
+          <div>
+            <label class="text-[10px] text-zinc-400 block">เงินได้สะสมยกมา (YTD Base)</label>
+            <input id="baseYTDEarnings" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
-          <div class="col-span-2">
-            <label class="block text-indigo-700 font-semibold">เงินประกันสังคมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDSocial" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
+          <div>
+            <label class="text-[10px] text-zinc-400 block">ประกันสังคมสะสมยกมา</label>
+            <input id="baseYTDSocial" type="number" step="0.01" oninput="saveAndRefreshPayslip()" class="valk-field w-full font-mono text-xs">
           </div>
-          <div class="col-span-2 sm:col-span-4">
-            <label class="block text-slate-600 font-semibold">วันหยุดบริษัทเพิ่มเติม (คั่นด้วยลูกน้ำ เช่น 2026-11-25, 2026-12-25)</label>
-            <input type="text" id="customHolidaysInput" placeholder="YYYY-MM-DD, YYYY-MM-DD" oninput="saveCustomHolidays()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
-            <div id="payDateRuleHint" class="text-[10px] text-emerald-700 font-medium mt-1"></div>
+          <div>
+            <label class="text-[10px] text-zinc-400 block">วันหยุดเพิ่ม (YYYY-MM-DD คั่นด้วย ,)</label>
+            <input id="customHolidaysInput" type="text" oninput="saveCustomHolidays()" placeholder="2026-11-25,2026-12-07" class="valk-field w-full font-mono text-xs">
           </div>
         </div>
       </div>
 
-      <!-- Horizontal Scroll Wrapper on Mobile -->
-      <div class="overflow-x-auto pb-1">
-        <div id="payslipCaptureContent" class="a5-payslip-sheet w-[840px] mx-auto bg-white px-7 py-4 flex flex-col space-y-2 select-none">
-          
-          <div>
-            <div class="text-center space-y-0.5">
-              <h2 class="font-bold text-[15px] leading-tight">ใบจ่ายเงินเดือน</h2>
-              <h3 class="font-bold text-[17px] leading-tight">บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</h3>
+      <!-- A5 Sheet Container -->
+      <div class="overflow-x-auto bg-zinc-800/60 p-2 rounded-lg">
+        <div id="payslipCaptureContent" class="a5-payslip-sheet bg-white text-black w-[840px] mx-auto p-5 border border-black shadow-md text-[12px] leading-snug">
+          <div class="text-center font-bold text-[15px] mb-2">ใบจ่ายเงินเดือน (PAYSLIP)</div>
+          <div class="flex justify-between items-start border-b border-black pb-2 mb-2">
+            <div>
+              <div class="font-bold text-[13px]">บริษัท โพร์ไวด์ เพาเวอร์เอ้าท์ซอร์สซิ่ง จำกัด</div>
+              <div class="text-[11px]">PROVIDE POWER OUTSOURCING CO., LTD.</div>
             </div>
-            <div class="flex justify-between items-center text-[12px] pt-2 pb-0.5 px-1" id="payslipHeaderInfo"></div>
+            <div id="payslipRefID" class="text-[10px] font-mono text-right"></div>
           </div>
 
-          <div class="grid grid-cols-12 gap-2.5 text-[11px] leading-[1.35]">
-            <div class="col-span-9 border-[1.5px] border-black flex flex-col justify-between bg-white">
-              <div class="grid grid-cols-12 flex-1 items-stretch">
-                <div class="col-span-7 border-r border-black flex flex-col">
-                  <table class="w-full h-full text-left border-collapse">
-                    <thead>
-                      <tr class="border-b border-black">
-                        <th class="py-1 px-2 font-bold text-center border-r border-black">รายได้</th>
-                        <th class="py-1 px-1.5 font-bold text-center border-r border-black w-16">จำนวน</th>
-                        <th class="py-1 px-2 font-bold text-center w-24">จำนวนเงิน</th>
-                      </tr>
-                    </thead>
-                    <tbody id="payslipEarningsBody"></tbody>
-                  </table>
-                </div>
+          <div id="payslipHeaderInfo" class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 border-b border-black pb-2 mb-2 text-[11.5px]"></div>
 
-                <div class="col-span-5 flex flex-col">
-                  <table class="w-full h-full text-left border-collapse">
-                    <thead>
-                      <tr class="border-b border-black">
-                        <th class="py-1 px-2 font-bold text-center border-r border-black">รายการหัก</th>
-                        <th class="py-1 px-2 font-bold text-center w-24">จำนวนเงิน</th>
-                      </tr>
-                    </thead>
-                    <tbody id="payslipDeductionsBody"></tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-12 border-t-[1.5px] border-black font-bold text-[12px]">
-                <div class="col-span-7 border-r border-black flex justify-between items-center py-1 px-2.5">
-                  <span class="mx-auto">รวมเงินได้</span>
-                  <span id="payslipTotalEarnings">0.00</span>
-                </div>
-                <div class="col-span-5 flex justify-between items-center py-1 px-2.5">
-                  <span class="mx-auto">รวมรายการหัก</span>
-                  <span id="payslipTotalDeductions">0.00</span>
-                </div>
+          <div class="grid grid-cols-2 border border-black mb-2">
+            <!-- Earnings -->
+            <div class="border-r border-black flex flex-col">
+              <div class="bg-gray-100 font-bold text-center py-1 border-b border-black text-[11.5px]">รายได้ (EARNINGS)</div>
+              <table class="w-full text-[11px] flex-1">
+                <thead>
+                  <tr class="border-b border-black bg-gray-50">
+                    <th class="py-0.5 px-2 text-left border-r border-black">รายการ</th>
+                    <th class="py-0.5 px-1.5 text-right border-r border-black w-16">วัน/นาที</th>
+                    <th class="py-0.5 px-2 text-right w-24">จำนวนเงิน</th>
+                  </tr>
+                </thead>
+                <tbody id="payslipEarningsBody"></tbody>
+              </table>
+              <div class="flex justify-between font-bold px-2 py-1 border-t border-black bg-gray-100 text-[11.5px]">
+                <span>รวมรายได้</span>
+                <span id="payslipTotalEarnings" class="font-mono">0.00</span>
               </div>
             </div>
 
-            <div class="col-span-3 flex flex-col justify-between space-y-2 text-[11px] bg-white">
-              <div class="border-[1.5px] border-black text-center bg-white">
-                <div class="border-b border-black py-1 font-bold">วันที่จ่าย</div>
-                <div id="payslipPayDate" class="py-1 font-normal">--/--/----</div>
-              </div>
-
-              <div class="border-[1.5px] border-black text-center flex-1 flex flex-col justify-between bg-white">
-                <div class="border-b border-black">
-                  <div class="py-0.5 font-bold border-b border-black">เงินได้สะสมต่อปี</div>
-                  <div id="payslipYTDEarnings" class="py-1 font-normal">43,625.00</div>
-                </div>
-                <div class="border-b border-black">
-                  <div class="py-0.5 font-bold border-b border-black">ภาษีสะสมต่อปี</div>
-                  <div id="payslipYTDTax" class="py-1 font-normal">0.00</div>
-                </div>
-                <div class="border-b border-black">
-                  <div class="py-0.5 font-bold border-b border-black">เงินสะสมกองทุนต่อปี</div>
-                  <div id="payslipYTDFund" class="py-1 font-normal">0.00</div>
-                </div>
-                <div class="border-b border-black">
-                  <div class="py-0.5 font-bold border-b border-black">ค่าลดหย่อนอื่นๆ</div>
-                  <div id="payslipOtherDeductions" class="py-1 font-normal">0.00</div>
-                </div>
-                <div>
-                  <div class="py-0.5 font-bold border-b border-black">เงินประกันสังคมต่อปี</div>
-                  <div id="payslipYTDSocial" class="py-1 font-normal">1,200.00</div>
-                </div>
-              </div>
-
-              <div class="border-[1.5px] border-black text-center bg-white">
-                <div class="border-b border-black py-1 font-bold text-[11.5px]">เงินรับสุทธิ</div>
-                <div id="payslipNetPay" class="py-1.5 font-bold text-[13px]">0.00</div>
+            <!-- Deductions -->
+            <div class="flex flex-col">
+              <div class="bg-gray-100 font-bold text-center py-1 border-b border-black text-[11.5px]">รายการหัก (DEDUCTIONS)</div>
+              <table class="w-full text-[11px] flex-1">
+                <thead>
+                  <tr class="border-b border-black bg-gray-50">
+                    <th class="py-0.5 px-2 text-left border-r border-black">รายการหัก</th>
+                    <th class="py-0.5 px-2 text-right w-24">จำนวนเงิน</th>
+                  </tr>
+                </thead>
+                <tbody id="payslipDeductionsBody"></tbody>
+              </table>
+              <div class="flex justify-between font-bold px-2 py-1 border-t border-black bg-gray-100 text-[11.5px]">
+                <span>รวมรายการหัก</span>
+                <span id="payslipTotalDeductions" class="font-mono">0.00</span>
               </div>
             </div>
           </div>
 
-          <div class="pt-1 space-y-2">
-            <div class="text-slate-700 font-sans not-italic text-[8.5px]" id="payslipRefID">E_PaySlip ID : PROVIDE POWER OUTSOURCING CO., LTD.</div>
-            <div class="pl-12 font-bold text-[12px] flex items-end gap-2">
-              <span>ลงชื่อพนักงาน</span>
-              <span class="inline-block w-64 border-b border-slate-400 mb-0.5"></span>
+          <div class="grid grid-cols-3 gap-2 border border-black p-2 bg-gray-50 text-[11px] items-center">
+            <div>
+              <div>วันที่จ่าย: <strong id="payslipPayDate" class="font-mono">-</strong></div>
+              <div>เงินได้สะสมต่อปี: <strong id="payslipYTDEarnings" class="font-mono">0.00</strong></div>
+              <div>ประกันสังคมสะสมต่อปี: <strong id="payslipYTDSocial" class="font-mono">0.00</strong></div>
+            </div>
+            <div class="col-span-2 text-right border-l border-black pl-3">
+              <div class="text-[11px] font-bold">เงินรับสุทธิ (NET PAY)</div>
+              <div id="payslipNetPay" class="font-mono font-extrabold text-xl">0.00</div>
             </div>
           </div>
-
         </div>
       </div>
 
-      <!-- Mobile Fallback Preview Image Box -->
-      <div id="mobileSlipImageFallback" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-3 text-center space-y-2 no-print">
-        <div class="flex justify-between items-center text-[11px] font-bold text-blue-900">
-          <span><i class="fa-solid fa-hand-pointer mr-1"></i>แตะค้างที่รูปด้านล่างเพื่อ "บันทึกลงเครื่อง"</span>
-          <button onclick="document.getElementById('mobileSlipImageFallback').classList.add('hidden')" class="text-slate-500 hover:text-slate-800 px-1.5">ปิด</button>
-        </div>
-        <img id="mobileSlipFallbackImgTag" alt="PaySlip A5" class="w-full rounded border border-slate-300 shadow-sm">
+      <!-- Mobile Fallback Image Box -->
+      <div id="mobileSlipImageFallback" class="hidden bg-zinc-900 border border-cyan-500/40 rounded-lg p-3 text-center space-y-2">
+        <div class="text-[11px] text-cyan-300 font-bold">หากไฟล์ไม่เข้าอัลบั้มอัตโนมัติ ให้แตะค้างที่รูปด้านล่างเพื่อบันทึก</div>
+        <img id="mobileSlipFallbackImgTag" src="" alt="A5 Payslip Preview" class="max-w-full mx-auto rounded border border-zinc-700">
       </div>
-
     </div>
   </div>
 
-  <!-- Settings Config Modal -->
-  <div id="configModal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4 no-print">
-    <div class="armor-frame chamfer-box w-full max-w-xs">
-      <div class="armor-inner chamfer-box p-4 space-y-3">
-        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
-          <h3 class="font-hud font-bold text-xs text-white">SYSTEM CONFIG</h3>
-          <button onclick="closeConfigModal()" class="text-zinc-400 hover:text-red-500 p-1"><i class="fa-solid fa-xmark"></i></button>
+  <!-- Config Modal -->
+  <div id="configModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="armor-frame chamfer-box w-full max-w-md">
+      <div class="armor-inner chamfer-box p-4 space-y-3 text-xs">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+          <span class="font-hud font-bold text-cyan-400">SYSTEM &amp; CLOUD CONFIG</span>
+          <button onclick="closeConfigModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
         </div>
-        <div class="space-y-2 text-xs">
+
+        <div class="space-y-2">
           <div>
-            <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">Google Apps Script URL</label>
-            <input type="text" id="gasUrlInput" class="valk-field w-full text-[10px] font-mono outline-none">
+            <label class="text-[10px] text-zinc-400 block mb-0.5">Google Apps Script Web App URL</label>
+            <input id="gasUrlInput" type="text" class="valk-field w-full font-mono text-[11px]">
           </div>
           <div>
-            <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE Channel Token</label>
-            <input type="text" id="lineTokenInput" class="valk-field w-full text-[10px] font-mono outline-none">
+            <label class="text-[10px] text-zinc-400 block mb-0.5">LINE Messaging API Channel Access Token</label>
+            <input id="lineTokenInput" type="password" class="valk-field w-full font-mono text-[11px]">
           </div>
           <div>
-            <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE User ID</label>
-            <input type="text" id="lineUserIdInput" class="valk-field w-full text-[10px] font-mono outline-none">
+            <label class="text-[10px] text-zinc-400 block mb-0.5">LINE User / Group ID</label>
+            <input id="lineUserIdInput" type="text" class="valk-field w-full font-mono text-[11px]">
           </div>
         </div>
-        <button onclick="saveConfigSettings()" class="tactile-btn chamfer-sm w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 text-xs">
-          บันทึกการตั้งค่า
-        </button>
+
+        <div class="flex items-center justify-between pt-2 border-t border-white/10">
+          <button onclick="clearLocalStorageData()" class="tactile-btn chamfer-sm px-3 py-1.5 bg-red-950/80 hover:bg-red-700 border border-red-500/40 text-red-300 hover:text-white font-bold text-[10.5px]">
+            <i class="fa-solid fa-trash mr-1"></i>ล้างข้อมูลในเครื่อง
+          </button>
+          <div class="flex gap-1.5">
+            <button onclick="closeConfigModal()" class="tactile-btn chamfer-sm px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-[10.5px]">ยกเลิก</button>
+            <button onclick="saveConfigSettings()" class="tactile-btn chamfer-sm px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-[10.5px]">บันทึก</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="chamfer-sm fixed left-1/2 -translate-x-1/2 z-50 bg-zinc-950 text-white text-xs font-bold px-4 py-2.5 shadow-2xl hidden border border-red-500/80" style="top: calc(max(env(safe-area-inset-top, 48px), 48px) + 1rem);">
-    <span id="toastMsg">แจ้งเตือนระบบ</span>
+  <div id="toast" class="hidden fixed top-20 inset-x-0 z-[90] flex justify-center px-4 pointer-events-none no-print">
+    <div class="chamfer-sm bg-zinc-900/95 border border-cyan-500/50 text-white px-4 py-2 text-xs font-bold shadow-lg flex items-center gap-2">
+      <i class="fa-solid fa-bolt text-cyan-400"></i>
+      <span id="toastMsg">พร้อมใช้งาน</span>
+    </div>
   </div>
-
-  <script>
+<script>
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzIC7PtGt_PeyQ7Co1GTiC0Ev6dPfDSiGhhyHClbKL1yMzUCTmeju8JKOYAtNGJZaB7/exec";
     const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
@@ -1187,18 +868,24 @@
     ];
 
     const THAI_PUBLIC_HOLIDAYS = new Set([
-      "2026-01-01", "2026-01-02", "2026-03-03", "2026-04-06",
-      "2026-04-13", "2026-04-14", "2026-04-15", "2026-05-01",
-      "2026-05-04", "2026-05-31", "2026-06-01", "2026-06-03",
-      "2026-07-28", "2026-07-29", "2026-07-30", "2026-08-12",
-      "2026-10-13", "2026-10-23", "2026-12-05", "2026-12-07",
-      "2026-12-10", "2026-12-31",
-      "2027-01-01", "2027-02-21", "2027-02-22", "2027-04-06",
+      "2026-01-01", "2026-01-02", "2026-03-02", "2026-03-03", "2026-04-06",
+      "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17",
+      "2026-05-01", "2026-05-04", "2026-06-01", "2026-06-02", "2026-06-03",
+      "2026-07-27", "2026-07-28", "2026-07-29", "2026-08-12",
+      "2026-10-12", "2026-10-13", "2026-10-23", "2026-12-05",
+      "2026-12-10", "2026-12-28", "2026-12-29", "2026-12-30", "2026-12-31",
+      "2027-01-01", "2027-02-22", "2027-04-06",
       "2027-04-13", "2027-04-14", "2027-04-15", "2027-05-01",
       "2027-05-03", "2027-05-04", "2027-05-20", "2027-06-03",
-      "2027-07-18", "2027-07-19", "2027-07-28", "2027-08-12",
-      "2027-10-13", "2027-10-23", "2027-10-25", "2027-12-05",
+      "2027-07-19", "2027-07-28", "2027-08-12",
+      "2027-10-13", "2027-10-23", "2027-10-25",
       "2027-12-06", "2027-12-10", "2027-12-31"
+    ]);
+
+    const WORKING_SATURDAYS = new Set([
+      "2026-01-17", "2026-01-31", "2026-02-28", "2026-03-28", "2026-04-25",
+      "2026-05-09", "2026-06-13", "2026-07-18", "2026-08-15", "2026-09-12",
+      "2026-10-31", "2026-11-07", "2026-11-14", "2026-11-21", "2026-11-28"
     ]);
 
     let currentEmpId = employeeList[0].id;
@@ -1217,7 +904,140 @@
     let isCapturingSlipImage = false;
     let latestRenderedSlipSnapshot = null;
 
-    // --- Constellation & Pulse Particle Canvas ---
+    function applyCompanyLogos() {
+      const size = 512;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const cx = size / 2;
+      const cy = size / 2;
+
+      ctx.fillStyle = '#05070A';
+      ctx.fillRect(0, 0, size, size);
+
+      const bgGrad = ctx.createRadialGradient(cx, cy, 20, cx, cy, 250);
+      bgGrad.addColorStop(0, 'rgba(255, 30, 39, 0.22)');
+      bgGrad.addColorStop(0.55, 'rgba(0, 240, 255, 0.08)');
+      bgGrad.addColorStop(1, 'rgba(5, 7, 10, 0)');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.strokeStyle = '#FF1E27';
+      ctx.lineWidth = 10;
+      const pad = 34;
+      const len = 55;
+      ctx.beginPath();
+      ctx.moveTo(pad, pad + len); ctx.lineTo(pad, pad); ctx.lineTo(pad + len, pad);
+      ctx.moveTo(size - pad - len, pad); ctx.lineTo(size - pad, pad); ctx.lineTo(size - pad, pad + len);
+      ctx.moveTo(pad, size - pad - len); ctx.lineTo(pad, size - pad); ctx.lineTo(pad + len, size - pad);
+      ctx.moveTo(size - pad - len, size - pad); ctx.lineTo(size - pad, size - pad); ctx.lineTo(size - pad, size - pad - len);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.strokeStyle = '#00F0FF';
+      ctx.lineWidth = 8;
+      ctx.setLineDash([45, 18, 12, 18]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, 198, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      for (let i = 0; i < 12; i++) {
+        const angle = (i * Math.PI) / 6;
+        const r1 = 166;
+        const r2 = i % 3 === 0 ? 184 : 178;
+        ctx.strokeStyle = i % 3 === 0 ? '#FF1E27' : 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = i % 3 === 0 ? 6 : 3;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
+        ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = 'rgba(255, 30, 39, 0.85)';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 148, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.shadowColor = '#FF1E27';
+      ctx.shadowBlur = 24;
+      ctx.translate(cx - 128, cy - 128);
+      ctx.scale(4, 4);
+      ctx.fillStyle = '#FF1E27';
+      ctx.fill(new Path2D("M18 14 H48 L44 22 H24 L28 28 H45 L41 35 H24 L20 27 L16 21 Z"));
+      ctx.fill(new Path2D("M19 37 H31 L27 44 H42 L44 39 H34 L37 33 H52 L46 50 H21 L17 43 Z"));
+      ctx.restore();
+
+      ctx.fillStyle = '#00F0FF';
+      ctx.beginPath();
+      ctx.arc(cx, cy - 118, 5, 0, Math.PI * 2);
+      ctx.arc(cx, cy + 118, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      const dataUrl = canvas.toDataURL('image/png');
+      let appleIcon = document.getElementById('appleTouchIcon');
+      if (!appleIcon) {
+        appleIcon = document.createElement('link');
+        appleIcon.id = 'appleTouchIcon';
+        appleIcon.rel = 'apple-touch-icon';
+        document.head.appendChild(appleIcon);
+      }
+      appleIcon.href = dataUrl;
+
+      let favIcon = document.getElementById('faviconIcon');
+      if (!favIcon) {
+        favIcon = document.createElement('link');
+        favIcon.id = 'faviconIcon';
+        favIcon.rel = 'icon';
+        favIcon.type = 'image/png';
+        document.head.appendChild(favIcon);
+      }
+      favIcon.href = dataUrl;
+    }
+
+    function runBootDiagnosticSequence() {
+      const overlay = document.getElementById('bootOverlay');
+      const logBox = document.getElementById('bootLogLines');
+      const bar = document.getElementById('bootProgressBar');
+      if (!overlay) return;
+
+      const steps = [
+        { pct: 38, text: "> LOADING PAYROLL ENGINE [DILIGENCE: 500฿]..." },
+        { pct: 74, text: "> CALIBRATING REACTOR & SHIFT SENSORS..." },
+        { pct: 100, text: "> CLOUD & LINE TELEMETRY: ONLINE [OK]" }
+      ];
+
+      let idx = 0;
+      const timer = setInterval(() => {
+        if (idx < steps.length) {
+          const line = document.createElement('div');
+          line.textContent = steps[idx].text;
+          if (idx === steps.length - 1) line.className = "text-emerald-400 font-bold";
+          logBox.appendChild(line);
+          bar.style.width = `${steps[idx].pct}%`;
+          idx++;
+        } else {
+          clearInterval(timer);
+          setTimeout(dismissBootOverlay, 180);
+        }
+      }, 210);
+    }
+
+    function dismissBootOverlay() {
+      const overlay = document.getElementById('bootOverlay');
+      if (!overlay) return;
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.classList.add('hidden'), 280);
+    }
+
+    function updateHudAuraState(stateName) {
+      document.body.classList.remove('state-standby', 'state-onduty', 'state-overdrive');
+      document.body.classList.add(stateName);
+    }
+
     (function initConstellationNetwork() {
       window.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('constellationCanvas');
@@ -1283,7 +1103,6 @@
       });
     })();
 
-    // --- 60-Tick Precision Bezel Generator ---
     function buildChronoBezelTicks() {
       const group = document.getElementById('chronoTicksGroup');
       if (!group) return;
@@ -1293,14 +1112,13 @@
         const isMajor = i % 5 === 0;
         const y1 = isMajor ? 10 : 12;
         const y2 = isMajor ? 18 : 16;
-        const stroke = i === 0 ? '#FF1E27' : (isMajor ? 'rgba(0,240,255,0.65)' : 'rgba(255,255,255,0.2)');
+        const stroke = i === 0 ? '#FF1E27' : (isMajor ? 'rgba(0,240,255,0.75)' : 'rgba(255,255,255,0.22)');
         const width = isMajor ? '1.6' : '0.9';
         html += `<line x1="120" y1="${y1}" x2="120" y2="${y2}" stroke="${stroke}" stroke-width="${width}" transform="rotate(${angle} 120 120)"/>`;
       }
       group.innerHTML = html;
     }
 
-    // --- 3D Gyroscope & Touch Parallax Controller ---
     function init3DTiltCard() {
       const card = document.getElementById('chronoTiltCard');
       const glare = document.getElementById('sapphireGlare');
@@ -1335,7 +1153,6 @@
       }, { passive: true });
     }
 
-    // --- Interactive Slide-to-Engage Ignition Controller ---
     function initSlideIgnition() {
       const track = document.getElementById('ignitionSlideTrack');
       const thumb = document.getElementById('ignitionSlideThumb');
@@ -1397,10 +1214,9 @@
       window.addEventListener('touchend', onEnd);
     }
 
-    // --- Interactive OT Scrubber Simulator ---
     function onSimScrubberChange(val) {
       simExtraMinutes = Number(val) || 0;
-      const step = Math.floor(simExtraMinutes / 30);
+      const step = Math.floor(simExtraMinutes / 10);
       if (step !== lastDetentStep) {
         lastDetentStep = step;
         playClick('detent');
@@ -1455,10 +1271,15 @@
 
     function computeWorkedHoursFallback(shift, checkIn, checkOut) {
       if (!checkIn || !checkOut) return 8;
-      const inMins = timeToMins(checkIn);
+      let inMins = timeToMins(checkIn);
       let outMins = timeToMins(checkOut);
+      if (shift === 'NIGHT') {
+        if (inMins < 720) inMins += 1440;
+        if (outMins < 720) outMins += 1440;
+      }
       if (outMins < inMins) outMins += 1440;
-      const netMins = Math.max(0, (outMins - inMins) - 50);
+      const span = Math.max(0, outMins - inMins);
+      const netMins = span > 300 ? span - 50 : span;
       return Math.round((netMins / 60) * 100) / 100;
     }
 
@@ -1498,7 +1319,6 @@
       return Array.isArray(raw) ? raw.map(normalizeRecordItem) : [];
     }
 
-    // --- Theme Mode (Default AUTO: Daytime Titanium Gunmetal / Nighttime Valkyrie Obsidian) ---
     function getAutoThemeIsDark() {
       const hour = new Date().getHours();
       return (hour >= 18 || hour < 6);
@@ -1530,7 +1350,7 @@
       }
       html.classList.toggle('dark', shouldBeDark);
       const metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (metaTheme) metaTheme.setAttribute('content', shouldBeDark ? '#07090D' : '#1B212B');
+      if (metaTheme) metaTheme.setAttribute('content', shouldBeDark ? '#05070A' : '#141922');
     }
 
     function cycleThemeMode() {
@@ -1540,14 +1360,13 @@
       localStorage.setItem('theme_mode', next);
       applyThemeMode(next);
       const msgMap = {
-        auto: "โหมดธีมอัตโนมัติ (AUTO: 06:00 ไทเทเนียม / 18:00 ดำสนิท)",
-        light: "ล็อกโหมดไทเทเนียมเมทัลลิก (TITANIUM GUNMETAL)",
-        dark: "ล็อกโหมดมืดสนิท (VALKYRIE OBSIDIAN)"
+        auto: "โหมดธีมอัตโนมัติ (AUTO)",
+        light: "ล็อกโหมดไทเทเนียมเมทัลลิก",
+        dark: "ล็อกโหมดมืดสนิท"
       };
       showToast(msgMap[next]);
     }
 
-    // --- Auto Shift Switcher ---
     function getAutoShiftByTime(dateObj = new Date()) {
       const hour = dateObj.getHours();
       return (hour >= 6 && hour < 18) ? 'DAY' : 'NIGHT';
@@ -1592,8 +1411,9 @@
 
     function isNonWorkingDay(dateObj) {
       const dayOfWeek = dateObj.getDay();
-      if (dayOfWeek === 0 || dayOfWeek === 6) return true;
       const dateStr = getLocalDateStr(dateObj);
+      if (dayOfWeek === 0) return true;
+      if (dayOfWeek === 6 && !WORKING_SATURDAYS.has(dateStr)) return true;
       if (THAI_PUBLIC_HOLIDAYS.has(dateStr)) return true;
       const customRaw = localStorage.getItem("custom_company_holidays") || "";
       if (customRaw) {
@@ -1662,7 +1482,7 @@
     function playClick(type = 'normal') {
       if (!soundEnabled) return;
       const nowMs = Date.now();
-      if (type === 'normal' && nowMs - lastClickTime < 60) return;
+      if (type === 'normal' && nowMs - lastClickTime < 55) return;
       lastClickTime = nowMs;
 
       try {
@@ -1674,36 +1494,47 @@
 
         if (type === 'confirm') {
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(680, now);
-          osc.frequency.exponentialRampToValueAtTime(1520, now + 0.065);
-          gain.gain.setValueAtTime(0.22, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.exponentialRampToValueAtTime(1480, now + 0.08);
+          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
           osc.start(now);
-          osc.stop(now + 0.085);
+          osc.stop(now + 0.12);
+
+          const osc2 = sharedAudioCtx.createOscillator();
+          const gain2 = sharedAudioCtx.createGain();
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(1760, now + 0.06);
+          gain2.gain.setValueAtTime(0.14, now + 0.06);
+          gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          osc2.connect(gain2);
+          gain2.connect(sharedAudioCtx.destination);
+          osc2.start(now + 0.06);
+          osc2.stop(now + 0.19);
         } else if (type === 'detent') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(1250, now);
-          osc.frequency.exponentialRampToValueAtTime(480, now + 0.018);
-          gain.gain.setValueAtTime(0.14, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
+          osc.frequency.setValueAtTime(1420, now);
+          osc.frequency.exponentialRampToValueAtTime(520, now + 0.016);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
           osc.start(now);
-          osc.stop(now + 0.025);
+          osc.stop(now + 0.024);
         } else {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(980, now);
           osc.frequency.exponentialRampToValueAtTime(260, now + 0.028);
-          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.setValueAtTime(0.22, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
           osc.start(now);
           osc.stop(now + 0.038);
         }
-        if (navigator.vibrate) navigator.vibrate(type === 'confirm' ? [16, 20, 20] : 8);
+        if (navigator.vibrate) navigator.vibrate(type === 'confirm' ? [18, 25, 22] : 8);
       } catch (e) {}
     }
 
@@ -1754,10 +1585,18 @@
         ratePill.textContent = currentDayType === 'HOLIDAY' ? '2.0X' : '1.5X';
       }
 
+      const schedEl = document.getElementById('headerShiftSchedule');
+      if (schedEl) {
+        schedEl.textContent = currentShift === 'DAY'
+          ? 'SHIFT 08:00-16:50 // OT 17:10-19:10'
+          : 'SHIFT 20:00-04:50 // OT 05:10-07:10';
+      }
+
       updateAutoShiftBadge();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      runBootDiagnosticSequence();
       applyCompanyLogos();
       applyThemeMode();
       buildChronoBezelTicks();
@@ -1820,8 +1659,39 @@
       if (tabNum === 4) renderHistories();
     }
 
+    function computeLiveAccruedAmount(activeIn, nowDate = new Date()) {
+      const shift = activeIn.shift || 'DAY';
+      const dayType = activeIn.dayType || 'REGULAR';
+      const workType = activeIn.workType || 'FULL';
+      const checkInTime = activeIn.time || '08:00';
+      const nowTimeStr = getLocalTimeStr(nowDate);
+
+      let inMins = timeToMins(checkInTime);
+      let outMins = timeToMins(nowTimeStr);
+      if (shift === 'NIGHT') {
+        if (inMins < 720) inMins += 1440;
+        if (outMins < 720) outMins += 1440;
+      }
+      if (outMins < inMins) outMins += 1440;
+
+      const spanMins = Math.max(0, outMins - inMins);
+      const workedHrs = Math.round(((spanMins > 300 ? spanMins - 50 : spanMins) / 60) * 100) / 100;
+      const calc = calculatePayroll(shift, dayType, checkInTime, nowTimeStr, workType);
+
+      if (calc.totalSalary > 0) return calc.totalSalary;
+
+      const shiftAllow = shift === 'NIGHT' ? 180 : 0;
+      const mealAllow = workedHrs >= 4 ? 10 : 0;
+      if (dayType === 'HOLIDAY') {
+        const estOt = Math.round(workedHrs * 100 * 100) / 100;
+        return Math.round((estOt + shiftAllow + mealAllow) * 100) / 100;
+      }
+      const estBase = workType === 'HALF' ? 200 : 400;
+      return Math.round((estBase + shiftAllow + mealAllow) * 100) / 100;
+    }
+
     function startLiveChronograph() {
-      const ARC_CIRCUMFERENCE = 578.05;
+      const ARC_CIRCUMFERENCE = 565.48;
       const update = () => {
         const now = new Date();
         const timeStr = now.toTimeString().split(' ')[0];
@@ -1844,41 +1714,46 @@
 
         if (activeIn) {
           elapsedBar.classList.remove('hidden');
-          lcdTag.textContent = "THRUST ACTIVE";
-          lcdTag.className = "chamfer-sm bg-amber-500/20 text-amber-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-500/50 tracking-wider";
-
           const inDateTime = new Date(`${activeIn.date}T${activeIn.time}:00`);
-          const diffMs = Math.max(0, now - inDateTime);
+          const diffMs = Math.max(0, now.getTime() - inDateTime.getTime());
           const totalMins = Math.floor(diffMs / 60000);
           const hrs = Math.floor(totalMins / 60);
           const mins = totalMins % 60;
           document.getElementById('liveElapsedText').textContent = `${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`;
 
+          const isOverdrive = totalMins > 550;
+          updateHudAuraState(isOverdrive ? 'state-overdrive' : 'state-onduty');
+
+          if (isOverdrive) {
+            lcdTag.textContent = "OT OVERDRIVE";
+            lcdTag.className = "chamfer-sm bg-amber-500/25 text-amber-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-400/60 tracking-wider animate-pulse";
+          } else {
+            lcdTag.textContent = "THRUST ACTIVE";
+            lcdTag.className = "chamfer-sm bg-red-500/20 text-red-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-red-500/50 tracking-wider";
+          }
+
           const progressRatio = Math.min(1, totalMins / 530);
           const pctInt = Math.min(100, Math.round(progressRatio * 100));
           if (arcEl) arcEl.style.strokeDashoffset = (ARC_CIRCUMFERENCE * (1 - progressRatio)).toFixed(1);
 
-          const nowTimeStr = getLocalTimeStr(now);
-          const liveCalc = calculatePayroll(activeIn.shift, activeIn.dayType, activeIn.time, nowTimeStr, activeIn.workType);
-          const estCurrentPay = activeIn.dayType === 'REGULAR' && liveCalc.baseSalary === 0
-            ? (400 + liveCalc.shiftAllowance + liveCalc.totalMealAllowance + liveCalc.otPay)
-            : liveCalc.totalSalary;
+          const estCurrentPay = computeLiveAccruedAmount(activeIn, now);
           document.getElementById('liveAccruedPay').textContent = `${fmtNum(estCurrentPay)} ฿`;
 
           if (reactorBadge) {
-            reactorBadge.textContent = totalMins > 550 ? `OVERDRIVE +OT` : `${pctInt}% SHIFT`;
-            reactorBadge.className = totalMins > 550
-              ? "px-2 py-0.5 rounded bg-red-950/90 border border-red-500 text-[9.5px] font-mono font-bold text-red-400"
-              : "px-2 py-0.5 rounded bg-black/80 border border-cyan-500/50 text-[9.5px] font-mono font-bold text-cyan-300";
+            reactorBadge.textContent = isOverdrive ? `OVERDRIVE +OT` : `${pctInt}% SHIFT`;
+            reactorBadge.className = isOverdrive
+              ? "px-2.5 py-0.5 rounded bg-amber-950/90 border border-amber-500 text-[9.5px] font-mono font-bold text-amber-300"
+              : "px-2.5 py-0.5 rounded bg-red-950/90 border border-red-500/60 text-[9.5px] font-mono font-bold text-red-300";
           }
         } else {
+          updateHudAuraState('state-standby');
           elapsedBar.classList.add('hidden');
           lcdTag.textContent = "CORE READY";
           lcdTag.className = "chamfer-sm bg-cyan-500/15 text-cyan-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-500/40 tracking-wider";
           if (arcEl) arcEl.style.strokeDashoffset = ARC_CIRCUMFERENCE;
           if (reactorBadge) {
             reactorBadge.textContent = "0% SHIFT";
-            reactorBadge.className = "px-2 py-0.5 rounded bg-black/80 border border-zinc-800 text-[9.5px] font-mono font-bold text-zinc-400";
+            reactorBadge.className = "px-2.5 py-0.5 rounded bg-black/85 border border-zinc-800 text-[9.5px] font-mono font-bold text-zinc-400";
           }
         }
       };
@@ -1897,7 +1772,8 @@
       } else {
         currentShift = localStorage.getItem(`pref_shift_${currentEmpId}`) || getAutoShiftByTime();
       }
-      currentDayType = localStorage.getItem(`pref_daytype_${currentEmpId}`) || "REGULAR";
+      const todayIsHoliday = isNonWorkingDay(new Date());
+      currentDayType = todayIsHoliday ? "HOLIDAY" : (localStorage.getItem(`pref_daytype_${currentEmpId}`) || "REGULAR");
       renderSwitchStates();
     }
 
@@ -1923,7 +1799,7 @@
         const effectiveIn = Math.max(inMins, 480);
         const regularEnd = Math.min(outMins, 1010);
         const regularSpan = Math.max(0, regularEnd - effectiveIn);
-        totalWorkedMinutes = Math.max(0, regularSpan - 50);
+        totalWorkedMinutes = regularSpan > 300 ? regularSpan - 50 : regularSpan;
 
         const otStart = 1030;
         const otEndCap = 1150;
@@ -1940,7 +1816,7 @@
         const effectiveIn = Math.max(nightInMins, 1200);
         const regularEnd = Math.min(nightOutMins, 1730);
         const regularSpan = Math.max(0, regularEnd - effectiveIn);
-        totalWorkedMinutes = Math.max(0, regularSpan - 50);
+        totalWorkedMinutes = regularSpan > 300 ? regularSpan - 50 : regularSpan;
 
         const otStart = 1750;
         const otEndCap = 1870;
@@ -1951,7 +1827,17 @@
       }
 
       const workedHours = Math.round((totalWorkedMinutes / 60) * 100) / 100;
-      afterShiftOtHours = workType === 'HALF' ? 0 : Math.max(0, Math.round(afterShiftOtHours * 100) / 100);
+      const isHalfDay = (workType === 'HALF' || workedHours < 5);
+      afterShiftOtHours = isHalfDay ? 0 : Math.max(0, Math.round(afterShiftOtHours * 100) / 100);
+
+      if (workedHours < 4) {
+        return {
+          baseSalary: 0, salaryNote: "ทำงานไม่ถึง 4 ชม. (0฿)", workedHours,
+          otHours: 0, otRate: dayType === 'HOLIDAY' ? 2.0 : 1.5, otPay: 0,
+          ot20Hours: 0, ot20Pay: 0, ot30Hours: 0, ot30Pay: 0,
+          shiftAllowance: 0, normalMeal: 0, otMeal: 0, totalMealAllowance: 0, totalSalary: 0
+        };
+      }
 
       let baseSalary = 0;
       let salaryNote = "";
@@ -1962,25 +1848,22 @@
         otPay = Math.round(otHours * 75 * 100) / 100;
         if (otHours > 0) otMeal = 25;
 
-        if (workType === 'HALF') {
+        if (isHalfDay) {
           baseSalary = 200;
-          salaryNote = "ลาครึ่งวัน (200฿)";
-        } else if (workedHours < 8) {
-          baseSalary = 0;
-          salaryNote = "ทำงานไม่ถึง 8 ชม. (0฿)";
+          salaryNote = "ทำงานครึ่งวัน (200฿)";
         } else {
           baseSalary = 400;
           salaryNote = "เต็มวัน (400฿)";
         }
       } else {
         baseSalary = 0;
-        if (workType === 'HALF') {
-          ot20Hours = 4;
-          ot20Pay = 400;
+        if (isHalfDay) {
+          ot20Hours = Math.min(4, workedHours);
+          ot20Pay = Math.round(ot20Hours * 100 * 100) / 100;
           otRate = 2.0;
-          otHours = 4;
-          otPay = 400;
-          salaryNote = "วันหยุดครึ่งวัน (OT 2.0 = 400฿)";
+          otHours = ot20Hours;
+          otPay = ot20Pay;
+          salaryNote = `วันหยุดครึ่งวัน (OT 2.0 = ${ot20Pay}฿)`;
         } else {
           ot20Hours = Math.min(8, Math.max(0, workedHours));
           ot20Pay = Math.round(ot20Hours * 100 * 100) / 100;
@@ -2020,13 +1903,14 @@
       const calc = calculatePayroll(currentShift, currentDayType, dummyIn, dummyOut, currentWorkType);
       const simLabel = document.getElementById('simOutTimeLabel');
       if (simLabel) {
+        const shiftTag = currentShift === 'NIGHT' ? ' [ข้ามวัน]' : '';
         if (simExtraMinutes === 0) {
-          simLabel.textContent = `${dummyOut} (เลิกปกติ)`;
+          simLabel.textContent = `${dummyOut} (เลิกปกติ${shiftTag})`;
         } else if (simExtraMinutes <= 20) {
-          simLabel.textContent = `${dummyOut} (พักก่อน OT)`;
+          simLabel.textContent = `${dummyOut} (พักก่อน OT${shiftTag})`;
         } else {
           const otSimHrs = ((simExtraMinutes - 20) / 60).toFixed(2).replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
-          simLabel.textContent = `${dummyOut} (+OT ${otSimHrs}h)`;
+          simLabel.textContent = `${dummyOut} (+OT ${otSimHrs}h${shiftTag})`;
         }
       }
 
@@ -2041,7 +1925,7 @@
       const today = getLocalDateStr();
       const records = getStoredPayrollRecords();
       const activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
-      
+
       const activeIn = activeCheckins[currentEmpId];
       const todayRecord = records.find(r => r.id === currentEmpId && r.date === today);
 
@@ -2155,12 +2039,17 @@
       records.push(recordObj);
       localStorage.setItem("payroll_records", JSON.stringify(records));
 
+      const delKeys = new Set(JSON.parse(localStorage.getItem("deleted_payroll_keys") || "[]"));
+      delKeys.delete(`${emp.id}_${dateStr}`);
+      localStorage.setItem("deleted_payroll_keys", JSON.stringify(Array.from(delKeys)));
+
       delete activeCheckins[emp.id];
       localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
 
       playClick('confirm');
       showToast("DISENGAGED // ลงเวลาออก & คำนวณเงินสำเร็จ");
       loadTodayLiveStatus();
+      buildCutoffOptions();
       renderHistories();
 
       const lineMsg = `✅ [CHECK OUT & PAYROLL]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${activeIn.shift} / ${activeIn.dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${activeIn.time} - ${timeStr} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
@@ -2182,7 +2071,9 @@
         document.getElementById('manualCheckOut').value = existing.checkOut || '';
         badge.classList.remove('hidden');
       } else {
+        const dObj = new Date(dateStr + 'T00:00:00');
         document.getElementById('manualShift').value = getAutoShiftByTime();
+        document.getElementById('manualDayType').value = isNonWorkingDay(dObj) ? 'HOLIDAY' : 'REGULAR';
         document.getElementById('manualCheckIn').value = '';
         document.getElementById('manualCheckOut').value = '';
         badge.classList.add('hidden');
@@ -2236,10 +2127,15 @@
       records.push(recordObj);
       localStorage.setItem("payroll_records", JSON.stringify(records));
 
+      const delKeys = new Set(JSON.parse(localStorage.getItem("deleted_payroll_keys") || "[]"));
+      delKeys.delete(`${emp.id}_${dateStr}`);
+      localStorage.setItem("deleted_payroll_keys", JSON.stringify(Array.from(delKeys)));
+
       playClick('confirm');
       showToast("บันทึกเวลาย้อนหลังสำเร็จ");
       prefillManualByDate();
       loadTodayLiveStatus();
+      buildCutoffOptions();
       renderHistories();
 
       const lineMsg = `📝 [MANUAL EDIT]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${checkIn} - ${checkOut} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
@@ -2285,6 +2181,10 @@
       let records = getStoredPayrollRecords();
       records = records.filter(r => !(r.id === targetId && r.date === recordDate));
       localStorage.setItem("payroll_records", JSON.stringify(records));
+
+      const delKeys = new Set(JSON.parse(localStorage.getItem("deleted_payroll_keys") || "[]"));
+      delKeys.add(`${targetId}_${recordDate}`);
+      localStorage.setItem("deleted_payroll_keys", JSON.stringify(Array.from(delKeys)));
 
       showToast("ลบข้อมูลสำเร็จ");
       loadTodayLiveStatus();
@@ -2353,9 +2253,18 @@
             if (Array.isArray(data.payrolls)) {
               const cloudRecords = data.payrolls.map(normalizeRecordItem);
               const localRecords = getStoredPayrollRecords();
+              const deletedKeys = new Set(JSON.parse(localStorage.getItem("deleted_payroll_keys") || "[]"));
               const mergedMap = new Map();
-              localRecords.forEach(r => mergedMap.set(`${r.id}_${r.date}`, r));
-              cloudRecords.forEach(r => mergedMap.set(`${r.id}_${r.date}`, r));
+
+              localRecords.forEach(r => {
+                const key = `${r.id}_${r.date}`;
+                if (!deletedKeys.has(key)) mergedMap.set(key, r);
+              });
+              cloudRecords.forEach(r => {
+                const key = `${r.id}_${r.date}`;
+                if (!deletedKeys.has(key)) mergedMap.set(key, r);
+              });
+
               localStorage.setItem("payroll_records", JSON.stringify(Array.from(mergedMap.values())));
             }
             if (Array.isArray(data.leaves)) {
@@ -2363,6 +2272,7 @@
               localStorage.setItem("leave_records", JSON.stringify(normLeaves));
             }
             loadTodayLiveStatus();
+            buildCutoffOptions(true);
             renderHistories();
             prefillManualByDate();
             if (pill) pill.textContent = "LINKED";
@@ -2385,12 +2295,13 @@
         });
     }
 
-    function buildCutoffOptions() {
+    function buildCutoffOptions(preserveSelected = false) {
       const select = document.getElementById('cutoffPeriodSelect');
+      const prevVal = preserveSelected ? select.value : null;
       const now = new Date();
       const options = [];
 
-      for (let i = 0; i < 6; i++) {
+      for (let i = -1; i < 8; i++) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const y = d.getFullYear(), m = d.getMonth();
         const monthName = d.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
@@ -2411,8 +2322,16 @@
       options.push({ label: 'แสดงทั้งหมด (All Records)', start: '2000-01-01', end: '2099-12-31' });
       select.innerHTML = options.map(o => `<option value="${o.start}|${o.end}">${o.label}</option>`).join('');
 
-      // เลือกงวดปัจจุบันอัตโนมัติ (วันที่ 1-15 เลือกงวดต้นเดือน / วันที่ 16 ขึ้นไป เลือกงวดปลายเดือน)
-      select.selectedIndex = now.getDate() <= 15 ? 1 : 0;
+      if (prevVal && options.some(o => `${o.start}|${o.end}` === prevVal)) {
+        select.value = prevVal;
+      } else {
+        const curY = now.getFullYear();
+        const curM = String(now.getMonth() + 1).padStart(2, '0');
+        const curLast = new Date(curY, now.getMonth() + 1, 0).getDate();
+        select.value = now.getDate() <= 15
+          ? `${curY}-${curM}-01|${curY}-${curM}-15`
+          : `${curY}-${curM}-16|${curY}-${curM}-${curLast}`;
+      }
     }
 
     function renderHistories() {
@@ -2598,21 +2517,103 @@
 
     function closeBreakdownModal() { document.getElementById('breakdownModal').classList.add('hidden'); }
 
-    // --- Payslip & A5 Landscape Export ---
     function getSlipAdjKey() {
       const period = document.getElementById('cutoffPeriodSelect')?.value || 'ALL';
       return `slip_adj_${currentEmpId}_${period}`;
     }
 
-    function getDefaultSlipAdj(autoSocSec = 0) {
+    function isLeaveInMonth(leaveItem, yearNum, monthNum) {
+      const ymStr = `${yearNum}-${String(monthNum).padStart(2, '0')}`;
+      const start = normalizeDateToISO(leaveItem.startDate);
+      const end = normalizeDateToISO(leaveItem.endDate || leaveItem.startDate);
+      if (!start) return false;
+      const monthStart = `${ymStr}-01`;
+      const lastDay = new Date(yearNum, monthNum, 0).getDate();
+      const monthEnd = `${ymStr}-${String(lastDay).padStart(2, '0')}`;
+      return (start <= monthEnd && end >= monthStart);
+    }
+
+    function computeAutoMonthlyBonusAndHazard(startStr) {
+      if (!startStr || startStr === '2000-01-01') {
+        return { autoHazard: 0, autoDiligence: 0, ruleSummary: 'เลือกงวดปลายเดือน (16-สิ้นเดือน) เพื่อคำนวณค่าเสี่ยงภัยและเบี้ยขยันอัตโนมัติ' };
+      }
+      const [y, m, d] = startStr.split('-').map(Number);
+
+      if (d <= 15) {
+        return {
+          autoHazard: 0,
+          autoDiligence: 0,
+          ruleSummary: 'งวดวันที่ 1-15: ค่าเสี่ยงภัย (20฿/วัน) และเบี้ยขยันจะรวบยอดทั้งเดือนไปใส่ในสลิปงวดวันที่ 16-สิ้นเดือน'
+        };
+      }
+
+      const allRecs = getStoredPayrollRecords().filter(r => r.id === currentEmpId);
+      const allLeaves = JSON.parse(localStorage.getItem("leave_records") || "[]")
+        .filter(l => String(l.id || '').trim() === currentEmpId);
+
+      const BASELINE_MAX_YM = currentEmpId === "50001024" ? "2026-10" : "";
+
+      const checkMonthStatus = (yearNum, monthNum) => {
+        const ymStr = `${yearNum}-${String(monthNum).padStart(2, '0')}`;
+        const mRecs = allRecs.filter(r => r.date.startsWith(ymStr));
+        const mLeaves = allLeaves.filter(l => isLeaveInMonth(l, yearNum, monthNum));
+
+        const workedDaysInMonth = mRecs.filter(r => r.workedHours >= 4).length;
+        const hasDisqualifyingLeave = mLeaves.some(l => String(l.leaveType || '').trim() !== 'ลาพักร้อน');
+        const hasAbsentRecord = mRecs.some(r => r.workedHours < 4);
+
+        if (ymStr === BASELINE_MAX_YM && !hasDisqualifyingLeave && !hasAbsentRecord) {
+          return { workedDaysInMonth, isClean: true, isBaselineMax: true };
+        }
+
+        const isClean = workedDaysInMonth > 0 && !hasDisqualifyingLeave && !hasAbsentRecord;
+        return { workedDaysInMonth, isClean, isBaselineMax: false };
+      };
+
+      const curMonth = checkMonthStatus(y, m);
+      const autoHazard = curMonth.workedDaysInMonth * 20;
+
+      let autoDiligence = 0;
+      let streak = 0;
+
+      if (curMonth.isClean) {
+        streak = curMonth.isBaselineMax ? 3 : 1;
+        let checkY = y;
+        let checkM = m;
+
+        if (streak < 3) {
+          for (let step = 0; step < 24; step++) {
+            checkM -= 1;
+            if (checkM === 0) {
+              checkM = 12;
+              checkY -= 1;
+            }
+            const prevStatus = checkMonthStatus(checkY, checkM);
+            if (prevStatus.isClean) {
+              streak += prevStatus.isBaselineMax ? 3 : 1;
+              if (streak >= 3) break;
+            } else {
+              break;
+            }
+          }
+        }
+        autoDiligence = streak >= 3 ? 500 : (streak === 2 ? 400 : 300);
+      }
+
+      const ruleSummary = `สรุปทั้งเดือน (${curMonth.workedDaysInMonth} วัน): ค่าเสี่ยงภัย ${fmtNum(autoHazard)} ฿ | เบี้ยขยัน ${curMonth.isClean ? `ระดับสูงสุด/ต่อเนื่อง = ${fmtNum(autoDiligence)} ฿` : '0.00 ฿ (มีการลาที่ไม่ใช่ลาพักร้อน/วันทำงานไม่ครบ)'}`;
+
+      return { autoHazard, autoDiligence, ruleSummary };
+    }
+
+    function getDefaultSlipAdj(autoSocSec = 0, autoHazard = 0, autoDiligence = 0) {
       const saved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null");
       const isMainEmp = currentEmpId === "50001024";
       return {
-        diligence: saved?.diligence ?? 0,
-        hazard: saved?.hazard ?? 0,
+        diligence: (saved && saved.manualDiligence) ? saved.diligence : autoDiligence,
+        hazard: (saved && saved.manualHazard) ? saved.hazard : autoHazard,
         bonus: saved?.bonus ?? 0,
         otherIncome: saved?.otherIncome ?? 0,
-        socSec: saved?.socSec ?? autoSocSec,
+        socSec: (saved && saved.manualSocSec) ? saved.socSec : autoSocSec,
         uniform: saved?.uniform ?? 0,
         otherDed: saved?.otherDed ?? 0,
         studentLoan: saved?.studentLoan ?? 0,
@@ -2631,6 +2632,7 @@
     }
 
     function saveAndRefreshPayslip() {
+      const prev = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "{}");
       const adj = {
         diligence: parseFloat(document.getElementById('adjDiligence').value) || 0,
         hazard: parseFloat(document.getElementById('adjHazard').value) || 0,
@@ -2641,7 +2643,10 @@
         otherDed: parseFloat(document.getElementById('adjOtherDed').value) || 0,
         studentLoan: parseFloat(document.getElementById('adjStudentLoan').value) || 0,
         baseYTDEarnings: parseFloat(document.getElementById('baseYTDEarnings').value) || 0,
-        baseYTDSocial: parseFloat(document.getElementById('baseYTDSocial').value) || 0
+        baseYTDSocial: parseFloat(document.getElementById('baseYTDSocial').value) || 0,
+        manualDiligence: document.activeElement?.id === 'adjDiligence' ? true : (prev.manualDiligence || false),
+        manualHazard: document.activeElement?.id === 'adjHazard' ? true : (prev.manualHazard || false),
+        manualSocSec: document.activeElement?.id === 'adjSocSec' ? true : (prev.manualSocSec || false)
       };
       localStorage.setItem(getSlipAdjKey(), JSON.stringify(adj));
       renderPayslipContent(false);
@@ -2657,7 +2662,12 @@
       const cutoffSelect = document.getElementById('cutoffPeriodSelect');
       if (cutoffSelect && cutoffSelect.value === '2000-01-01|2099-12-31' && cutoffSelect.options.length > 1) {
         const now = new Date();
-        cutoffSelect.selectedIndex = now.getDate() <= 15 ? 1 : 0;
+        const curY = now.getFullYear();
+        const curM = String(now.getMonth() + 1).padStart(2, '0');
+        const curLast = new Date(curY, now.getMonth() + 1, 0).getDate();
+        cutoffSelect.value = now.getDate() <= 15
+          ? `${curY}-${curM}-01|${curY}-${curM}-15`
+          : `${curY}-${curM}-16|${curY}-${curM}-${curLast}`;
         renderHistories();
         showToast("สลับเป็นรอบตัดยอดล่าสุดให้อัตโนมัติ");
       }
@@ -2756,8 +2766,8 @@
       let minsOT15 = 0, minsOT20 = 0, minsOT30 = 0;
 
       empRecords.forEach(r => {
-        if (r.dayType !== 'HOLIDAY') {
-          workDaysCount += (r.workType === 'HALF' ? 0.5 : 1);
+        if (r.dayType !== 'HOLIDAY' && r.workedHours >= 4) {
+          workDaysCount += ((r.workType === 'HALF' || r.workedHours < 5) ? 0.5 : 1);
         }
         sumBase += r.baseSalary;
         sumShift += r.shiftAllowance;
@@ -2783,7 +2793,11 @@
 
       const baseEarnings = sumBase + sumOT15 + sumOT20 + sumOT30 + sumShift + sumMeal + sumOTMeal;
       const autoSocSec = baseEarnings > 0 ? Math.min(Math.round(baseEarnings * 0.05), 200.00) : 0.00;
-      const adj = getDefaultSlipAdj(autoSocSec);
+      const { autoHazard, autoDiligence, ruleSummary } = computeAutoMonthlyBonusAndHazard(startStr);
+      const adj = getDefaultSlipAdj(autoSocSec, autoHazard, autoDiligence);
+
+      const autoRuleEl = document.getElementById('autoBonusRuleHint');
+      if (autoRuleEl) autoRuleEl.textContent = ruleSummary;
 
       if (syncInputs) {
         document.getElementById('adjDiligence').value = adj.diligence;
@@ -2845,7 +2859,7 @@
         </tr>
       `;
 
-      document.getElementById('payslipEarningsBody').innerHTML = 
+      document.getElementById('payslipEarningsBody').innerHTML =
         genEarnRow('อัตราเงินเดือน', '', 400) +
         genEarnRow('เงินเดือน', fmtNum(workDaysCount), sumBase) +
         genEarnRow('ค่าล่วงเวลา1เท่า', '0.00', 0) +
@@ -2863,7 +2877,7 @@
         genEarnRow('Bonus/ค่ารถ', '', adj.bonus) +
         genEarnRow('ค่าเสี่ยงภัย', '', adj.hazard);
 
-      document.getElementById('payslipDeductionsBody').innerHTML = 
+      document.getElementById('payslipDeductionsBody').innerHTML =
         genDedRow('หักค่าชุดฟอร์ม', adj.uniform) +
         genDedRow('หักสมทบประกันสังคม', adj.socSec) +
         genDedRow('ค่าตรวจร่างกาย', 0) +
@@ -2934,9 +2948,18 @@
       ].join('\n');
 
       const slipRecord = {
-        id: s.emp.id, employeeName: s.emp.name, periodLabel: s.periodLabelText, payDate: s.payDateBE,
-        workDays: s.workDaysCount, totalEarnings: s.totalEarnings, totalDeductions: s.totalDeductions,
-        netPay: s.netPay, ytdEarnings: s.ytdEarningsTotal, ytdSocial: s.ytdSocialTotal
+        id: s.emp.id,
+        employeeName: s.emp.name,
+        periodLabel: s.periodLabelText,
+        payDate: s.payDateBE,
+        workDays: s.workDaysCount,
+        diligence: s.adj.diligence,
+        hazard: s.adj.hazard,
+        totalEarnings: s.totalEarnings,
+        totalDeductions: s.totalDeductions,
+        netPay: s.netPay,
+        ytdEarnings: s.ytdEarningsTotal,
+        ytdSocial: s.ytdSocialTotal
       };
 
       playClick('confirm');
@@ -2980,13 +3003,24 @@
     }
 
     function clearLocalStorageData() {
-      if (confirm("คุณต้องการล้างประวัติบันทึกเวลาทั้งหมดในอุปกรณ์นี้ใช่หรือไม่?")) {
-        localStorage.removeItem("payroll_records");
-        localStorage.removeItem("leave_records");
-        localStorage.removeItem("active_checkins");
+      if (confirm("คุณต้องการล้างประวัติบันทึกเวลาและการปรับปรุงสลิปทั้งหมดในอุปกรณ์นี้ใช่หรือไม่?")) {
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (
+            k === "payroll_records" ||
+            k === "leave_records" ||
+            k === "active_checkins" ||
+            k === "deleted_payroll_keys" ||
+            k.startsWith("slip_adj_")
+          ) {
+            keysToRemove.push(k);
+          }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
         loadTodayLiveStatus();
         renderHistories();
-        showToast("ล้างข้อมูลในเครื่องเรียบร้อย");
+        showToast("ล้างข้อมูลและแคชสลิปในเครื่องเรียบร้อย");
       }
     }
   </script>
