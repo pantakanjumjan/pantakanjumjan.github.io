@@ -6,10 +6,10 @@
   <title>Provide Power // VALKYRIE CHRONO-OVERDRIVE MK-IX</title>
 
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="ProvidePower">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#050608">
+  <meta name="theme-color" content="#07090D">
   <link id="appleTouchIconLink" rel="apple-touch-icon" sizes="180x180" href="">
   <link id="faviconLink" rel="icon" type="image/png" href="">
 
@@ -20,7 +20,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Orbitron:wght@700;800;900&family=Sarabun:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
 
-  <!-- Embedded Company Logo & Auto App Icon Generator -->
   <script>
     const COMPANY_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 225" fill="none">
       <path fill="#FF1E27" d="M68 18 H192 L222 70 H112 L94 101 H54 L36 70 Z"/>
@@ -98,6 +97,11 @@
 
   <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    html, body {
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
     body {
       font-family: 'IBM Plex Sans Thai', sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -108,6 +112,57 @@
       transition: background-color 0.25s ease, color 0.25s ease;
     }
     input, textarea, select { user-select: auto; }
+
+    /* =========================================================
+       iOS SAFE AREA & PWA STANDALONE HEADER PROTECTION
+       ========================================================= */
+    header.valk-header {
+      padding-top: calc(max(env(safe-area-inset-top, 0px), 12px) + 0.5rem) !important;
+      padding-bottom: 0.65rem !important;
+    }
+    @media all and (display-mode: standalone) {
+      header.valk-header {
+        padding-top: calc(max(env(safe-area-inset-top, 48px), 48px) + 0.4rem) !important;
+      }
+    }
+    nav.valk-dock {
+      bottom: calc(max(env(safe-area-inset-bottom, 0px), 12px) + 0.35rem) !important;
+    }
+    main.valk-main {
+      padding-bottom: calc(max(env(safe-area-inset-bottom, 0px), 16px) + 6.5rem) !important;
+    }
+
+    /* =========================================================
+       UNIFIED FORM INPUT / SELECT GEOMETRY FOR iOS & ANDROID
+       ========================================================= */
+    .valk-field {
+      height: 38px;
+      min-height: 38px;
+      line-height: 1.25;
+      padding: 0 0.65rem;
+      border-radius: 0.5rem;
+      border: 1.5px solid #3F3F46;
+      background-color: rgba(0, 0, 0, 0.72);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .valk-field:focus {
+      border-color: #FF1E27;
+      box-shadow: 0 0 0 2px rgba(255, 30, 39, 0.22);
+    }
+    input[type="date"].valk-field,
+    input[type="time"].valk-field {
+      -webkit-appearance: none;
+      appearance: none;
+      display: block;
+      padding-top: 0.45rem;
+      padding-bottom: 0.45rem;
+    }
+    select.valk-field {
+      padding-right: 1.85rem;
+    }
 
     /* =========================================================
        MECHA CHAMFERED CUT-CORNER ARCHITECTURE
@@ -239,7 +294,7 @@
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23FF1E27'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.65rem center;
+      background-position: right 0.6rem center;
       background-size: 0.85rem;
     }
 
@@ -301,32 +356,85 @@
     .chevron-anim { animation: chevron-pulse 1.4s infinite ease-in-out; }
 
     /* =========================================================
-       LIGHT MODE OVERRIDE (AUTO DAYTIME / MANUAL LIGHT)
+       DAYTIME TACTICAL TITANIUM GUNMETAL HUD (COOL, SLEEK & ANTI-GLARE)
        ========================================================= */
-    html:not(.dark) body { background-color: #E6E9EF; color: #0F1218; }
-    html:not(.dark) .valk-stage { background: radial-gradient(circle at 50% 18%, #F4F6FA 0%, #DCE1EA 80%); }
-    html:not(.dark) .crt-scanlines { opacity: 0.1; }
+    html:not(.dark) body { background-color: #1D232C; color: #F1F5F9; }
+    html:not(.dark) .valk-stage {
+      background: radial-gradient(circle at 50% 18%, #333D4D 0%, #181D26 85%);
+    }
+    html:not(.dark) .hex-grid-overlay {
+      background-image:
+        linear-gradient(30deg, rgba(0, 240, 255, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(0, 240, 255, 0.05) 87.5%, rgba(0, 240, 255, 0.05)),
+        linear-gradient(150deg, rgba(255, 30, 39, 0.04) 12%, transparent 12.5%, transparent 87%, rgba(255, 30, 39, 0.04) 87.5%, rgba(255, 30, 39, 0.04)),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      opacity: 0.95;
+    }
+    html:not(.dark) .crt-scanlines { opacity: 0.14; }
     html:not(.dark) header.valk-header {
-      background-color: rgba(255, 255, 255, 0.94) !important;
-      border-bottom-color: rgba(255, 30, 39, 0.35) !important;
+      background-color: rgba(27, 33, 43, 0.96) !important;
+      border-bottom-color: rgba(255, 30, 39, 0.6) !important;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
     }
-    html:not(.dark) header.valk-header h1 { color: #0F1218 !important; }
+    html:not(.dark) header.valk-header h1 { color: #F8FAFC !important; }
+    html:not(.dark) .header-ctrl-btn {
+      background-color: #2A3240 !important;
+      border-color: #475569 !important;
+      color: #F1F5F9 !important;
+    }
+    html:not(.dark) .pilot-bar {
+      background-color: #252C38 !important;
+      border-color: #475569 !important;
+    }
+    html:not(.dark) .pilot-bar select {
+      color: #F8FAFC !important;
+    }
+    html:not(.dark) .pilot-bar select option {
+      background-color: #1E242E !important;
+      color: #F8FAFC !important;
+    }
+    html:not(.dark) .armor-frame {
+      background: linear-gradient(145deg, rgba(255, 30, 39, 0.55) 0%, rgba(100, 116, 139, 0.7) 48%, rgba(0, 240, 255, 0.45) 100%) !important;
+    }
     html:not(.dark) .armor-inner {
-      background: rgba(255, 255, 255, 0.96) !important;
-      color: #0F1218 !important;
+      background: linear-gradient(180deg, rgba(39, 47, 60, 0.96) 0%, rgba(28, 34, 44, 0.98) 100%) !important;
+      color: #F1F5F9 !important;
     }
-    html:not(.dark) .armor-inner .text-white { color: #0F1218 !important; }
+    html:not(.dark) .reactor-chamber {
+      background:
+        radial-gradient(circle at 50% 44%, rgba(0, 240, 255, 0.12) 0%, rgba(30, 36, 46, 0.98) 70%),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 4px, transparent 4px, transparent 8px) !important;
+    }
+    html:not(.dark) .chrono-center-box {
+      background-color: rgba(15, 19, 26, 0.94) !important;
+      border-color: rgba(0, 240, 255, 0.45) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    }
+    html:not(.dark) .armor-inner .text-white { color: #F8FAFC !important; }
     html:not(.dark) .armor-inner .text-zinc-400,
-    html:not(.dark) .armor-inner .text-zinc-300 { color: #52525B !important; }
+    html:not(.dark) .armor-inner .text-zinc-300 { color: #CBD5E1 !important; }
+    html:not(.dark) .armor-inner .border-zinc-800 { border-color: #475569 !important; }
+    html:not(.dark) .valk-field {
+      background-color: #1B212B !important;
+      border: 1.5px solid #475569 !important;
+      color: #F8FAFC !important;
+    }
+    html:not(.dark) .valk-field:focus {
+      background-color: #141921 !important;
+      border-color: #00F0FF !important;
+    }
+    html:not(.dark) .valk-field option {
+      background-color: #1E242E !important;
+      color: #F8FAFC !important;
+    }
     html:not(.dark) .armor-inner .bg-black\/60,
     html:not(.dark) .armor-inner .bg-black\/65,
     html:not(.dark) .armor-inner .bg-black\/70,
     html:not(.dark) .armor-inner .bg-black\/75,
     html:not(.dark) .armor-inner .bg-black\/80,
     html:not(.dark) .armor-inner .bg-black\/85 {
-      background-color: #F1F3F7 !important;
-      border-color: #CBD5E1 !important;
-      color: #0F1218 !important;
+      background-color: rgba(20, 25, 33, 0.85) !important;
+      border-color: #475569 !important;
+      color: #F1F5F9 !important;
     }
 
     /* =========================================================
@@ -371,7 +479,7 @@
   </div>
 
   <!-- Top Mecha HUD Header Bar -->
-  <header class="valk-header sticky top-0 z-30 bg-[#07090D]/92 backdrop-blur-xl border-b border-red-600/45 px-3.5 py-2.5 no-print">
+  <header class="valk-header sticky top-0 z-30 bg-[#07090D]/95 backdrop-blur-xl border-b border-red-600/45 px-3.5 no-print">
     <div class="max-w-md mx-auto space-y-2">
       <div class="flex justify-between items-center gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
@@ -381,33 +489,33 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
               <h1 class="font-hud font-black text-xs tracking-wider text-white truncate">PROVIDE POWER</h1>
-              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/50">LINKED</span>
+              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-500 border border-emerald-500/50">LINKED</span>
             </div>
-            <p class="font-mono text-[9px] text-cyan-400/95 tracking-widest">SHIFT 08:00-16:50 // OT 17:10-19:10</p>
+            <p class="font-mono text-[9px] text-cyan-400 font-bold tracking-widest">SHIFT 08:00-16:50 // OT 17:10-19:10</p>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5 shrink-0">
-          <button onclick="toggleAudio()" id="audioToggleBtn" aria-label="สลับเสียง" class="tactile-btn chamfer-sm w-7 h-7 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300">
+          <button onclick="toggleAudio()" id="audioToggleBtn" aria-label="สลับเสียง" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300">
             <i class="fa-solid fa-volume-high text-[11px]" id="audioIcon"></i>
           </button>
-          <button onclick="cycleThemeMode()" aria-label="สลับโหมดสีอัตโนมัติ" class="tactile-btn chamfer-sm h-7 px-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 flex items-center gap-1 text-[9.5px] font-hud font-bold text-zinc-200">
-            <i id="themeIcon" class="fa-solid fa-moon text-[10px] text-red-500"></i>
+          <button onclick="cycleThemeMode()" aria-label="สลับโหมดสี" class="header-ctrl-btn tactile-btn chamfer-sm h-7 px-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 flex items-center gap-1 text-[9.5px] font-hud font-bold text-zinc-200">
+            <i id="themeIcon" class="fa-solid fa-shield-halved text-[10px] text-cyan-400"></i>
             <span id="themeLabel">AUTO</span>
           </button>
-          <button onclick="pullFromGoogleSheets(false)" id="btnTopSync" title="ซิงค์ข้อมูลกับ Google Sheets" aria-label="ซิงค์ข้อมูล" class="tactile-btn chamfer-sm w-7 h-7 bg-zinc-900 hover:bg-cyan-600 border border-cyan-500/50 flex items-center justify-center text-cyan-300 hover:text-white">
+          <button onclick="pullFromGoogleSheets(false)" id="btnTopSync" title="ซิงค์ข้อมูลกับ Google Sheets" aria-label="ซิงค์ข้อมูล" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-900 hover:bg-cyan-600 border border-cyan-500/50 flex items-center justify-center text-cyan-400 hover:text-white">
             <i class="fa-solid fa-arrows-rotate text-[11px]" id="topSyncIcon"></i>
           </button>
-          <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="tactile-btn chamfer-sm w-7 h-7 bg-zinc-950 hover:bg-red-600 border border-red-500/70 flex items-center justify-center text-red-500 hover:text-white">
+          <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-950 hover:bg-red-600 border border-red-500/70 flex items-center justify-center text-red-500 hover:text-white">
             <i class="fa-solid fa-microchip text-[11px]"></i>
           </button>
         </div>
       </div>
 
       <!-- Pilot Identification Bar -->
-      <div class="chamfer-sm flex items-center gap-2 bg-[#0F1219] border border-zinc-800/90 px-2.5 py-1.5">
+      <div class="pilot-bar chamfer-sm flex items-center gap-2 bg-[#0F1219] border border-zinc-800/90 px-2.5 py-1.5">
         <span class="text-[9px] font-hud font-bold text-red-500 tracking-wider shrink-0">PILOT //</span>
-        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="hw-select flex-1 bg-transparent font-bold text-xs text-white outline-none truncate cursor-pointer">
+        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="hw-select flex-1 bg-transparent font-bold text-xs text-white outline-none truncate cursor-pointer pr-5">
         </select>
         <span id="dutyBadge" class="chamfer-sm text-[9.5px] px-2.5 py-0.5 bg-zinc-800 border border-zinc-700 font-bold text-zinc-200 shrink-0">STANDBY</span>
       </div>
@@ -415,14 +523,14 @@
   </header>
 
   <!-- Main Cockpit Viewport -->
-  <main class="relative z-10 flex-1 max-w-md w-full mx-auto px-3.5 py-3.5 space-y-3.5 pb-28 no-print">
+  <main class="valk-main relative z-10 flex-1 max-w-md w-full mx-auto px-3.5 py-3.5 space-y-3.5 no-print">
 
     <!-- TAB 1: HYBRID 3D GYRO CHRONO-REACTOR + INTERACTIVE OT SIMULATOR -->
     <section id="tab-1" class="tab-content space-y-3.5">
       
       <!-- 3D Gyroscope Tilt Mecha Armor Chassis -->
       <div class="tilt-stage">
-        <div id="chronoTiltCard" class="armor-frame chamfer-box tilt-card shadow-[0_14px_38px_rgba(0,0,0,0.88)]">
+        <div id="chronoTiltCard" class="armor-frame chamfer-box tilt-card shadow-[0_14px_38px_rgba(0,0,0,0.45)]">
           <div class="armor-inner reactor-chamber chamfer-box p-4 font-mono space-y-3 relative overflow-hidden">
             <div id="sapphireGlare" class="sapphire-glare"></div>
 
@@ -432,7 +540,7 @@
                 <i class="fa-solid fa-satellite-dish text-red-500 text-[9px]"></i>
                 <span>--/--/----</span>
               </span>
-              <span id="lcdModeTag" class="chamfer-sm bg-cyan-500/15 text-cyan-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-400/40 tracking-wider">CORE READY</span>
+              <span id="lcdModeTag" class="chamfer-sm bg-cyan-500/15 text-cyan-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-500/40 tracking-wider">CORE READY</span>
             </div>
 
             <!-- Dual-Core Arc Reactor + 60-Tick Chronograph Bezel + Sweeping Second Hand -->
@@ -449,7 +557,7 @@
 
                   <!-- Outer Rotating Telemetry Ring -->
                   <g class="ring-spin-cw">
-                    <circle cx="120" cy="120" r="115" fill="none" stroke="rgba(255,30,39,0.32)" stroke-width="1.5" stroke-dasharray="16 8 3 8"/>
+                    <circle cx="120" cy="120" r="115" fill="none" stroke="rgba(255,30,39,0.45)" stroke-width="1.5" stroke-dasharray="16 8 3 8"/>
                   </g>
 
                   <!-- 60 Precision Chronograph Bezel Ticks -->
@@ -457,11 +565,11 @@
 
                   <!-- Inner Counter-Rotating Ring -->
                   <g class="ring-spin-ccw">
-                    <circle cx="120" cy="120" r="80" fill="none" stroke="rgba(0,240,255,0.18)" stroke-width="1.2" stroke-dasharray="6 6"/>
+                    <circle cx="120" cy="120" r="80" fill="none" stroke="rgba(0,240,255,0.35)" stroke-width="1.2" stroke-dasharray="6 6"/>
                   </g>
 
                   <!-- Shift Progress Track & Fill (r=92, circ=578.05) -->
-                  <circle cx="120" cy="120" r="92" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="6.5"/>
+                  <circle cx="120" cy="120" r="92" fill="none" stroke="rgba(148,163,184,0.25)" stroke-width="6.5"/>
                   <circle id="reactorProgressArc" cx="120" cy="120" r="92" fill="none" stroke="url(#reactorGrad)" stroke-width="6.5"
                     stroke-linecap="round" stroke-dasharray="578.05" stroke-dashoffset="578.05"
                     transform="rotate(-90 120 120)" style="transition: stroke-dashoffset 0.35s ease;"/>
@@ -474,7 +582,7 @@
                 </svg>
 
                 <!-- Center Digital Clock & Telemetry Pills -->
-                <div class="relative z-10 text-center flex flex-col items-center bg-[#07090E]/82 px-3.5 py-2 rounded-2xl border border-white/10 backdrop-blur-sm">
+                <div class="chrono-center-box relative z-10 text-center flex flex-col items-center bg-[#07090E]/92 px-3.5 py-2 rounded-2xl border border-white/15 backdrop-blur-sm shadow-lg">
                   <span class="font-hud text-[8px] tracking-[0.22em] text-zinc-400 uppercase mb-0.5">CHRONO CORE</span>
                   <div class="font-hud text-[24px] font-black tracking-wider leading-none text-white drop-shadow-[0_0_12px_rgba(255,30,39,0.5)]" id="liveClock">
                     00:00:00<span class="text-xs text-red-500 font-bold">.0</span>
@@ -496,7 +604,7 @@
                   <i class="fa-solid fa-fire-flame-curved"></i>
                   <span>ELAPSED: <span id="liveElapsedText" class="text-white">00h 00m</span></span>
                 </span>
-                <span class="text-cyan-300 font-bold">ACCRUED: <span id="liveAccruedPay" class="text-emerald-400 font-extrabold">0.00 ฿</span></span>
+                <span class="text-cyan-400 font-bold">ACCRUED: <span id="liveAccruedPay" class="text-emerald-400 font-extrabold">0.00 ฿</span></span>
               </div>
             </div>
 
@@ -506,7 +614,7 @@
                 <div>
                   <div class="flex justify-between items-center mb-1">
                     <span class="text-zinc-400 text-[8.5px] font-hud tracking-wider">SHIFT MODE</span>
-                    <button type="button" id="btnAutoShiftMode" onclick="enableAutoShiftMode()" title="เปิดโหมดสลับกะอัตโนมัติตามเวลา" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">AUTO</button>
+                    <button type="button" id="btnAutoShiftMode" onclick="enableAutoShiftMode()" title="เปิดโหมดสลับกะอัตโนมัติตามเวลา" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">AUTO</button>
                   </div>
                   <div class="chamfer-sm grid grid-cols-2 bg-black/85 p-0.5 border border-zinc-800">
                     <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px] transition">DAY</button>
@@ -534,13 +642,13 @@
         </div>
       </div>
 
-      <!-- Interactive OT Scrubber Simulator Strip (08:00-16:50 ปกติ | OT 17:10-19:10) -->
+      <!-- Interactive OT Scrubber Simulator Strip -->
       <div class="armor-frame chamfer-sm">
         <div class="armor-inner chamfer-sm p-3 space-y-2.5">
           <div class="flex justify-between items-center text-[10px] font-mono">
-            <span class="text-cyan-300 font-bold flex items-center gap-1.5">
+            <span class="text-cyan-400 font-bold flex items-center gap-1.5">
               <i class="fa-solid fa-sliders text-red-500"></i>
-              <span>OT SIMULATOR // ออก <strong id="simOutTimeLabel" class="text-amber-400">16:50 (ปกติ)</strong></span>
+              <span>OT SIMULATOR // ออก <strong id="simOutTimeLabel" class="text-amber-400">16:50 (เลิกปกติ)</strong></span>
             </span>
             <button type="button" onclick="resetSimScrubber()" class="text-[9px] font-hud text-zinc-400 hover:text-white underline">RESET</button>
           </div>
@@ -554,11 +662,11 @@
             </div>
             <div class="chamfer-sm bg-black/65 p-2 border border-zinc-800/90">
               <span class="block text-[8.5px] text-zinc-400">ALLOWANCE</span>
-              <span id="estAllowance" class="text-xs font-extrabold text-cyan-300">10 ฿</span>
+              <span id="estAllowance" class="text-xs font-extrabold text-cyan-400">10 ฿</span>
             </div>
             <div class="chamfer-sm bg-black/65 p-2 border border-red-500/35">
               <span class="block text-[8.5px] text-zinc-400">EST. NET</span>
-              <span id="estTotal" class="text-xs font-extrabold text-red-500">410 ฿</span>
+              <span id="estTotal" class="text-xs font-extrabold text-red-400">410 ฿</span>
             </div>
           </div>
         </div>
@@ -575,7 +683,7 @@
 
           <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-black/90 border border-emerald-500/45 flex items-center justify-center select-none">
             <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-emerald-600/40 to-emerald-500/70"></div>
-            <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-emerald-300 pointer-events-none pl-8">
+            <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-emerald-400 pointer-events-none pl-8">
               <span>SLIDE TO CHECK IN</span>
               <span class="chevron-anim text-xs">&gt;&gt;&gt;</span>
             </div>
@@ -585,13 +693,13 @@
           </div>
 
           <div class="grid grid-cols-2 gap-2 pt-0.5">
-            <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="tactile-btn chamfer-sm py-2 px-3 bg-emerald-950/70 hover:bg-emerald-700 border border-emerald-500/45 text-emerald-300 hover:text-white flex items-center justify-between text-[10.5px] font-hud font-bold">
+            <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="tactile-btn chamfer-sm py-2 px-3 bg-emerald-950/80 hover:bg-emerald-700 border border-emerald-500/45 text-emerald-300 hover:text-white flex items-center justify-between text-[10.5px] font-hud font-bold">
               <span><i class="fa-solid fa-right-to-bracket mr-1"></i>IN NOW</span>
-              <span id="checkInStatusText" class="font-sans text-[9px] opacity-80 truncate max-w-[68px]">เข้างาน</span>
+              <span id="checkInStatusText" class="font-sans text-[9px] opacity-85 truncate max-w-[68px]">เข้างาน</span>
             </button>
-            <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="tactile-btn chamfer-sm py-2 px-3 bg-red-950/70 hover:bg-red-700 border border-red-500/45 text-red-300 hover:text-white flex items-center justify-between text-[10.5px] font-hud font-bold">
+            <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="tactile-btn chamfer-sm py-2 px-3 bg-red-950/80 hover:bg-red-700 border border-red-500/45 text-red-300 hover:text-white flex items-center justify-between text-[10.5px] font-hud font-bold">
               <span><i class="fa-solid fa-right-from-bracket mr-1"></i>OUT NOW</span>
-              <span id="checkOutStatusText" class="font-sans text-[9px] opacity-80 truncate max-w-[68px]">ออกงาน</span>
+              <span id="checkOutStatusText" class="font-sans text-[9px] opacity-85 truncate max-w-[68px]">ออกงาน</span>
             </button>
           </div>
         </div>
@@ -604,7 +712,7 @@
         <div class="armor-inner chamfer-box p-3.5 space-y-3">
           <div class="border-b border-zinc-800 pb-2.5 flex items-center justify-between">
             <div class="flex items-center space-x-2.5">
-              <div class="chamfer-sm w-7 h-7 bg-red-600 text-white flex items-center justify-center text-xs">
+              <div class="chamfer-sm w-7 h-7 bg-red-600 text-white flex items-center justify-center text-xs shrink-0">
                 <i class="fa-solid fa-pen-to-square"></i>
               </div>
               <div>
@@ -612,18 +720,18 @@
                 <p class="text-[10px] text-zinc-400">บันทึกเวลาย้อนหลัง (08:00-16:50 | OT 17:10-19:10)</p>
               </div>
             </div>
-            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 border border-amber-500/40">EXISTING</span>
+            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-400 px-2 py-0.5 border border-amber-500/40">EXISTING</span>
           </div>
 
-          <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-2.5 text-xs">
+          <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-3 text-xs">
             <div class="grid grid-cols-2 gap-2.5">
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">วันที่ต้องการบันทึก</label>
-                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg font-mono text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">วันที่ต้องการบันทึก</label>
+                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="valk-field w-full font-mono text-xs outline-none">
               </div>
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">สถานะการทำงาน</label>
-                <select id="manualWorkType" onchange="updateManualPreview()" class="hw-select w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">สถานะการทำงาน</label>
+                <select id="manualWorkType" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
                   <option value="FULL">เต็มวัน (8 ชม.)</option>
                   <option value="HALF">ลาครึ่งวัน (ครึ่งกะ)</option>
                 </select>
@@ -632,15 +740,15 @@
 
             <div class="grid grid-cols-2 gap-2.5">
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">กะการทำงาน</label>
-                <select id="manualShift" onchange="updateManualPreview()" class="hw-select w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">กะการทำงาน</label>
+                <select id="manualShift" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
                   <option value="DAY">กลางวัน (08:00-16:50)</option>
                   <option value="NIGHT">กลางคืน (20:00-04:50)</option>
                 </select>
               </div>
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">ประเภทวัน</label>
-                <select id="manualDayType" onchange="updateManualPreview()" class="hw-select w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทวัน</label>
+                <select id="manualDayType" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
                   <option value="REGULAR">วันปกติ (OT 1.5)</option>
                   <option value="HOLIDAY">วันหยุด (OT 2.0)</option>
                 </select>
@@ -649,18 +757,18 @@
 
             <div class="grid grid-cols-2 gap-2.5">
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">เวลาเข้า</label>
-                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg font-mono text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาเข้า</label>
+                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="valk-field w-full font-mono text-xs outline-none">
               </div>
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">เวลาออก</label>
-                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg font-mono text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาออก</label>
+                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="valk-field w-full font-mono text-xs outline-none">
               </div>
             </div>
 
-            <div id="manualPreviewBox" class="hidden chamfer-sm bg-black/85 text-cyan-300 font-mono px-3 py-2 border border-cyan-500/40 flex justify-between items-center text-[11px]">
+            <div id="manualPreviewBox" class="hidden chamfer-sm bg-black/85 text-cyan-400 font-mono px-3 py-2 border border-cyan-500/40 flex justify-between items-center text-[11px]">
               <span id="manPrevDetail">OT: 0h (0h)</span>
-              <span class="font-extrabold text-xs text-white">สุทธิ <span id="manPrevTotal" class="text-red-500">0</span> ฿</span>
+              <span class="font-extrabold text-xs text-white">สุทธิ <span id="manPrevTotal" class="text-red-400">0</span> ฿</span>
             </div>
 
             <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-[0_4px_15px_rgba(255,30,39,0.4)] mt-1">
@@ -676,7 +784,7 @@
       <div class="armor-frame chamfer-box">
         <div class="armor-inner chamfer-box p-3.5 space-y-3">
           <div class="border-b border-zinc-800 pb-2.5 flex items-center space-x-2.5">
-            <div class="chamfer-sm w-7 h-7 bg-amber-500 text-black flex items-center justify-center text-xs">
+            <div class="chamfer-sm w-7 h-7 bg-amber-500 text-black flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-calendar-minus"></i>
             </div>
             <div>
@@ -685,10 +793,10 @@
             </div>
           </div>
 
-          <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-2.5 text-xs">
+          <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-3 text-xs">
             <div>
-              <label class="block text-[10px] font-semibold text-zinc-400 mb-1">ประเภทการลา</label>
-              <select id="leaveType" required class="hw-select w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg text-xs text-white outline-none focus:border-red-500">
+              <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทการลา</label>
+              <select id="leaveType" required class="valk-field hw-select w-full text-xs outline-none">
                 <option value="ลากิจ">ลากิจ (Personal Leave)</option>
                 <option value="ลาป่วย">ลาป่วย (Sick Leave)</option>
                 <option value="ลาพักร้อน">ลาพักร้อน (Annual Leave)</option>
@@ -697,17 +805,17 @@
             </div>
             <div class="grid grid-cols-2 gap-2.5">
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">ตั้งแต่วันที่</label>
-                <input type="date" id="leaveStartDate" required class="w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg font-mono text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ตั้งแต่วันที่</label>
+                <input type="date" id="leaveStartDate" required class="valk-field w-full font-mono text-xs outline-none">
               </div>
               <div>
-                <label class="block text-[10px] font-semibold text-zinc-400 mb-1">ถึงวันที่</label>
-                <input type="date" id="leaveEndDate" required class="w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg font-mono text-xs text-white outline-none focus:border-red-500">
+                <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ถึงวันที่</label>
+                <input type="date" id="leaveEndDate" required class="valk-field w-full font-mono text-xs outline-none">
               </div>
             </div>
             <div>
-              <label class="block text-[10px] font-semibold text-zinc-400 mb-1">เหตุผลการลา</label>
-              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="w-full bg-black/70 border border-zinc-700 px-2.5 py-2 rounded-lg text-xs text-white outline-none focus:border-red-500">
+              <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เหตุผลการลา</label>
+              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="valk-field w-full text-xs outline-none">
             </div>
             <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs mt-1">
               ส่งใบลางาน
@@ -741,7 +849,7 @@
               </button>
             </div>
           </div>
-          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="hw-select w-full bg-black/70 border border-zinc-700 text-xs font-bold text-white px-2.5 py-2 rounded-lg outline-none">
+          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="valk-field hw-select w-full text-xs font-bold outline-none">
           </select>
         </div>
       </div>
@@ -753,7 +861,7 @@
             <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-24 h-20 opacity-10 pointer-events-none">
             <div class="flex justify-between items-center">
               <span class="text-[10.5px] font-sans text-zinc-400">ยอดรวมค่าแรง + OT ในรอบนี้</span>
-              <span class="text-[10px] font-sans bg-red-500/20 border border-red-500/40 px-2.5 py-0.5 rounded-full text-red-300 font-bold" id="summaryTotalRecords">0 รายการ</span>
+              <span class="text-[10px] font-sans bg-red-500/20 border border-red-500/40 px-2.5 py-0.5 rounded-full text-red-400 font-bold" id="summaryTotalRecords">0 รายการ</span>
             </div>
             <div class="text-2xl font-extrabold text-white tracking-tight relative z-10" id="summaryTotalSalary">0.00 ฿</div>
             <div class="space-y-1 pt-1">
@@ -777,7 +885,7 @@
         <div class="armor-frame chamfer-sm">
           <div class="armor-inner chamfer-sm p-3">
             <span class="text-[10px] font-sans text-zinc-400 block font-semibold">ค่าอาหารรวม</span>
-            <span class="text-base font-extrabold text-cyan-300" id="summaryTotalMeals">0.00 ฿</span>
+            <span class="text-base font-extrabold text-cyan-400" id="summaryTotalMeals">0.00 ฿</span>
           </div>
         </div>
       </div>
@@ -806,8 +914,8 @@
   </main>
 
   <!-- Floating Mecha Wing Bottom Navigation Dock -->
-  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.75rem)] max-w-sm z-40 no-print">
-    <div class="chamfer-box bg-[#0A0C12]/95 backdrop-blur-xl border border-red-500/55 p-1 flex justify-between shadow-[0_12px_35px_rgba(0,0,0,0.9)]">
+  <nav class="valk-dock fixed left-1/2 -translate-x-1/2 w-[calc(100%-1.75rem)] max-w-sm z-40 no-print">
+    <div class="chamfer-box bg-[#0A0C12]/95 backdrop-blur-xl border border-red-500/55 p-1 flex justify-between shadow-[0_12px_35px_rgba(0,0,0,0.85)]">
       <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-white bg-red-600 font-bold transition-all">
         <i class="fa-solid fa-gauge-high text-xs"></i>
         <span class="text-[10px] mt-0.5">บันทึกสด</span>
@@ -1045,15 +1153,15 @@
         <div class="space-y-2 text-xs">
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">Google Apps Script URL</label>
-            <input type="text" id="gasUrlInput" class="w-full bg-black/70 border border-zinc-700 px-2.5 py-1.5 rounded text-[10px] font-mono text-white outline-none">
+            <input type="text" id="gasUrlInput" class="valk-field w-full text-[10px] font-mono outline-none">
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE Channel Token</label>
-            <input type="text" id="lineTokenInput" class="w-full bg-black/70 border border-zinc-700 px-2.5 py-1.5 rounded text-[10px] font-mono text-white outline-none">
+            <input type="text" id="lineTokenInput" class="valk-field w-full text-[10px] font-mono outline-none">
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE User ID</label>
-            <input type="text" id="lineUserIdInput" class="w-full bg-black/70 border border-zinc-700 px-2.5 py-1.5 rounded text-[10px] font-mono text-white outline-none">
+            <input type="text" id="lineUserIdInput" class="valk-field w-full text-[10px] font-mono outline-none">
           </div>
         </div>
         <button onclick="saveConfigSettings()" class="tactile-btn chamfer-sm w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 text-xs">
@@ -1064,7 +1172,7 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="chamfer-sm fixed top-14 left-1/2 -translate-x-1/2 z-50 bg-zinc-950 text-white text-xs font-bold px-4 py-2.5 shadow-2xl hidden border border-red-500/80">
+  <div id="toast" class="chamfer-sm fixed left-1/2 -translate-x-1/2 z-50 bg-zinc-950 text-white text-xs font-bold px-4 py-2.5 shadow-2xl hidden border border-red-500/80" style="top: calc(max(env(safe-area-inset-top, 48px), 48px) + 1rem);">
     <span id="toastMsg">แจ้งเตือนระบบ</span>
   </div>
 
@@ -1321,12 +1429,35 @@
       return `${hh}:${mm}`;
     }
 
+    function normalizeDateToISO(rawDate) {
+      if (!rawDate) return '';
+      const str = String(rawDate).trim();
+      if (str.includes('T')) {
+        const d = new Date(str);
+        if (!isNaN(d.getTime())) return getLocalDateStr(d);
+      }
+      if (str.includes('/')) {
+        const parts = str.split('/');
+        if (parts.length === 3) {
+          let y = Number(parts[2]);
+          if (y > 2400) y -= 543;
+          return `${y}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+      }
+      const m = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (m) {
+        let y = Number(m[1]);
+        if (y > 2400) y -= 543;
+        return `${y}-${m[2]}-${m[3]}`;
+      }
+      return str.slice(0, 10);
+    }
+
     function computeWorkedHoursFallback(shift, checkIn, checkOut) {
       if (!checkIn || !checkOut) return 8;
       const inMins = timeToMins(checkIn);
       let outMins = timeToMins(checkOut);
       if (outMins < inMins) outMins += 1440;
-      // 08:00 - 16:50 = 530 นาที หักพักกลางวัน 50 นาที = 480 นาที (8 ชม.)
       const netMins = Math.max(0, (outMins - inMins) - 50);
       return Math.round((netMins / 60) * 100) / 100;
     }
@@ -1355,7 +1486,7 @@
         ...r,
         id: String(r.id || '').trim(),
         employeeName: String(r.employeeName || '').trim(),
-        date: String(r.date || '').trim(),
+        date: normalizeDateToISO(r.date),
         shift, dayType, workType, checkIn, checkOut, workedHours,
         baseSalary, otHours, otRate, otPay, shiftAllowance,
         normalMeal, otMeal, totalMealAllowance, totalSalary
@@ -1367,7 +1498,7 @@
       return Array.isArray(raw) ? raw.map(normalizeRecordItem) : [];
     }
 
-    // --- Auto Theme ---
+    // --- Theme Mode (Default AUTO: Daytime Titanium Gunmetal / Nighttime Valkyrie Obsidian) ---
     function getAutoThemeIsDark() {
       const hour = new Date().getHours();
       return (hour >= 18 || hour < 6);
@@ -1386,7 +1517,7 @@
         if (iconEl) {
           iconEl.className = shouldBeDark
             ? 'fa-solid fa-moon text-[10px] text-red-500'
-            : 'fa-solid fa-sun text-[10px] text-amber-400';
+            : 'fa-solid fa-shield-halved text-[10px] text-cyan-400';
         }
       } else if (savedMode === 'dark') {
         shouldBeDark = true;
@@ -1394,22 +1525,24 @@
         if (iconEl) iconEl.className = 'fa-solid fa-moon text-[10px] text-red-500';
       } else {
         shouldBeDark = false;
-        if (labelEl) labelEl.textContent = 'LIGHT';
-        if (iconEl) iconEl.className = 'fa-solid fa-sun text-[10px] text-amber-400';
+        if (labelEl) labelEl.textContent = 'TITAN';
+        if (iconEl) iconEl.className = 'fa-solid fa-shield-halved text-[10px] text-cyan-400';
       }
       html.classList.toggle('dark', shouldBeDark);
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme) metaTheme.setAttribute('content', shouldBeDark ? '#07090D' : '#1B212B');
     }
 
     function cycleThemeMode() {
       const current = localStorage.getItem('theme_mode') || 'auto';
-      const order = ['auto', 'dark', 'light'];
+      const order = ['auto', 'light', 'dark'];
       const next = order[(order.indexOf(current) + 1) % order.length];
       localStorage.setItem('theme_mode', next);
       applyThemeMode(next);
       const msgMap = {
-        auto: "โหมดธีมอัตโนมัติ (AUTO: 06:00 สว่าง / 18:00 มืด)",
-        dark: "ล็อกโหมดมืด (VALKYRIE DARK HUD)",
-        light: "ล็อกโหมดสว่าง (VALKYRIE LIGHT HUD)"
+        auto: "โหมดธีมอัตโนมัติ (AUTO: 06:00 ไทเทเนียม / 18:00 ดำสนิท)",
+        light: "ล็อกโหมดไทเทเนียมเมทัลลิก (TITANIUM GUNMETAL)",
+        dark: "ล็อกโหมดมืดสนิท (VALKYRIE OBSIDIAN)"
       };
       showToast(msgMap[next]);
     }
@@ -1430,7 +1563,7 @@
       if (!badge) return;
       if (isShiftAutoMode()) {
         badge.textContent = "AUTO";
-        badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
       } else {
         badge.textContent = "MANUAL";
         badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-zinc-800 text-zinc-400 border border-zinc-700";
@@ -1654,7 +1787,7 @@
 
     function renderEmployeeDropdowns() {
       const select = document.getElementById("globalEmployeeSelect");
-      select.innerHTML = employeeList.map(emp => `<option value="${emp.id}" class="bg-zinc-900 text-white">${emp.id} • ${emp.name}</option>`).join('');
+      select.innerHTML = employeeList.map(emp => `<option value="${emp.id}">${emp.id} • ${emp.name}</option>`).join('');
       select.value = currentEmpId;
     }
 
@@ -1698,7 +1831,6 @@
           weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
         });
 
-        // Smooth 10Hz Sweeping Second Hand
         const secAngle = (now.getSeconds() + now.getMilliseconds() / 1000) * 6;
         const handEl = document.getElementById('chronoSecondHand');
         if (handEl) handEl.setAttribute('transform', `rotate(${secAngle.toFixed(1)} 120 120)`);
@@ -1713,7 +1845,7 @@
         if (activeIn) {
           elapsedBar.classList.remove('hidden');
           lcdTag.textContent = "THRUST ACTIVE";
-          lcdTag.className = "chamfer-sm bg-amber-500/20 text-amber-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-400/50 tracking-wider";
+          lcdTag.className = "chamfer-sm bg-amber-500/20 text-amber-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-500/50 tracking-wider";
 
           const inDateTime = new Date(`${activeIn.date}T${activeIn.time}:00`);
           const diffMs = Math.max(0, now - inDateTime);
@@ -1722,7 +1854,6 @@
           const mins = totalMins % 60;
           document.getElementById('liveElapsedText').textContent = `${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`;
 
-          // 08:00 - 16:50 = 530 นาทีเต็มกะ
           const progressRatio = Math.min(1, totalMins / 530);
           const pctInt = Math.min(100, Math.round(progressRatio * 100));
           if (arcEl) arcEl.style.strokeDashoffset = (ARC_CIRCUMFERENCE * (1 - progressRatio)).toFixed(1);
@@ -1743,7 +1874,7 @@
         } else {
           elapsedBar.classList.add('hidden');
           lcdTag.textContent = "CORE READY";
-          lcdTag.className = "chamfer-sm bg-cyan-500/15 text-cyan-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-400/40 tracking-wider";
+          lcdTag.className = "chamfer-sm bg-cyan-500/15 text-cyan-400 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-cyan-500/40 tracking-wider";
           if (arcEl) arcEl.style.strokeDashoffset = ARC_CIRCUMFERENCE;
           if (reactorBadge) {
             reactorBadge.textContent = "0% SHIFT";
@@ -1776,7 +1907,6 @@
       return (h * 60) + m;
     }
 
-    // คำนวณเวลาทำงาน 08:00 - 16:50 (พัก 50 นาที -> 8 ชม.) | พักเบรก 16:50 - 17:10 (20 นาที) | เริ่ม OT 17:10 - 19:10 (สูงสุด 2 ชม.)
     function calculatePayroll(shift, dayType, checkInTime, checkOutTime, workType = 'FULL') {
       let otHours = 0, otRate = 1.5, otPay = 0, shiftAllowance = 0;
       let normalMeal = 10, otMeal = 0;
@@ -1790,13 +1920,11 @@
       let afterShiftOtHours = 0;
 
       if (shift === 'DAY') {
-        // กะกลางวัน: 08:00 (480) - 16:50 (1010) = 530 นาที หักพักกลางวัน 50 นาที = 480 นาที (8 ชม.)
         const effectiveIn = Math.max(inMins, 480);
         const regularEnd = Math.min(outMins, 1010);
         const regularSpan = Math.max(0, regularEnd - effectiveIn);
         totalWorkedMinutes = Math.max(0, regularSpan - 50);
 
-        // ช่วง OT: 17:10 (1030) - 19:10 (1150) สูงสุด 2.0 ชม. (120 นาที)
         const otStart = 1030;
         const otEndCap = 1150;
         const cappedOutMins = Math.min(outMins, otEndCap);
@@ -1804,7 +1932,6 @@
           afterShiftOtHours = (cappedOutMins - otStart) / 60;
         }
       } else {
-        // กะกลางคืน: 20:00 (1200) - 04:50 (1730) = 530 นาที หักพัก 50 นาที = 480 นาที (8 ชม.)
         shiftAllowance = 180;
         let nightInMins = inMins < 720 ? inMins + 1440 : inMins;
         let nightOutMins = outMins < 720 ? outMins + 1440 : outMins;
@@ -1815,7 +1942,6 @@
         const regularSpan = Math.max(0, regularEnd - effectiveIn);
         totalWorkedMinutes = Math.max(0, regularSpan - 50);
 
-        // ช่วง OT กะดึก: 05:10 (1750) - 07:10 (1870) สูงสุด 2.0 ชม.
         const otStart = 1750;
         const otEndCap = 1870;
         const cappedOutMins = Math.min(nightOutMins, otEndCap);
@@ -1885,7 +2011,6 @@
 
     function updateLiveEstimator() {
       const dummyIn = currentShift === 'DAY' ? '08:00' : '20:00';
-      // 16:50 = 1010 นาที | 04:50 = 290 นาที (เลื่อนได้ถึง +140 นาที -> 19:10 / 07:10)
       const baseOutMins = currentShift === 'DAY' ? (16 * 60 + 50) : (4 * 60 + 50);
       const simOutTotalMins = (baseOutMins + simExtraMinutes) % 1440;
       const simH = String(Math.floor(simOutTotalMins / 60)).padStart(2, '0');
@@ -1942,7 +2067,7 @@
 
         track.className = "slide-track chamfer-sm bg-black/90 border border-red-500/55 flex items-center justify-center select-none";
         fill.className = "slide-fill bg-gradient-to-r from-red-600/40 to-red-500/70";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-red-300 pointer-events-none pl-8";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-red-400 pointer-events-none pl-8";
         label.innerHTML = `<span>SLIDE TO CHECK OUT</span><span class="chevron-anim text-xs">&gt;&gt;&gt;</span>`;
         thumb.className = "slide-thumb chamfer-sm bg-gradient-to-br from-red-500 to-red-800 text-white shadow-[0_0_18px_rgba(255,30,39,0.75)]";
         hint.textContent = "SLIDE TO DISENGAGE";
@@ -1950,7 +2075,7 @@
       } else {
         track.className = "slide-track chamfer-sm bg-black/90 border border-emerald-500/45 flex items-center justify-center select-none";
         fill.className = "slide-fill bg-gradient-to-r from-emerald-600/40 to-emerald-500/70";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-emerald-300 pointer-events-none pl-8";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-emerald-400 pointer-events-none pl-8";
         label.innerHTML = `<span>SLIDE TO CHECK IN</span><span class="chevron-anim text-xs">&gt;&gt;&gt;</span>`;
         thumb.className = "slide-thumb chamfer-sm bg-gradient-to-br from-emerald-400 to-emerald-700 text-black shadow-[0_0_18px_rgba(0,255,148,0.6)]";
         hint.textContent = "SLIDE TO ENGAGE";
@@ -1962,7 +2087,7 @@
           inText.textContent = todayRecord.checkIn || '-';
           outText.textContent = todayRecord.checkOut || '-';
           badge.textContent = "COMPLETED";
-          badge.className = "chamfer-sm text-[9.5px] px-2.5 py-0.5 bg-cyan-500/20 border border-cyan-500/40 font-bold text-cyan-300 shrink-0";
+          badge.className = "chamfer-sm text-[9.5px] px-2.5 py-0.5 bg-cyan-500/20 border border-cyan-500/40 font-bold text-cyan-400 shrink-0";
         } else {
           inEl.textContent = '--:--';
           outEl.textContent = '--:--';
@@ -2271,13 +2396,23 @@
         const monthName = d.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
         const lastDay = new Date(y, m + 1, 0).getDate();
 
-        options.push({ label: `งวด 16 - ${lastDay} ${monthName}`, start: `${y}-${String(m + 1).padStart(2, '0')}-16`, end: `${y}-${String(m + 1).padStart(2, '0')}-${lastDay}` });
-        options.push({ label: `งวด 1 - 15 ${monthName}`, start: `${y}-${String(m + 1).padStart(2, '0')}-01`, end: `${y}-${String(m + 1).padStart(2, '0')}-15` });
+        options.push({
+          label: `งวด 16 - ${lastDay} ${monthName}`,
+          start: `${y}-${String(m + 1).padStart(2, '0')}-16`,
+          end: `${y}-${String(m + 1).padStart(2, '0')}-${lastDay}`
+        });
+        options.push({
+          label: `งวด 1 - 15 ${monthName}`,
+          start: `${y}-${String(m + 1).padStart(2, '0')}-01`,
+          end: `${y}-${String(m + 1).padStart(2, '0')}-15`
+        });
       }
 
-      options.unshift({ label: 'แสดงทั้งหมด (All Records)', start: '2000-01-01', end: '2099-12-31' });
-      select.innerHTML = options.map(o => `<option value="${o.start}|${o.end}" class="bg-zinc-900 text-white">${o.label}</option>`).join('');
-      select.selectedIndex = 0;
+      options.push({ label: 'แสดงทั้งหมด (All Records)', start: '2000-01-01', end: '2099-12-31' });
+      select.innerHTML = options.map(o => `<option value="${o.start}|${o.end}">${o.label}</option>`).join('');
+
+      // เลือกงวดปัจจุบันอัตโนมัติ (วันที่ 1-15 เลือกงวดต้นเดือน / วันที่ 16 ขึ้นไป เลือกงวดปลายเดือน)
+      select.selectedIndex = now.getDate() <= 15 ? 1 : 0;
     }
 
     function renderHistories() {
@@ -2326,8 +2461,8 @@
           totalMealsSum += r.totalMealAllowance;
 
           const shiftBadge = r.shift === 'NIGHT'
-            ? `<span class="text-[9px] px-1.5 py-[1px] rounded bg-purple-500/20 text-purple-300 border border-purple-500/35 font-bold">กะดึก</span>`
-            : `<span class="text-[9px] px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 font-bold">กะเช้า</span>`;
+            ? `<span class="text-[9px] px-1.5 py-[1px] rounded bg-purple-500/20 text-purple-400 border border-purple-500/35 font-bold">กะดึก</span>`
+            : `<span class="text-[9px] px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/35 font-bold">กะเช้า</span>`;
 
           const holBadge = r.dayType === 'HOLIDAY'
             ? `<span class="text-[9px] px-1.5 py-[1px] rounded bg-rose-500/20 text-rose-400 border border-rose-500/35 font-bold">วันหยุด</span>`
@@ -2356,7 +2491,7 @@
                     <div class="font-mono font-extrabold text-white text-sm">${fmtNum(r.totalSalary)} ฿</div>
                     <span class="text-[9.5px] text-cyan-400 font-bold hover:underline">ดูบิล</span>
                   </div>
-                  <button onclick="deleteRecord('${r.id}', '${r.date}')" aria-label="ลบรายการ" class="tactile-btn chamfer-sm w-7 h-7 bg-red-950/70 hover:bg-red-600 border border-red-500/40 text-red-400 hover:text-white flex items-center justify-center transition">
+                  <button onclick="deleteRecord('${r.id}', '${r.date}')" aria-label="ลบรายการ" class="tactile-btn chamfer-sm w-7 h-7 bg-red-950/75 hover:bg-red-600 border border-red-500/40 text-red-400 hover:text-white flex items-center justify-center transition">
                     <i class="fa-solid fa-trash-can text-[11px]"></i>
                   </button>
                 </div>
@@ -2447,13 +2582,13 @@
           <div class="font-bold text-white">${item.employeeName} (${formatThaiBE(item.date)})</div>
           <div>กะการทำงาน: <span class="font-bold">${item.shift === 'DAY' ? 'กลางวัน (08:00-16:50)' : 'กลางคืน (20:00-04:50)'}</span></div>
           <div>ประเภทวัน: <span class="font-bold">${item.dayType === 'REGULAR' ? 'วันปกติ' : 'วันหยุด (OT 2.0)'}</span></div>
-          <div>เวลาจริง: <span class="font-mono font-bold text-cyan-300">${item.checkIn} - ${item.checkOut} (${item.workedHours} ชม.)</span></div>
+          <div>เวลาจริง: <span class="font-mono font-bold text-cyan-400">${item.checkIn} - ${item.checkOut} (${item.workedHours} ชม.)</span></div>
         </div>
         <div class="space-y-1.5 pt-1">
           ${otBreakdownHtml}
           <div class="flex justify-between"><span>ค่ากะกลางคืน:</span> <span class="font-bold font-mono">+${fmtNum(item.shiftAllowance)} ฿</span></div>
           <div class="flex justify-between"><span>ค่าอาหารรวม:</span> <span class="font-bold font-mono">+${fmtNum(item.totalMealAllowance)} ฿</span></div>
-          <div class="border-t border-zinc-800 pt-2 flex justify-between font-bold text-sm text-red-500">
+          <div class="border-t border-zinc-800 pt-2 flex justify-between font-bold text-sm text-red-400">
             <span>รวมรายได้สุทธิ:</span> <span class="font-mono">${fmtNum(item.totalSalary)} ฿</span>
           </div>
         </div>
@@ -2521,7 +2656,8 @@
     function openPayslipModal() {
       const cutoffSelect = document.getElementById('cutoffPeriodSelect');
       if (cutoffSelect && cutoffSelect.value === '2000-01-01|2099-12-31' && cutoffSelect.options.length > 1) {
-        cutoffSelect.selectedIndex = 1;
+        const now = new Date();
+        cutoffSelect.selectedIndex = now.getDate() <= 15 ? 1 : 0;
         renderHistories();
         showToast("สลับเป็นรอบตัดยอดล่าสุดให้อัตโนมัติ");
       }
