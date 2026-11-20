@@ -197,7 +197,7 @@
   <div id="bootOverlay" class="fixed inset-0 z-[100] bg-[#05070A] flex flex-col items-center justify-center p-6 transition-opacity duration-300">
     <div class="w-full max-w-xs space-y-3 font-mono text-xs">
       <div class="flex items-center justify-between text-cyan-400 border-b border-cyan-500/30 pb-1.5">
-        <span class="font-hud font-bold tracking-widest">VALKYRIE OS v4.5</span>
+        <span class="font-hud font-bold tracking-widest">VALKYRIE OS v4.6</span>
         <span class="animate-pulse text-[10px]">BOOTING...</span>
       </div>
       <div id="bootLogLines" class="space-y-1 text-[10.5px] text-zinc-400 min-h-[54px]">
@@ -985,7 +985,7 @@
 
       const steps = [
         { pct: 38, text: "> LOADING PAYROLL & SSO ENGINE [5% BASE]..." },
-        { pct: 74, text: "> CALIBRATING REACTOR & YTD CHAIN..." },
+        { pct: 74, text: "> SYNCING ACTIVE DUTY STATE ACROSS DEVICES..." },
         { pct: 100, text: "> CLOUD & LINE TELEMETRY: ONLINE [OK]" }
       ];
 
@@ -1976,10 +1976,11 @@
       isPunchBusy = true;
       setTimeout(() => { isPunchBusy = false; }, 600);
 
-      activeCheckins[emp.id] = {
+      const activeObj = {
         date: dateStr, time: timeStr,
         shift: currentShift, dayType: currentDayType, workType: currentWorkType
       };
+      activeCheckins[emp.id] = activeObj;
 
       localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
       playClick('confirm');
@@ -1987,7 +1988,7 @@
       loadTodayLiveStatus();
 
       const lineMsg = `⏰ [CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (กะ ${currentShift})\nเวลา: ${timeStr} น.`;
-      syncToGoogleSheets([], lineMsg);
+      syncToGoogleSheets([], lineMsg, [], null, { id: emp.id, status: "IN", ...activeObj });
     }
 
     function handleLiveCheckOut() {
@@ -2030,7 +2031,7 @@
       renderHistories();
 
       const lineMsg = `✅ [CHECK OUT & PAYROLL]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${activeIn.shift} / ${activeIn.dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${activeIn.time} - ${timeStr} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
-      syncToGoogleSheets([recordObj], lineMsg);
+      syncToGoogleSheets([recordObj], lineMsg, [], null, { id: emp.id, status: "OUT" });
     }
 
     function prefillManualByDate() {
@@ -2212,7 +2213,7 @@
       postToGasWebhook(payload).catch(err => console.error(err));
     }
 
-    function syncToGoogleSheets(payrolls = [], lineMessage = '', leaves = [], payslip = null) {
+    function syncToGoogleSheets(payrolls = [], lineMessage = '', leaves = [], payslip = null, activeCheckin = null) {
       const { gasUrl, lineToken, lineUserId } = getActiveLineConfig();
       const pill = document.getElementById('cloudSyncPill');
       if (pill) pill.textContent = "SYNCING...";
@@ -2232,7 +2233,8 @@
         lineMessage: shouldSendLine ? lineMessage.trim() : "",
         payrolls,
         leaves,
-        payslip
+        payslip,
+        activeCheckin
       };
 
       return postToGasWebhook(payload)
@@ -2300,6 +2302,9 @@
                 slipMap.set(k, s);
               });
               localStorage.setItem("payslip_history", JSON.stringify(Array.from(slipMap.values())));
+            }
+            if (data.activeCheckins && typeof data.activeCheckins === "object") {
+              localStorage.setItem("active_checkins", JSON.stringify(data.activeCheckins));
             }
             loadTodayLiveStatus();
             buildCutoffOptions(true);
@@ -2667,7 +2672,6 @@
 
       const earnings = Math.round((sumBase + sumOT + sumShift + sumMeal + sumOTMeal) * 100) / 100;
 
-      // ประกันสังคม 5% ของเงินเดือนฐานค่าจ้าง (sumBase) ไม่รวม OT / ค่ากะ / ค่าอาหาร
       let social = sumBase > 0 ? Math.min(Math.round(sumBase * 0.05), 875.00) : 0.00;
       const [y, m, d] = startStr.split('-').map(Number);
       if (d > 15 && sumBase > 0) {
