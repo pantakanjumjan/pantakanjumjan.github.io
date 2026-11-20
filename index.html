@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050403" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>PK SOVEREIGN // SHIFT & OT CHRONOGRAPH MK-XII </title>
+  <title>PK SOVEREIGN MK-XII </title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 96'%3E%3Crect width='120' height='96' rx='18' fill='%23050403'/%3E%3Cpath d='M12 14 H48 C61 14 68 22 68 35 C68 48 61 56 48 56 H28 V82 H12 Z M28 27 V43 H46 C51 43 53 40 53 35 C53 30 51 27 46 27 Z' fill='%23F59E0B'/%3E%3Cpath d='M75 14 H91 V42 L106 14 H120 L100 47 L120 82 H104 L91 57 V82 H75 Z' fill='%23FDE68A'/%3E%3C/svg%3E" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='goldPK' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FFFBEB'/%3E%3Cstop offset='40%25' stop-color='%23FDE68A'/%3E%3Cstop offset='100%25' stop-color='%23D97706'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='36' fill='%23050403'/%3E%3Crect x='10' y='10' width='160' height='160' rx='30' fill='none' stroke='%23F59E0B' stroke-width='3'/%3E%3Cg transform='translate(22, 36) scale(1.13)'%3E%3Cpath d='M12 14 H48 C61 14 68 22 68 35 C68 48 61 56 48 56 H28 V82 H12 Z M28 27 V43 H46 C51 43 53 40 53 35 C53 30 51 27 46 27 Z' fill='url(%23goldPK)'/%3E%3Cpath d='M75 14 H91 V42 L106 14 H120 L100 47 L120 82 H104 L91 57 V82 H75 Z' fill='url(%23goldPK)'/%3E%3C/g%3E%3C/svg%3E" />
-  
+  <link id="appleTouchIconPng" rel="apple-touch-icon" sizes="180x180" href="" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -66,7 +66,6 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* มุมบากเหลี่ยมเพชรแบบนาฬิกาหรู */
     .chamfer-box {
       clip-path: polygon(
         14px 0%, calc(100% - 14px) 0%,
@@ -85,7 +84,6 @@
       );
     }
 
-    /* กรอบทองเงาตัดสีดำ */
     .sovereign-frame {
       position: relative;
       background: linear-gradient(135deg, rgba(255, 251, 235, 0.72), rgba(245, 158, 11, 0.45), rgba(120, 53, 15, 0.75), rgba(253, 230, 138, 0.6));
@@ -110,7 +108,6 @@
       overflow: hidden;
     }
 
-    /* ปุ่มทองคำแท่ง 24K พร้อมแสงวิ่ง */
     .gold-ingot-btn {
       position: relative;
       overflow: hidden;
@@ -149,7 +146,6 @@
       transform: scale(0.965);
     }
 
-    /* ช่องกรอกข้อมูลโทนดำทอง */
     .sovereign-field {
       background: rgba(6, 5, 4, 0.92);
       border: 1px solid rgba(245, 158, 11, 0.38);
@@ -173,7 +169,6 @@
       padding-right: 2rem;
     }
 
-    /* การ์ดโครโนกราฟเอียง 3 มิติ + แสงสะท้อนกระจกแซฟไฟร์ */
     .chrono-3d-wrap {
       perspective: 1100px;
     }
@@ -199,7 +194,6 @@
       z-index: 20;
     }
 
-    /* ลวดลายแฉกแสงหน้าปัด */
     .guilloche-dial {
       background:
         repeating-conic-gradient(
@@ -230,7 +224,6 @@
       animation: reverseSpin 26s linear infinite;
     }
 
-    /* แถบสไลด์ลงเวลา */
     .slide-track {
       position: relative;
       height: 52px;
@@ -273,12 +266,10 @@
       animation: chevronPulse 1.3s ease-in-out infinite;
     }
 
-    /* แถบนำทางลอยด้านล่าง */
     .sovereign-dock {
       bottom: calc(var(--safe-bottom) + 6px);
     }
 
-    /* สลิป A5 แนวนอน */
     .a5-payslip-sheet {
       color: #000000;
       font-family: 'Noto Sans Thai', sans-serif;
@@ -318,23 +309,21 @@
 </head>
 
 <body>
-  <!-- ฉากหลังเครือข่ายจุดทอง-แชมเปญ -->
   <canvas id="constellationCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-75"></canvas>
 
-  <!-- ส่วนหัวระบบ -->
   <header class="sticky top-0 z-30 px-3.5 pb-2.5 backdrop-blur-xl bg-[#050403]/85 border-b border-amber-400/25">
     <div class="max-w-md mx-auto space-y-2">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
           <div class="chamfer-sm w-9 h-9 gold-ingot-btn flex items-center justify-center shrink-0">
-            <img alt="PK" class="company-logo-slot w-6 h-5 object-contain" />
+            <img alt="PK" class="company-logo-slot w-7 h-6 object-contain drop-shadow" />
           </div>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="font-hud font-extrabold text-xs tracking-wider text-amber-100 truncate">PJ CHRONOGRAPH</span>
+              <span class="font-hud font-extrabold text-xs tracking-wider text-amber-100 truncate">PK CHRONOGRAPH</span>
               <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50">SYNCING...</span>
             </div>
-            <p class="text-[10px] text-amber-200/65 truncate">Pantakan J. MK-XII </p>
+            <p class="text-[10px] text-amber-200/65 truncate">Pantakan J. MK-XII</p>
           </div>
         </div>
 
@@ -362,7 +351,6 @@
     </div>
   </header>
 
-  <!-- เนื้อหาหลัก -->
   <main class="relative z-10 max-w-md mx-auto px-3.5 pt-3 space-y-3.5">
 
     <!-- TAB 1: บันทึกสด -->
@@ -383,7 +371,6 @@
               </div>
             </div>
 
-            <!-- หน้าปัดนาฬิกาโครโนกราฟทอง-ดำ -->
             <div class="relative flex items-center justify-center py-1 z-10">
               <div class="relative w-56 h-56 flex items-center justify-center">
                 <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_24px_rgba(245,158,11,0.28)]">
@@ -399,22 +386,18 @@
                   <circle cx="120" cy="120" r="115" fill="none" stroke="url(#goldRimGrad)" stroke-width="2.2" />
                   <circle cx="120" cy="120" r="108" fill="none" stroke="rgba(253,230,138,0.22)" stroke-width="1" stroke-dasharray="4 4" />
 
-                  <!-- วงแหวนหมุนชั้นนอก -->
                   <g class="ring-cw">
                     <circle cx="120" cy="120" r="102" fill="none" stroke="rgba(245,158,11,0.35)" stroke-width="1.2" stroke-dasharray="14 8" />
                     <circle cx="120" cy="18" r="3" fill="#FDE68A" />
                     <circle cx="120" cy="222" r="3" fill="#F59E0B" />
                   </g>
 
-                  <!-- วงแหวนหมุนทวนเข็มชั้นใน -->
                   <g class="ring-ccw">
                     <circle cx="120" cy="120" r="88" fill="none" stroke="rgba(253,230,138,0.25)" stroke-width="1" stroke-dasharray="6 9" />
                   </g>
 
-                  <!-- ขีดบอกวินาที/นาที 60 ตำแหน่ง -->
                   <g id="chronoTicksGroup"></g>
 
-                  <!-- วงความคืบหน้ากะงาน -->
                   <circle cx="120" cy="120" r="93" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
                   <circle
                     id="reactorProgressArc"
@@ -430,7 +413,6 @@
                     transform="rotate(-90 120 120)"
                   />
 
-                  <!-- เข็มชั่วโมง / นาที / วินาที -->
                   <g id="chronoHourHand" transform="rotate(0 120 120)">
                     <polygon points="117.5,126 122.5,126 121.2,72 118.8,72" fill="#FDE68A" />
                   </g>
@@ -444,7 +426,6 @@
                   <circle cx="120" cy="120" r="5.5" fill="#D97706" stroke="#FFFBEB" stroke-width="1.5" />
                 </svg>
 
-                <!-- หน้าจอแสดงเวลาดิจิทัลกลางหน้าปัด -->
                 <div class="guilloche-dial chamfer-box absolute w-36 h-24 border border-amber-300/45 flex flex-col items-center justify-center px-2 shadow-[0_0_24px_rgba(0,0,0,0.9)]">
                   <span class="text-[8px] font-hud tracking-[0.22em] text-amber-300/80 uppercase">CHRONO TIME</span>
                   <div id="liveClock" class="font-mono text-xl font-extrabold text-amber-50 tracking-tight mt-0.5">00:00:00<span class="text-xs text-amber-300 font-bold">.0</span></div>
@@ -455,7 +436,6 @@
               </div>
             </div>
 
-            <!-- แถบเวลาทำงานสะสมและรายได้สด -->
             <div id="liveShiftElapsedBar" class="hidden chamfer-sm bg-black/85 border border-amber-400/45 px-3 py-2 flex items-center justify-between text-xs font-mono relative z-10">
               <div class="flex items-center gap-1.5 text-amber-200">
                 <i class="fa-solid fa-hourglass-half text-amber-300 text-[11px]"></i>
@@ -466,7 +446,6 @@
               </div>
             </div>
 
-            <!-- เวลาเข้า-ออกวันนี้ -->
             <div class="grid grid-cols-2 gap-2.5 text-center font-mono relative z-10">
               <div class="chamfer-sm bg-black/75 border border-amber-500/30 p-2.5">
                 <div class="text-[9.5px] text-zinc-400 flex items-center justify-center gap-1">
@@ -484,7 +463,6 @@
               </div>
             </div>
 
-            <!-- แถบสไลด์ลงเวลา -->
             <div class="space-y-1.5 relative z-10">
               <div class="flex justify-between items-center px-0.5">
                 <span class="font-hud text-[9px] text-amber-200/75 tracking-wider">IGNITION SLIDER</span>
@@ -505,7 +483,6 @@
         </div>
       </div>
 
-      <!-- แผงตั้งค่ากะ ประเภทวัน รูปแบบการทำงาน และจำลอง OT -->
       <div class="sovereign-frame chamfer-box">
         <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
           <div class="flex items-center justify-between border-b border-amber-500/25 pb-2">
@@ -533,7 +510,6 @@
             </div>
           </div>
 
-          <!-- ตัวเลื่อนจำลองเวลาเลิกงาน / OT -->
           <div class="bg-black/80 border border-amber-500/30 rounded-xl p-2.5 space-y-2">
             <div class="flex justify-between items-center text-[10.5px]">
               <span class="text-zinc-300 font-semibold flex items-center gap-1.5">
@@ -556,7 +532,6 @@
             />
           </div>
 
-          <!-- สรุปประมาณการรายได้ต่อกะ -->
           <div class="grid grid-cols-3 gap-2 font-mono text-center pt-0.5">
             <div class="chamfer-sm bg-black/85 border border-amber-500/30 p-2">
               <div id="estBaseLabel" class="text-[8.5px] text-zinc-400 uppercase">BASE PAY</div>
@@ -574,7 +549,8 @@
         </div>
       </div>
     </section>
-<!-- TAB 2: Manual Override -->
+
+    <!-- TAB 2: Manual Override -->
     <section id="tab-2" class="tab-content hidden space-y-3.5">
       <div class="sovereign-frame chamfer-box">
         <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
@@ -779,7 +755,6 @@
 
   </main>
 
-  <!-- เมนูนำทางด้านล่าง -->
   <nav class="sovereign-dock fixed left-1/2 -translate-x-1/2 w-[calc(100%-1.75rem)] max-w-sm z-40 no-print">
     <div class="chamfer-box bg-[#080705]/95 backdrop-blur-2xl border border-amber-300/70 p-1 flex justify-between shadow-[0_14px_38px_rgba(0,0,0,0.95),0_0_24px_rgba(245,158,11,0.28)]">
       <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn transition-all">
@@ -1042,9 +1017,10 @@
   <div id="toast" class="chamfer-sm fixed left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 backdrop-blur-md text-amber-100 text-xs font-bold px-4 py-2.5 shadow-[0_0_24px_rgba(245,158,11,0.45)] hidden border border-amber-300/85" style="top: calc(max(env(safe-area-inset-top, 48px), 48px) + 1rem);">
     <span id="toastMsg">แจ้งเตือนระบบ</span>
   </div>
-<script>
+
+  <script>
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbz9m1r1olY7mEnzNTEK9Ml3helG24iAJPzyvCEob1a9qO9JI0_G4LAdCsSloSZMivh9/exec";
-    const GAS_URL_VERSION = "v2026_11_20_sovereign_full";
+    const GAS_URL_VERSION = "v2026_11_21_sovereign_pk_icon";
     const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
     const DEFAULT_HAZARD_RATE = 20;
@@ -1109,19 +1085,50 @@
     function applyCompanyLogos() {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 96">
         <defs>
-          <linearGradient id="pkGoldLogo" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#FFFBEB"/>
-            <stop offset="45%" stop-color="#FDE68A"/>
-            <stop offset="100%" stop-color="#F59E0B"/>
+          <linearGradient id="pkDarkGold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#291906"/>
+            <stop offset="55%" stop-color="#140c03"/>
+            <stop offset="100%" stop-color="#050403"/>
           </linearGradient>
         </defs>
-        <path d="M18 14 H56 C70 14 78 22 78 35 C78 48 70 56 56 56 H35 V82 H18 Z M35 28 V42 H53 C58 42 61 39 61 35 C61 31 58 28 53 28 Z" fill="url(#pkGoldLogo)"/>
-        <path d="M84 14 H101 V42 L116 14 H135 L114 48 L136 82 H116 L101 56 V82 H84 Z" fill="url(#pkGoldLogo)"/>
+        <path d="M12 14 H48 C61 14 68 22 68 35 C68 48 61 56 48 56 H28 V82 H12 Z M28 27 V43 H46 C51 43 53 40 53 35 C53 30 51 27 46 27 Z" fill="url(#pkDarkGold)"/>
+        <path d="M75 14 H91 V42 L106 14 H120 L100 47 L120 82 H104 L91 57 V82 H75 Z" fill="url(#pkDarkGold)"/>
       </svg>`;
       const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
       document.querySelectorAll('.company-logo-slot').forEach(img => {
         img.src = dataUri;
       });
+    }
+
+    function generateGoldPkTouchIcon() {
+      try {
+        const c = document.createElement('canvas');
+        c.width = 180;
+        c.height = 180;
+        const ctx = c.getContext('2d');
+
+        ctx.fillStyle = '#050403';
+        ctx.fillRect(0, 0, 180, 180);
+
+        const grad = ctx.createLinearGradient(16, 16, 164, 164);
+        grad.addColorStop(0, '#FFFBEB');
+        grad.addColorStop(0.35, '#FDE68A');
+        grad.addColorStop(0.7, '#F59E0B');
+        grad.addColorStop(1, '#B45309');
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 4;
+        ctx.strokeRect(10, 10, 160, 160);
+
+        ctx.fillStyle = grad;
+        ctx.font = '800 76px "Cinzel", Georgia, serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('PK', 90, 95);
+
+        const link = document.getElementById('appleTouchIconPng');
+        if (link) link.href = c.toDataURL('image/png');
+      } catch (e) {}
     }
 
     function setSyncPillStatus(state) {
@@ -1906,6 +1913,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       applyCompanyLogos();
+      generateGoldPkTouchIcon();
       applyThemeMode();
       buildChronoBezelTicks();
       init3DTiltCard();
