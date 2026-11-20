@@ -197,7 +197,7 @@
   <div id="bootOverlay" class="fixed inset-0 z-[100] bg-[#05070A] flex flex-col items-center justify-center p-6 transition-opacity duration-300">
     <div class="w-full max-w-xs space-y-3 font-mono text-xs">
       <div class="flex items-center justify-between text-cyan-400 border-b border-cyan-500/30 pb-1.5">
-        <span class="font-hud font-bold tracking-widest">VALKYRIE OS v4.2</span>
+        <span class="font-hud font-bold tracking-widest">VALKYRIE OS v4.3</span>
         <span class="animate-pulse text-[10px]">BOOTING...</span>
       </div>
       <div id="bootLogLines" class="space-y-1 text-[10.5px] text-zinc-400 min-h-[54px]">
@@ -356,7 +356,7 @@
       <div class="armor-frame chamfer-box">
         <div class="armor-inner chamfer-box p-3.5 space-y-3">
           <div class="flex items-center justify-between border-b border-white/10 pb-2">
-            <span class="font-hud font-bold text-[10.5px] tracking-wider text-cyan-400"><i class="fa-solid fa-sliders mr-1.5"></i>SHIFT & OT TELEMETRY</span>
+            <span class="font-hud font-bold text-[10.5px] tracking-wider text-cyan-400"><i class="fa-solid fa-sliders mr-1.5"></i>SHIFT &amp; OT TELEMETRY</span>
             <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">AUTO</button>
           </div>
 
@@ -2158,11 +2158,19 @@
       const { gasUrl } = getActiveLineConfig();
       if (!gasUrl) return Promise.reject(new Error("Missing GAS URL"));
 
+      const jsonStr = JSON.stringify(payloadObj);
+      const formBody = new URLSearchParams();
+      formBody.append("payload", jsonStr);
+      formBody.append("action", payloadObj.action || "syncAll");
+      formBody.append("sendLine", payloadObj.sendLine ? "true" : "false");
+      formBody.append("channelAccessToken", payloadObj.channelAccessToken || "");
+      formBody.append("userId", payloadObj.userId || "");
+      formBody.append("lineMessage", payloadObj.lineMessage || "");
+
       return fetch(gasUrl, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payloadObj)
+        body: formBody
       });
     }
 
