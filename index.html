@@ -985,7 +985,7 @@
 
       const steps = [
         { pct: 38, text: "> LOADING PAYROLL & SSO ENGINE [5% BASE]..." },
-        { pct: 74, text: "> SYNCING ACTIVE DUTY STATE ACROSS DEVICES..." },
+        { pct: 74, text: "> CALIBRATING CHRONO-REACTOR & GYRO..." },
         { pct: 100, text: "> CLOUD & LINE TELEMETRY: ONLINE [OK]" }
       ];
 
@@ -1976,19 +1976,17 @@
       isPunchBusy = true;
       setTimeout(() => { isPunchBusy = false; }, 600);
 
-      const activeObj = {
+      activeCheckins[emp.id] = {
         date: dateStr, time: timeStr,
         shift: currentShift, dayType: currentDayType, workType: currentWorkType
       };
-      activeCheckins[emp.id] = activeObj;
-
       localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
       playClick('confirm');
       showToast(`IGNITION // บันทึกเข้างาน (${currentShift}) สำเร็จ`);
       loadTodayLiveStatus();
 
       const lineMsg = `⏰ [CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (กะ ${currentShift})\nเวลา: ${timeStr} น.`;
-      syncToGoogleSheets([], lineMsg, [], null, { id: emp.id, status: "IN", ...activeObj });
+      syncToGoogleSheets([], lineMsg);
     }
 
     function handleLiveCheckOut() {
@@ -2031,7 +2029,7 @@
       renderHistories();
 
       const lineMsg = `✅ [CHECK OUT & PAYROLL]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${activeIn.shift} / ${activeIn.dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${activeIn.time} - ${timeStr} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
-      syncToGoogleSheets([recordObj], lineMsg, [], null, { id: emp.id, status: "OUT" });
+      syncToGoogleSheets([recordObj], lineMsg);
     }
 
     function prefillManualByDate() {
@@ -2213,7 +2211,7 @@
       postToGasWebhook(payload).catch(err => console.error(err));
     }
 
-    function syncToGoogleSheets(payrolls = [], lineMessage = '', leaves = [], payslip = null, activeCheckin = null) {
+    function syncToGoogleSheets(payrolls = [], lineMessage = '', leaves = [], payslip = null) {
       const { gasUrl, lineToken, lineUserId } = getActiveLineConfig();
       const pill = document.getElementById('cloudSyncPill');
       if (pill) pill.textContent = "SYNCING...";
@@ -2233,8 +2231,7 @@
         lineMessage: shouldSendLine ? lineMessage.trim() : "",
         payrolls,
         leaves,
-        payslip,
-        activeCheckin
+        payslip
       };
 
       return postToGasWebhook(payload)
@@ -2302,9 +2299,6 @@
                 slipMap.set(k, s);
               });
               localStorage.setItem("payslip_history", JSON.stringify(Array.from(slipMap.values())));
-            }
-            if (data.activeCheckins && typeof data.activeCheckins === "object") {
-              localStorage.setItem("active_checkins", JSON.stringify(data.activeCheckins));
             }
             loadTodayLiveStatus();
             buildCutoffOptions(true);
