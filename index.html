@@ -1,728 +1,501 @@
 <!DOCTYPE html>
 <html lang="th" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Provide Power // VALKYRIE CHRONO-OVERDRIVE MK-X GOLD</title>
-
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="ProvidePower">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#050507">
-  <link id="appleTouchIconLink" rel="apple-touch-icon" sizes="180x180" href="">
-  <link id="faviconLink" rel="icon" type="image/png" href="">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#050403" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>PK SOVEREIGN // SHIFT & OT CHRONOGRAPH MK-XII </title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Orbitron:wght@700;800;900&family=Sarabun:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
-
-  <script>
-    const COMPANY_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 225" fill="none">
-      <defs>
-        <linearGradient id="goldLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FDE68A"/>
-          <stop offset="45%" stop-color="#F59E0B"/>
-          <stop offset="100%" stop-color="#B45309"/>
-        </linearGradient>
-      </defs>
-      <path fill="url(#goldLogoGrad)" d="M68 18 H192 L222 70 H112 L94 101 H54 L36 70 Z"/>
-      <path fill="url(#goldLogoGrad)" d="M29 82 L47 51 L65 82 L41 124 L23 93 Z"/>
-      <path fill="url(#goldLogoGrad)" d="M77 82 H115 L74 153 L55 120 Z"/>
-      <path fill="url(#goldLogoGrad)" d="M128 82 H229 L246 112 H111 L82 162 L101 195 H159 L174 169 H126 L142 141 H231 L182 225 H82 L42 156 L84 82 Z"/>
-    </svg>`;
-    const COMPANY_LOGO_URI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(COMPANY_LOGO_SVG);
-
-    function applyCompanyLogos() {
-      document.querySelectorAll('.company-logo-slot').forEach(el => {
-        el.src = COMPANY_LOGO_URI;
-      });
-    }
-
-    (function generateAppIcons() {
-      window.addEventListener('DOMContentLoaded', applyCompanyLogos);
-      const img = new Image();
-      img.onload = function () {
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = 512;
-          canvas.height = 512;
-          const ctx = canvas.getContext('2d');
-
-          const grad = ctx.createLinearGradient(0, 0, 512, 512);
-          grad.addColorStop(0, '#18140C');
-          grad.addColorStop(1, '#050507');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, 512, 512);
-
-          ctx.strokeStyle = 'rgba(245, 158, 11, 0.9)';
-          ctx.lineWidth = 10;
-          ctx.strokeRect(22, 22, 468, 468);
-
-          ctx.shadowColor = 'rgba(245, 158, 11, 0.95)';
-          ctx.shadowBlur = 32;
-          ctx.drawImage(img, 96, 110, 320, 277);
-
-          const pngUrl = canvas.toDataURL('image/png');
-          document.getElementById('appleTouchIconLink').href = pngUrl;
-          document.getElementById('faviconLink').href = pngUrl;
-        } catch (e) {}
-      };
-      img.src = COMPANY_LOGO_URI;
-    })();
-  </script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['IBM Plex Sans Thai', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-            hud: ['Orbitron', 'Chakra Petch', 'sans-serif'],
-            mech: ['Chakra Petch', 'IBM Plex Sans Thai', 'sans-serif'],
-            slip: ['Sarabun', 'sans-serif'],
-          },
-          colors: {
-            valk: {
-              bg: '#050507',
-              panel: '#0C0B0E',
-              gold: '#F59E0B',
-              champagne: '#FDE68A',
-              amber: '#D97706',
-              emerald: '#10B981'
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
-    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    html, body {
-      min-height: 100%;
-      margin: 0;
-      padding: 0;
+    :root {
+      --obsidian-void: #050403;
+      --obsidian-panel: #0c0a07;
+      --obsidian-elevated: #14100b;
+      --gold-deep: #78350f;
+      --gold-rich: #d97706;
+      --gold-bright: #f59e0b;
+      --gold-champagne: #fde68a;
+      --gold-ivory: #fffbeb;
+      --text-main: #fafaf9;
+      --text-muted: #a8a29e;
+      --safe-top: max(env(safe-area-inset-top, 20px), 20px);
+      --safe-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
     }
+
+    html:not(.dark) {
+      --obsidian-void: #120e0a;
+      --obsidian-panel: #1b150f;
+      --obsidian-elevated: #261e15;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'IBM Plex Sans Thai', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-      background-color: #050507;
-      color: #F8FAFC;
+      font-family: 'Noto Sans Thai', sans-serif;
+      background-color: var(--obsidian-void);
+      color: var(--text-main);
+      min-height: 100dvh;
       overflow-x: hidden;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    input, textarea, select { user-select: auto; }
-
-    /* =========================================================
-       iOS SAFE AREA & PWA STANDALONE HEADER PROTECTION
-       ========================================================= */
-    header.valk-header {
-      padding-top: calc(max(env(safe-area-inset-top, 0px), 12px) + 0.5rem) !important;
-      padding-bottom: 0.65rem !important;
-    }
-    @media all and (display-mode: standalone) {
-      header.valk-header {
-        padding-top: calc(max(env(safe-area-inset-top, 48px), 48px) + 0.4rem) !important;
-      }
-    }
-    nav.valk-dock {
-      bottom: calc(max(env(safe-area-inset-bottom, 0px), 12px) + 0.35rem) !important;
-    }
-    main.valk-main {
-      padding-bottom: calc(max(env(safe-area-inset-bottom, 0px), 16px) + 6.8rem) !important;
+      padding-top: calc(var(--safe-top) + 6px);
+      padding-bottom: calc(var(--safe-bottom) + 86px);
+      background-image:
+        radial-gradient(circle at 50% -10%, rgba(245, 158, 11, 0.16), transparent 55%),
+        radial-gradient(circle at 85% 25%, rgba(253, 230, 138, 0.06), transparent 40%),
+        linear-gradient(180deg, #070503 0%, #040302 100%);
     }
 
-    /* =========================================================
-       UNIFIED FORM INPUT / SELECT GEOMETRY FOR iOS & ANDROID
-       ========================================================= */
-    .valk-field {
-      height: 38px;
-      min-height: 38px;
-      line-height: 1.25;
-      padding: 0 0.65rem;
-      border-radius: 0.5rem;
-      border: 1.5px solid #3F3728;
-      background-color: rgba(8, 7, 10, 0.88);
-      color: #FFFBEB;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
-    }
-    .valk-field:focus {
-      border-color: #F59E0B;
-      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.22), 0 0 14px rgba(245, 158, 11, 0.3);
-    }
-    input[type="date"].valk-field,
-    input[type="time"].valk-field {
-      -webkit-appearance: none;
-      appearance: none;
-      display: block;
-      padding-top: 0.45rem;
-      padding-bottom: 0.45rem;
-    }
-    select.valk-field {
-      padding-right: 1.85rem;
+    .font-hud {
+      font-family: 'Cinzel', 'JetBrains Mono', sans-serif;
     }
 
-    /* =========================================================
-       MECHA CHAMFERED CUT-CORNER ARCHITECTURE & HUD BRACKETS
-       ========================================================= */
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* มุมบากเหลี่ยมเพชรแบบนาฬิกาหรู */
     .chamfer-box {
       clip-path: polygon(
-        15px 0, calc(100% - 15px) 0,
-        100% 15px, 100% calc(100% - 15px),
-        calc(100% - 15px) 100%, 15px 100%,
-        0 calc(100% - 15px), 0 15px
+        14px 0%, calc(100% - 14px) 0%,
+        100% 14px, 100% calc(100% - 14px),
+        calc(100% - 14px) 100%, 14px 100%,
+        0% calc(100% - 14px), 0% 14px
       );
     }
+
     .chamfer-sm {
       clip-path: polygon(
-        8px 0, calc(100% - 8px) 0,
+        8px 0%, calc(100% - 8px) 0%,
         100% 8px, 100% calc(100% - 8px),
         calc(100% - 8px) 100%, 8px 100%,
-        0 calc(100% - 8px), 0 8px
+        0% calc(100% - 8px), 0% 8px
       );
     }
 
-    /* Tactical HUD Corner Reticles - 24K Gold */
-    .hud-bracket-tl, .hud-bracket-tr, .hud-bracket-bl, .hud-bracket-br {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      pointer-events: none;
-      z-index: 20;
-    }
-    .hud-bracket-tl { top: 8px; left: 8px; border-top: 2px solid #FDE68A; border-left: 2px solid #FDE68A; }
-    .hud-bracket-tr { top: 8px; right: 8px; border-top: 2px solid #F59E0B; border-right: 2px solid #F59E0B; }
-    .hud-bracket-bl { bottom: 8px; left: 8px; border-bottom: 2px solid #F59E0B; border-left: 2px solid #F59E0B; }
-    .hud-bracket-br { bottom: 8px; right: 8px; border-bottom: 2px solid #FDE68A; border-right: 2px solid #FDE68A; }
-
-    /* =========================================================
-       IMPERIAL GOLD PLASMA AURA + HEX-GRID + LASER STAGE
-       ========================================================= */
-    .valk-stage {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 14%, rgba(245, 158, 11, 0.18) 0%, transparent 52%),
-        radial-gradient(circle at 85% 78%, rgba(253, 230, 138, 0.08) 0%, transparent 50%),
-        linear-gradient(180deg, #0B0A0E 0%, #040406 100%);
-    }
-
-    @keyframes plasma-pulse {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 0.75; transform: scale(1.06); }
-    }
-    .plasma-orb {
-      position: absolute;
-      top: -60px;
-      left: 50%;
-      margin-left: -190px;
-      width: 380px;
-      height: 380px;
-      border-radius: 9999px;
-      background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, rgba(253, 230, 138, 0.06) 45%, transparent 72%);
-      filter: blur(22px);
-      animation: plasma-pulse 6s ease-in-out infinite;
-    }
-
-    .hex-grid-overlay {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(30deg, rgba(245, 158, 11, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(245, 158, 11, 0.05) 87.5%, rgba(245, 158, 11, 0.05)),
-        linear-gradient(150deg, rgba(253, 230, 138, 0.035) 12%, transparent 12.5%, transparent 87%, rgba(253, 230, 138, 0.035) 87.5%, rgba(253, 230, 138, 0.035)),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-      background-size: 40px 70px, 40px 70px, 24px 24px;
-      opacity: 0.95;
-    }
-
-    .crt-scanlines {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.22) 0px,
-        rgba(0, 0, 0, 0.22) 1px,
-        transparent 1px,
-        transparent 3px
-      );
-      opacity: 0.45;
-    }
-
-    @keyframes radar-sweep {
-      0% { transform: translateY(-100%); opacity: 0; }
-      25% { opacity: 0.6; }
-      100% { transform: translateY(100vh); opacity: 0; }
-    }
-    .laser-sweep-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #B45309, #FDE68A, #F59E0B, transparent);
-      box-shadow: 0 0 22px #F59E0B, 0 0 12px #FDE68A;
-      animation: radar-sweep 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
-
-    #constellationCanvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.88;
-    }
-
-    /* =========================================================
-       3D GYRO TILT + 24K GOLD-OBSIDIAN ARMOR CHASSIS
-       ========================================================= */
-    .tilt-stage {
-      perspective: 1200px;
-    }
-    .tilt-card {
-      transform-style: preserve-3d;
-      transition: transform 0.14s ease-out;
-    }
-
-    .armor-frame {
+    /* กรอบทองเงาตัดสีดำ */
+    .sovereign-frame {
       position: relative;
-      background: linear-gradient(135deg, rgba(253, 230, 138, 0.85) 0%, rgba(120, 90, 35, 0.65) 48%, rgba(245, 158, 11, 0.85) 100%);
+      background: linear-gradient(135deg, rgba(255, 251, 235, 0.72), rgba(245, 158, 11, 0.45), rgba(120, 53, 15, 0.75), rgba(253, 230, 138, 0.6));
       padding: 1.25px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
-    }
-    .armor-inner {
-      background:
-        radial-gradient(circle at 100% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
-        linear-gradient(180deg, rgba(16, 15, 20, 0.96) 0%, rgba(8, 8, 11, 0.98) 100%);
-      backdrop-filter: blur(14px);
+      box-shadow:
+        0 14px 36px rgba(0, 0, 0, 0.88),
+        0 0 22px rgba(245, 158, 11, 0.12);
     }
 
-    /* Refined Crisp Obsidian Reactor Chamber */
-    .reactor-chamber {
+    .sovereign-inner {
+      position: relative;
       background:
-        radial-gradient(circle at 50% 42%, rgba(245, 158, 11, 0.11) 0%, rgba(217, 119, 6, 0.03) 38%, rgba(6, 6, 8, 0.99) 68%),
-        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 3px, transparent 3px, transparent 7px);
+        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08), transparent 65%),
+        repeating-linear-gradient(
+          45deg,
+          rgba(255, 251, 235, 0.012) 0px,
+          rgba(255, 251, 235, 0.012) 1px,
+          transparent 1px,
+          transparent 9px
+        ),
+        var(--obsidian-panel);
+      overflow: hidden;
     }
 
-    .sapphire-glare {
+    /* ปุ่มทองคำแท่ง 24K พร้อมแสงวิ่ง */
+    .gold-ingot-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fffbeb 0%, #fde68a 22%, #f59e0b 55%, #b45309 100%);
+      color: #140d04;
+      font-weight: 800;
+      border: 1px solid rgba(255, 251, 235, 0.75);
+      box-shadow:
+        0 6px 20px rgba(245, 158, 11, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    }
+
+    .gold-ingot-btn::after {
+      content: "";
       position: absolute;
-      inset: 0;
+      top: -40%;
+      left: -120%;
+      width: 55%;
+      height: 180%;
+      transform: rotate(24deg);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      animation: ingotSweep 4.2s ease-in-out infinite;
       pointer-events: none;
-      background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 20%), rgba(253, 230, 138, 0.12) 0%, transparent 60%);
-      z-index: 3;
     }
 
-    @keyframes spin-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes spin-ccw { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-    .ring-spin-cw { transform-origin: 120px 120px; animation: spin-cw 28s linear infinite; }
-    .ring-spin-ccw { transform-origin: 120px 120px; animation: spin-ccw 18s linear infinite; }
-
-    @keyframes reactor-breathe {
-      0%, 100% { opacity: 0.45; transform: scale(0.97); }
-      50% { opacity: 0.85; transform: scale(1.03); }
-    }
-    .reactor-core-aura {
-      transform-origin: 120px 120px;
-      animation: reactor-breathe 3.4s ease-in-out infinite;
+    @keyframes ingotSweep {
+      0%, 72% { left: -120%; }
+      100% { left: 160%; }
     }
 
     .tactile-btn {
-      transition: transform 0.08s ease, filter 0.12s ease, box-shadow 0.15s ease;
+      transition: transform 0.14s cubic-bezier(0.2, 0.9, 0.3, 1), filter 0.15s ease;
     }
+
     .tactile-btn:active {
-      transform: scale(0.96);
+      transform: scale(0.965);
     }
 
-    .hw-select {
+    /* ช่องกรอกข้อมูลโทนดำทอง */
+    .sovereign-field {
+      background: rgba(6, 5, 4, 0.92);
+      border: 1px solid rgba(245, 158, 11, 0.38);
+      color: #fffbeb;
+      border-radius: 10px;
+      padding: 8px 10px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .sovereign-field:focus {
+      border-color: #fde68a;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+
+    .sovereign-select {
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F59E0B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fcd34d'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.6rem center;
-      background-size: 0.85rem;
+      background-position: right 0.65rem center;
+      background-size: 0.9rem;
+      padding-right: 2rem;
     }
 
-    /* Interactive OT Scrubber Slider - Gold & Bronze */
-    input[type="range"].chrono-scrubber {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 7px;
-      background: linear-gradient(90deg, #78350F 0%, #D97706 40%, #F59E0B 72%, #FDE68A 100%);
-      border-radius: 999px;
-      outline: none;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.85);
-    }
-    input[type="range"].chrono-scrubber::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 7px;
-      background: linear-gradient(145deg, #272012, #0C0A07);
-      border: 2.5px solid #FDE68A;
-      box-shadow: 0 0 14px rgba(245, 158, 11, 0.95), 0 0 6px rgba(253, 230, 138, 0.85);
-      cursor: pointer;
+    /* การ์ดโครโนกราฟเอียง 3 มิติ + แสงสะท้อนกระจกแซฟไฟร์ */
+    .chrono-3d-wrap {
+      perspective: 1100px;
     }
 
-    /* Slide-to-Engage Ignition Track */
+    .chrono-3d-card {
+      transform-style: preserve-3d;
+      transition: transform 0.22s ease-out;
+      will-change: transform;
+    }
+
+    .sapphire-glare {
+      --gx: 50%;
+      --gy: 20%;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(
+        circle at var(--gx) var(--gy),
+        rgba(255, 251, 235, 0.14),
+        rgba(253, 230, 138, 0.04) 30%,
+        transparent 62%
+      );
+      z-index: 20;
+    }
+
+    /* ลวดลายแฉกแสงหน้าปัด */
+    .guilloche-dial {
+      background:
+        repeating-conic-gradient(
+          from 0deg at 120px 120px,
+          rgba(245, 158, 11, 0.06) 0deg 3deg,
+          transparent 3deg 12deg
+        ),
+        radial-gradient(circle at 50% 45%, #19130c 0%, #090705 68%, #040302 100%);
+    }
+
+    @keyframes slowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes reverseSpin {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    .ring-cw {
+      transform-origin: 120px 120px;
+      animation: slowSpin 38s linear infinite;
+    }
+
+    .ring-ccw {
+      transform-origin: 120px 120px;
+      animation: reverseSpin 26s linear infinite;
+    }
+
+    /* แถบสไลด์ลงเวลา */
     .slide-track {
       position: relative;
-      height: 56px;
+      height: 52px;
       overflow: hidden;
-      touch-action: pan-y;
+      touch-action: none;
     }
+
     .slide-fill {
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
+      inset: 0 auto 0 0;
       width: 0%;
       pointer-events: none;
-      transition: width 0.05s linear;
     }
+
     .slide-thumb {
       position: absolute;
       top: 4px;
       left: 4px;
-      width: 54px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: grab;
       z-index: 10;
+      user-select: none;
       touch-action: none;
     }
-    .slide-thumb:active { cursor: grabbing; }
 
-    @keyframes chevron-pulse {
-      0%, 100% { opacity: 0.25; transform: translateX(0); }
-      50% { opacity: 1; transform: translateX(5px); }
-    }
-    .chevron-anim { animation: chevron-pulse 1.3s infinite ease-in-out; }
-
-    @keyframes text-shimmer {
-      0% { background-position: -120% 0; }
-      100% { background-position: 220% 0; }
-    }
-    .shimmer-hud-text {
-      background: linear-gradient(90deg, currentColor 20%, #FFFFFF 50%, currentColor 80%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      animation: text-shimmer 3s linear infinite;
+    .slide-thumb:active {
+      cursor: grabbing;
     }
 
-    /* =========================================================
-       DAYTIME CHAMPAGNE BRONZE & CHARCOAL HUD
-       ========================================================= */
-    html:not(.dark) body { background-color: #1C1915; color: #FEFCE8; }
-    html:not(.dark) .valk-stage {
-      background:
-        radial-gradient(circle at 50% 14%, rgba(245, 158, 11, 0.22) 0%, transparent 55%),
-        radial-gradient(circle at 50% 25%, #342D23 0%, #171411 85%);
-    }
-    html:not(.dark) .hex-grid-overlay {
-      background-image:
-        linear-gradient(30deg, rgba(245, 158, 11, 0.07) 12%, transparent 12.5%, transparent 87%, rgba(245, 158, 11, 0.07) 87.5%, rgba(245, 158, 11, 0.07)),
-        linear-gradient(150deg, rgba(253, 230, 138, 0.06) 12%, transparent 12.5%, transparent 87%, rgba(253, 230, 138, 0.06) 87.5%, rgba(253, 230, 138, 0.06)),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      opacity: 0.95;
-    }
-    html:not(.dark) .crt-scanlines { opacity: 0.12; }
-    html:not(.dark) header.valk-header {
-      background-color: rgba(28, 24, 19, 0.96) !important;
-      border-bottom-color: rgba(245, 158, 11, 0.55) !important;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
-    }
-    html:not(.dark) header.valk-header h1 { color: #FFFBEB !important; }
-    html:not(.dark) .header-ctrl-btn {
-      background-color: #2A241C !important;
-      border-color: #78643C !important;
-      color: #FEF3C7 !important;
-    }
-    html:not(.dark) .pilot-bar {
-      background-color: #231E18 !important;
-      border-color: #78643C !important;
-    }
-    html:not(.dark) .pilot-bar select { color: #FFFBEB !important; }
-    html:not(.dark) .pilot-bar select option { background-color: #1F1B16 !important; color: #FFFBEB !important; }
-    html:not(.dark) .armor-frame {
-      background: linear-gradient(135deg, rgba(253, 230, 138, 0.85) 0%, rgba(161, 120, 48, 0.8) 48%, rgba(245, 158, 11, 0.85) 100%) !important;
-    }
-    html:not(.dark) .armor-inner {
-      background: linear-gradient(180deg, rgba(39, 34, 27, 0.96) 0%, rgba(26, 22, 18, 0.98) 100%) !important;
-      color: #FEFCE8 !important;
-    }
-    html:not(.dark) .reactor-chamber {
-      background:
-        radial-gradient(circle at 50% 42%, rgba(245, 158, 11, 0.15) 0%, rgba(29, 25, 20, 0.98) 72%),
-        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 3px, transparent 3px, transparent 7px) !important;
-    }
-    html:not(.dark) .chrono-center-box {
-      background-color: rgba(15, 13, 10, 0.94) !important;
-      border-color: rgba(245, 158, 11, 0.65) !important;
-      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.55);
-    }
-    html:not(.dark) .armor-inner .text-white { color: #FFFBEB !important; }
-    html:not(.dark) .armor-inner .text-zinc-400,
-    html:not(.dark) .armor-inner .text-zinc-300 { color: #E7E5E4 !important; }
-    html:not(.dark) .armor-inner .border-zinc-800 { border-color: #574B37 !important; }
-    html:not(.dark) .valk-field {
-      background-color: #1B1713 !important;
-      border: 1.5px solid #6B5B3E !important;
-      color: #FFFBEB !important;
-    }
-    html:not(.dark) .valk-field:focus {
-      background-color: #14110E !important;
-      border-color: #F59E0B !important;
-    }
-    html:not(.dark) .valk-field option { background-color: #1F1B16 !important; color: #FFFBEB !important; }
-    html:not(.dark) .armor-inner .bg-black\/60,
-    html:not(.dark) .armor-inner .bg-black\/65,
-    html:not(.dark) .armor-inner .bg-black\/70,
-    html:not(.dark) .armor-inner .bg-black\/75,
-    html:not(.dark) .armor-inner .bg-black\/80,
-    html:not(.dark) .armor-inner .bg-black\/85,
-    html:not(.dark) .armor-inner .bg-black\/90 {
-      background-color: rgba(18, 15, 12, 0.88) !important;
-      border-color: #574B37 !important;
-      color: #FEFCE8 !important;
+    @keyframes chevronPulse {
+      0%, 100% { opacity: 0.35; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(4px); }
     }
 
-    /* =========================================================
-       A5 LANDSCAPE PAYSLIP SHEET STYLING (IMAGE & PRINT)
-       ========================================================= */
+    .chevron-anim {
+      animation: chevronPulse 1.3s ease-in-out infinite;
+    }
+
+    /* แถบนำทางลอยด้านล่าง */
+    .sovereign-dock {
+      bottom: calc(var(--safe-bottom) + 6px);
+    }
+
+    /* สลิป A5 แนวนอน */
     .a5-payslip-sheet {
-      font-family: 'Sarabun', sans-serif;
-      font-style: italic;
       color: #000000;
-      background-color: #ffffff;
+      font-family: 'Noto Sans Thai', sans-serif;
     }
 
-    @page { size: A5 landscape; margin: 5mm; }
     @media print {
-      body { background: #fff !important; color: #000 !important; }
-      .valk-stage, .no-print { display: none !important; }
-      body * { visibility: hidden !important; }
-      #payslipCaptureContent, #payslipCaptureContent * { visibility: visible !important; }
-      #payslipCaptureContent {
+      @page {
+        size: A5 landscape;
+        margin: 6mm;
+      }
+      body * {
+        visibility: hidden !important;
+      }
+      #payslipModal,
+      #payslipModal * {
+        visibility: visible !important;
+      }
+      #payslipModal {
         position: fixed !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 200mm !important;
-        height: auto !important;
-        padding: 4mm 6mm !important;
+        inset: 0 !important;
+        background: #ffffff !important;
+        padding: 0 !important;
         margin: 0 !important;
-        background: #fff !important;
-        color: #000 !important;
+      }
+      #printablePayslipArea {
         box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        max-width: 100% !important;
+      }
+      .no-print {
+        display: none !important;
       }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
 
-  <!-- ROYAL GOLD PLASMA + HEX-GRID + LASER + CONSTELLATION STAGE -->
-  <div class="valk-stage no-print" aria-hidden="true">
-    <div class="plasma-orb"></div>
-    <div class="hex-grid-overlay"></div>
-    <div class="crt-scanlines"></div>
-    <div class="laser-sweep-line"></div>
-    <canvas id="constellationCanvas"></canvas>
-  </div>
+<body>
+  <!-- ฉากหลังเครือข่ายจุดทอง-แชมเปญ -->
+  <canvas id="constellationCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-75"></canvas>
 
-  <!-- Top Mecha HUD Header Bar -->
-  <header class="valk-header sticky top-0 z-30 bg-[#060608]/92 backdrop-blur-xl border-b border-amber-500/50 px-3.5 no-print shadow-[0_6px_28px_rgba(0,0,0,0.8)]">
+  <!-- ส่วนหัวระบบ -->
+  <header class="sticky top-0 z-30 px-3.5 pb-2.5 backdrop-blur-xl bg-[#050403]/85 border-b border-amber-400/25">
     <div class="max-w-md mx-auto space-y-2">
-      <div class="flex justify-between items-center gap-2">
+      <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
-          <div class="chamfer-sm w-9 h-9 bg-gradient-to-br from-[#1C1810] to-black flex items-center justify-center border border-amber-400/90 shadow-[0_0_18px_rgba(245,158,11,0.6)] shrink-0 relative">
-            <img alt="Provide Power Logo" class="company-logo-slot w-6 h-5 object-contain">
-            <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-300 shadow-[0_0_8px_#FDE68A]"></span>
+          <div class="chamfer-sm w-9 h-9 gold-ingot-btn flex items-center justify-center shrink-0">
+            <img alt="PK" class="company-logo-slot w-6 h-5 object-contain" />
           </div>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <h1 class="font-hud font-black text-xs tracking-wider text-amber-50 truncate drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]">PROVIDE POWER</h1>
-              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.25)]">LINKED</span>
+              <span class="font-hud font-extrabold text-xs tracking-wider text-amber-100 truncate">PK CHRONOGRAPH</span>
+              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50">SYNCING...</span>
             </div>
-            <p class="font-mono text-[8.5px] text-amber-300 font-bold tracking-widest truncate">ROYAL GOLD // 08:00-16:50 • OT 17:10-19:10</p>
+            <p class="text-[10px] text-amber-200/65 truncate">CHRONO-OVERDRIVE MK-XII GOLD</p>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5 shrink-0">
-          <button onclick="toggleAudio()" id="audioToggleBtn" aria-label="สลับเสียง" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-900/90 hover:bg-zinc-800 border border-amber-500/35 flex items-center justify-center text-amber-200">
-            <i class="fa-solid fa-volume-high text-[11px]" id="audioIcon"></i>
-          </button>
-          <button onclick="cycleThemeMode()" aria-label="สลับโหมดสี" class="header-ctrl-btn tactile-btn chamfer-sm h-7 px-2 bg-zinc-900/90 hover:bg-zinc-800 border border-amber-500/35 flex items-center gap-1 text-[9.5px] font-hud font-bold text-amber-100">
-            <i id="themeIcon" class="fa-solid fa-crown text-[10px] text-amber-400"></i>
+          <button onclick="cycleThemeMode()" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center gap-1 text-[9px] font-mono font-bold">
+            <i id="themeIcon" class="fa-solid fa-crown text-[10px] text-amber-300"></i>
             <span id="themeLabel">AUTO</span>
           </button>
-          <button onclick="pullFromGoogleSheets(false)" id="btnTopSync" title="ซิงค์ข้อมูลกับ Google Sheets" aria-label="ซิงค์ข้อมูล" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-900/90 hover:bg-amber-500 border border-amber-400/60 flex items-center justify-center text-amber-300 hover:text-black shadow-[0_0_10px_rgba(245,158,11,0.25)]">
-            <i class="fa-solid fa-arrows-rotate text-[11px]" id="topSyncIcon"></i>
+          <button id="audioToggleBtn" onclick="toggleAudio()" aria-label="เสียง" class="tactile-btn chamfer-sm w-8 h-8 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center justify-center">
+            <i id="audioIcon" class="fa-solid fa-volume-high text-[11px]"></i>
           </button>
-          <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="header-ctrl-btn tactile-btn chamfer-sm w-7 h-7 bg-zinc-950 hover:bg-amber-500 border border-amber-500/80 flex items-center justify-center text-amber-400 hover:text-black shadow-[0_0_10px_rgba(245,158,11,0.3)]">
-            <i class="fa-solid fa-microchip text-[11px]"></i>
+          <button onclick="pullFromGoogleSheets(false)" aria-label="ซิงค์ข้อมูล" class="tactile-btn chamfer-sm w-8 h-8 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center justify-center">
+            <i id="topSyncIcon" class="fa-solid fa-rotate text-[11px]"></i>
+          </button>
+          <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="tactile-btn chamfer-sm w-8 h-8 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center justify-center">
+            <i class="fa-solid fa-gear text-[11px]"></i>
           </button>
         </div>
       </div>
 
-      <!-- Pilot Identification Bar -->
-      <div class="pilot-bar chamfer-sm flex items-center gap-2 bg-[#0D0C10]/95 border border-amber-500/35 px-2.5 py-1.5 shadow-inner">
-        <span class="text-[9px] font-hud font-bold text-amber-400 tracking-wider shrink-0 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-          PILOT //
-        </span>
-        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="hw-select flex-1 bg-transparent font-bold text-xs text-amber-50 outline-none truncate cursor-pointer pr-5">
+      <div>
+        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="sovereign-field sovereign-select w-full text-xs font-bold outline-none">
         </select>
-        <span id="dutyBadge" class="chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-900 border border-amber-500/40 font-hud font-bold text-amber-200 shrink-0 tracking-wider">STANDBY</span>
       </div>
     </div>
   </header>
 
-  <!-- Main Cockpit Viewport -->
-  <main class="valk-main relative z-10 flex-1 max-w-md w-full mx-auto px-3.5 py-3.5 space-y-3.5 no-print">
+  <!-- เนื้อหาหลัก -->
+  <main class="relative z-10 max-w-md mx-auto px-3.5 pt-3 space-y-3.5">
 
-    <!-- TAB 1: HYBRID 3-AXIS GYRO CHRONO-REACTOR + INTERACTIVE OT SIMULATOR -->
+    <!-- TAB 1: บันทึกสด -->
     <section id="tab-1" class="tab-content space-y-3.5">
-      <div class="tilt-stage">
-        <div id="chronoTiltCard" class="armor-frame chamfer-box tilt-card shadow-[0_18px_45px_rgba(0,0,0,0.75)]">
-          <div class="armor-inner reactor-chamber chamfer-box p-4 font-mono space-y-3 relative overflow-hidden">
+      <div class="chrono-3d-wrap">
+        <div id="chronoTiltCard" class="chrono-3d-card sovereign-frame chamfer-box">
+          <div class="sovereign-inner chamfer-box p-4 space-y-3.5">
             <div id="sapphireGlare" class="sapphire-glare"></div>
 
-            <!-- Tactical HUD Reticle Brackets -->
-            <span class="hud-bracket-tl"></span>
-            <span class="hud-bracket-tr"></span>
-            <span class="hud-bracket-bl"></span>
-            <span class="hud-bracket-br"></span>
-
-            <div class="flex justify-between items-center text-[10px] border-b border-amber-500/30 pb-2 relative z-10 px-1">
-              <span id="currentDateDisplay" class="font-bold text-amber-100 flex items-center gap-1.5">
-                <i class="fa-solid fa-crown text-amber-400 text-[9px]"></i>
-                <span>--/--/----</span>
-              </span>
-              <span id="lcdModeTag" class="chamfer-sm bg-amber-500/15 text-amber-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-400/50 tracking-wider shadow-[0_0_10px_rgba(245,158,11,0.25)]">CORE READY</span>
+            <div class="flex items-center justify-between text-[10px] font-mono relative z-10">
+              <div id="currentDateDisplay" class="flex items-center gap-1.5 text-amber-200/90 font-semibold">
+                <i class="fa-regular fa-calendar-check text-amber-300"></i>
+                <span></span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span id="reactorLiveBadge" class="px-2 py-0.5 rounded bg-black/90 border border-amber-500/40 text-[9px] font-mono font-bold text-zinc-400">0% SHIFT</span>
+                <span id="lcdModeTag" class="chamfer-sm bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/50 tracking-wider">CALIBRATED</span>
+              </div>
             </div>
 
-            <div class="relative flex flex-col items-center justify-center py-0.5 z-10">
-              <div class="relative w-[244px] h-[244px] flex items-center justify-center">
-                <svg class="absolute inset-0 w-full h-full drop-shadow-[0_0_14px_rgba(245,158,11,0.25)]" viewBox="0 0 240 240">
+            <!-- หน้าปัดนาฬิกาโครโนกราฟทอง-ดำ -->
+            <div class="relative flex items-center justify-center py-1 z-10">
+              <div class="relative w-56 h-56 flex items-center justify-center">
+                <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_24px_rgba(245,158,11,0.28)]">
                   <defs>
-                    <linearGradient id="reactorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#FDE68A"/>
-                      <stop offset="45%" stop-color="#F59E0B"/>
-                      <stop offset="78%" stop-color="#D97706"/>
-                      <stop offset="100%" stop-color="#FFFBEB"/>
+                    <linearGradient id="goldRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FFFBEB" />
+                      <stop offset="30%" stop-color="#FDE68A" />
+                      <stop offset="68%" stop-color="#D97706" />
+                      <stop offset="100%" stop-color="#FEF3C7" />
                     </linearGradient>
-                    <radialGradient id="coreGlowGrad" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.16"/>
-                      <stop offset="65%" stop-color="#B45309" stop-opacity="0.04"/>
-                      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
-                    </radialGradient>
                   </defs>
 
-                  <!-- Breathing Reactor Core Aura -->
-                  <circle id="reactorCoreAura" class="reactor-core-aura" cx="120" cy="120" r="88" fill="url(#coreGlowGrad)"/>
+                  <circle cx="120" cy="120" r="115" fill="none" stroke="url(#goldRimGrad)" stroke-width="2.2" />
+                  <circle cx="120" cy="120" r="108" fill="none" stroke="rgba(253,230,138,0.22)" stroke-width="1" stroke-dasharray="4 4" />
 
-                  <!-- Outer Armor Ring -->
-                  <g class="ring-spin-cw">
-                    <circle cx="120" cy="120" r="116" fill="none" stroke="rgba(245,158,11,0.65)" stroke-width="1.5" stroke-dasharray="18 7 3 7"/>
-                    <circle cx="120" cy="4" r="2.2" fill="#FDE68A"/>
-                    <circle cx="120" cy="236" r="2.2" fill="#F59E0B"/>
+                  <!-- วงแหวนหมุนชั้นนอก -->
+                  <g class="ring-cw">
+                    <circle cx="120" cy="120" r="102" fill="none" stroke="rgba(245,158,11,0.35)" stroke-width="1.2" stroke-dasharray="14 8" />
+                    <circle cx="120" cy="18" r="3" fill="#FDE68A" />
+                    <circle cx="120" cy="222" r="3" fill="#F59E0B" />
                   </g>
 
-                  <!-- 60 Precision Chronograph Ticks -->
+                  <!-- วงแหวนหมุนทวนเข็มชั้นใน -->
+                  <g class="ring-ccw">
+                    <circle cx="120" cy="120" r="88" fill="none" stroke="rgba(253,230,138,0.25)" stroke-width="1" stroke-dasharray="6 9" />
+                  </g>
+
+                  <!-- ขีดบอกวินาที/นาที 60 ตำแหน่ง -->
                   <g id="chronoTicksGroup"></g>
 
-                  <!-- Inner Counter-Rotating Gyro Ring -->
-                  <g class="ring-spin-ccw">
-                    <circle cx="120" cy="120" r="78" fill="none" stroke="rgba(253,230,138,0.45)" stroke-width="1.3" stroke-dasharray="5 5"/>
-                  </g>
+                  <!-- วงความคืบหน้ากะงาน -->
+                  <circle cx="120" cy="120" r="93" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
+                  <circle
+                    id="reactorProgressArc"
+                    cx="120"
+                    cy="120"
+                    r="93"
+                    fill="none"
+                    stroke="url(#goldRimGrad)"
+                    stroke-width="3.2"
+                    stroke-linecap="round"
+                    stroke-dasharray="584.34"
+                    stroke-dashoffset="584.34"
+                    transform="rotate(-90 120 120)"
+                  />
 
-                  <!-- Shift Progress Arc Track & Active Fill -->
-                  <circle cx="120" cy="120" r="92" fill="none" stroke="rgba(245,158,11,0.16)" stroke-width="7"/>
-                  <circle id="reactorProgressArc" cx="120" cy="120" r="92" fill="none" stroke="url(#reactorGrad)" stroke-width="7"
-                    stroke-linecap="round" stroke-dasharray="578.05" stroke-dashoffset="578.05"
-                    transform="rotate(-90 120 120)" style="transition: stroke-dashoffset 0.35s ease;"/>
-
-                  <!-- Analog Hour Hand -->
+                  <!-- เข็มชั่วโมง / นาที / วินาที -->
                   <g id="chronoHourHand" transform="rotate(0 120 120)">
-                    <line x1="120" y1="128" x2="120" y2="66" stroke="rgba(255,251,235,0.75)" stroke-width="3.2" stroke-linecap="round"/>
+                    <polygon points="117.5,126 122.5,126 121.2,72 118.8,72" fill="#FDE68A" />
                   </g>
-
-                  <!-- Analog Minute Hand -->
                   <g id="chronoMinuteHand" transform="rotate(0 120 120)">
-                    <line x1="120" y1="132" x2="120" y2="38" stroke="rgba(253,230,138,0.88)" stroke-width="2.2" stroke-linecap="round"/>
+                    <polygon points="118.5,128 121.5,128 120.7,52 119.3,52" fill="#FFFBEB" />
                   </g>
-
-                  <!-- Sweep Second Hand -->
                   <g id="chronoSecondHand" transform="rotate(0 120 120)">
-                    <line x1="120" y1="140" x2="120" y2="18" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round"/>
-                    <circle cx="120" cy="120" r="4" fill="#FDE68A" stroke="#050507" stroke-width="1.3"/>
+                    <line x1="120" y1="138" x2="120" y2="34" stroke="#F59E0B" stroke-width="1.6" stroke-linecap="round" />
+                    <circle cx="120" cy="40" r="3.5" fill="#FDE68A" />
                   </g>
+                  <circle cx="120" cy="120" r="5.5" fill="#D97706" stroke="#FFFBEB" stroke-width="1.5" />
                 </svg>
 
-                <!-- Center Holographic Digital Readout -->
-                <div class="chrono-center-box relative z-10 text-center flex flex-col items-center bg-[#08070B]/92 px-3.5 py-2 rounded-2xl border border-amber-400/45 backdrop-blur-md shadow-[0_0_24px_rgba(0,0,0,0.9)]">
-                  <span class="font-hud text-[7.5px] tracking-[0.26em] text-amber-300 uppercase mb-0.5">IMPERIAL CORE</span>
-                  <div class="font-hud text-[24px] font-black tracking-wider leading-none text-amber-50 drop-shadow-[0_0_14px_rgba(245,158,11,0.65)]" id="liveClock">
-                    00:00:00<span class="text-xs text-amber-400 font-bold">.0</span>
-                  </div>
-                  <div class="flex items-center gap-1.5 mt-1.5">
-                    <span id="reactorLiveBadge" class="px-2 py-0.5 rounded bg-black/85 border border-amber-500/30 text-[9px] font-mono font-bold text-amber-100">
-                      0% SHIFT
-                    </span>
-                    <span id="otRateGaugePill" class="px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-400/60 text-[9px] font-mono font-extrabold text-amber-300">
-                      1.5X
-                    </span>
+                <!-- หน้าจอแสดงเวลาดิจิทัลกลางหน้าปัด -->
+                <div class="guilloche-dial chamfer-box absolute w-36 h-24 border border-amber-300/45 flex flex-col items-center justify-center px-2 shadow-[0_0_24px_rgba(0,0,0,0.9)]">
+                  <span class="text-[8px] font-hud tracking-[0.22em] text-amber-300/80 uppercase">CHRONO TIME</span>
+                  <div id="liveClock" class="font-mono text-xl font-extrabold text-amber-50 tracking-tight mt-0.5">00:00:00<span class="text-xs text-amber-300 font-bold">.0</span></div>
+                  <div class="flex items-center gap-1.5 mt-1">
+                    <span id="dutyBadge" class="chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-900 border border-amber-400/50 font-hud font-bold text-amber-200 tracking-wider">STANDBY</span>
                   </div>
                 </div>
-              </div>
-
-              <!-- Live Elapsed & Accrued Bar (Shown while On Duty) -->
-              <div id="liveShiftElapsedBar" class="hidden w-full mt-1 pt-2.5 border-t border-amber-500/35 flex justify-between items-center text-[10.5px] px-1">
-                <span class="text-amber-300 font-bold flex items-center gap-1.5">
-                  <i class="fa-solid fa-fire-flame-curved animate-pulse"></i>
-                  <span>ELAPSED: <span id="liveElapsedText" class="text-white">00h 00m</span></span>
-                </span>
-                <span class="text-amber-200 font-bold">ACCRUED: <span id="liveAccruedPay" class="text-emerald-400 font-extrabold drop-shadow-[0_0_8px_rgba(16,185,129,0.45)]">0.00 ฿</span></span>
               </div>
             </div>
 
-            <!-- Tactical Cockpit Switches -->
-            <div class="space-y-2 pt-2 border-t border-amber-500/25 text-[10px] relative z-10">
-              <div class="grid grid-cols-2 gap-2.5">
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="text-amber-200/70 text-[8.5px] font-hud tracking-wider">SHIFT MODE</span>
-                    <button type="button" id="btnAutoShiftMode" onclick="enableAutoShiftMode()" title="เปิดโหมดสลับกะอัตโนมัติตามเวลา" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-300 border border-amber-400/50">AUTO</button>
-                  </div>
-                  <div class="chamfer-sm grid grid-cols-2 bg-black/90 p-0.5 border border-amber-500/30">
-                    <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px] transition">DAY</button>
-                    <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 font-hud font-bold text-[10px] transition">NIGHT</button>
-                  </div>
-                </div>
-                <div>
-                  <span class="block text-amber-200/70 text-[8.5px] font-hud mb-1 tracking-wider">RATE MULTIPLIER</span>
-                  <div class="chamfer-sm grid grid-cols-2 bg-black/90 p-0.5 border border-amber-500/30">
-                    <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 font-hud font-bold text-[10px] transition">REG 1.5</button>
-                    <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 font-hud font-bold text-[10px] transition">HOL 2.0</button>
-                  </div>
-                </div>
+            <!-- แถบเวลาทำงานสะสมและรายได้สด -->
+            <div id="liveShiftElapsedBar" class="hidden chamfer-sm bg-black/85 border border-amber-400/45 px-3 py-2 flex items-center justify-between text-xs font-mono relative z-10">
+              <div class="flex items-center gap-1.5 text-amber-200">
+                <i class="fa-solid fa-hourglass-half text-amber-300 text-[11px]"></i>
+                <span>ทำงานแล้ว: <strong id="liveElapsedText" class="text-white">00h 00m</strong></span>
               </div>
+              <div class="text-amber-300 font-extrabold">
+                สะสมวันนี้: <span id="liveAccruedPay">0.00 ฿</span>
+              </div>
+            </div>
 
-              <div>
-                <span class="block text-amber-200/70 text-[8.5px] font-hud mb-1 tracking-wider">DUTY ALLOCATION</span>
-                <div class="chamfer-sm grid grid-cols-2 bg-black/90 p-0.5 border border-amber-500/30">
-                  <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 font-hud font-bold text-[10px] transition">FULL SHIFT (8H)</button>
-                  <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 font-hud font-bold text-[10px] transition">HALF LEAVE</button>
+            <!-- เวลาเข้า-ออกวันนี้ -->
+            <div class="grid grid-cols-2 gap-2.5 text-center font-mono relative z-10">
+              <div class="chamfer-sm bg-black/75 border border-amber-500/30 p-2.5">
+                <div class="text-[9.5px] text-zinc-400 flex items-center justify-center gap-1">
+                  <i class="fa-solid fa-right-to-bracket text-amber-300 text-[10px]"></i>
+                  <span>เข้างาน (<span id="checkInStatusText">เข้างาน</span>)</span>
+                </div>
+                <div id="displayCheckInTime" class="text-base font-extrabold text-amber-100 mt-0.5">--:--</div>
+              </div>
+              <div class="chamfer-sm bg-black/75 border border-amber-500/30 p-2.5">
+                <div class="text-[9.5px] text-zinc-400 flex items-center justify-center gap-1">
+                  <i class="fa-solid fa-right-from-bracket text-amber-300 text-[10px]"></i>
+                  <span>ออกงาน (<span id="checkOutStatusText">ออกงาน</span>)</span>
+                </div>
+                <div id="displayCheckOutTime" class="text-base font-extrabold text-amber-100 mt-0.5">--:--</div>
+              </div>
+            </div>
+
+            <!-- แถบสไลด์ลงเวลา -->
+            <div class="space-y-1.5 relative z-10">
+              <div class="flex justify-between items-center px-0.5">
+                <span class="font-hud text-[9px] text-amber-200/75 tracking-wider">IGNITION SLIDER</span>
+                <span id="ignitionStatusHint" class="font-hud text-[9px] text-amber-300 tracking-wider">SLIDE TO ENGAGE</span>
+              </div>
+              <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-black/95 border border-amber-300/65 flex items-center justify-center select-none shadow-inner">
+                <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-amber-700/50 to-amber-300/80"></div>
+                <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8">
+                  <span>SLIDE TO CHECK IN</span>
+                  <span class="chevron-anim text-xs">&gt;&gt;&gt;</span>
+                </div>
+                <div id="ignitionSlideThumb" class="slide-thumb chamfer-sm gold-ingot-btn">
+                  <i class="fa-solid fa-bolt text-sm"></i>
                 </div>
               </div>
             </div>
@@ -730,77 +503,82 @@
         </div>
       </div>
 
-      <!-- Interactive OT Scrubber Simulator Strip -->
-      <div class="armor-frame chamfer-sm">
-        <div class="armor-inner chamfer-sm p-3 space-y-2.5">
-          <div class="flex justify-between items-center text-[10px] font-mono">
-            <span class="text-amber-300 font-bold flex items-center gap-1.5">
-              <i class="fa-solid fa-sliders text-amber-400"></i>
-              <span>OT SIMULATOR // ออก <strong id="simOutTimeLabel" class="text-amber-200">16:50 (เลิกปกติ)</strong></span>
-            </span>
-            <button type="button" onclick="resetSimScrubber()" class="text-[9px] font-hud text-zinc-400 hover:text-amber-300 underline">RESET</button>
+      <!-- แผงตั้งค่ากะ ประเภทวัน รูปแบบการทำงาน และจำลอง OT -->
+      <div class="sovereign-frame chamfer-box">
+        <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-amber-500/25 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="font-hud font-bold text-xs tracking-wider text-amber-100">SHIFT & OT CALIBRATION</span>
+              <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/50">AUTO</button>
+            </div>
+            <span id="otRateGaugePill" class="chamfer-sm px-2 py-0.5 bg-amber-500/15 border border-amber-300/50 font-mono text-[10px] font-extrabold text-amber-200">1.5X</span>
           </div>
 
-          <input type="range" id="otSimScrubber" min="0" max="140" step="10" value="0" oninput="onSimScrubberChange(this.value)" class="chrono-scrubber">
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-black/80 border border-amber-500/25 rounded-lg p-1 grid grid-cols-2 gap-1">
+              <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px]">DAY</button>
+              <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 font-hud font-bold text-[10px]">NIGHT</button>
+            </div>
 
-          <div class="grid grid-cols-3 gap-2 text-center font-mono">
-            <div class="chamfer-sm bg-black/75 p-2 border border-amber-500/25">
-              <span id="estBaseLabel" class="block text-[8.5px] text-zinc-400">BASE PAY</span>
-              <span id="estBasePay" class="text-xs font-extrabold text-amber-50">400 ฿</span>
+            <div class="bg-black/80 border border-amber-500/25 rounded-lg p-1 grid grid-cols-2 gap-1">
+              <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 font-hud font-bold text-[10px]">REG</button>
+              <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 font-hud font-bold text-[10px]">HOL</button>
             </div>
-            <div class="chamfer-sm bg-black/75 p-2 border border-amber-500/35">
-              <span id="estAllowance" class="block text-[8.5px] text-zinc-400">ALLOWANCE</span>
-              <span id="estAllowanceVal" class="text-xs font-extrabold text-amber-300">10 ฿</span>
-            </div>
-            <div class="chamfer-sm bg-black/75 p-2 border border-amber-400/65 shadow-[inset_0_0_12px_rgba(245,158,11,0.18)]">
-              <span class="block text-[8.5px] text-zinc-400">EST. NET</span>
-              <span id="estTotal" class="text-xs font-extrabold text-amber-400">410 ฿</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Slide-to-Engage Tactical Ignition Control + Quick Tap Fallback -->
-      <div class="armor-frame chamfer-box">
-        <div class="armor-inner chamfer-box p-3 space-y-2.5">
-          <div class="flex justify-between items-center text-[10px] font-mono">
-            <span class="text-zinc-400">IN: <strong id="displayCheckInTime" class="text-emerald-400 text-xs">--:--</strong></span>
-            <span id="ignitionStatusHint" class="font-hud text-[9px] text-amber-300 tracking-wider">SLIDE TO ENGAGE</span>
-            <span class="text-zinc-400">OUT: <strong id="displayCheckOutTime" class="text-amber-400 text-xs">--:--</strong></span>
-          </div>
-
-          <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-black/90 border border-amber-400/60 flex items-center justify-center select-none shadow-inner">
-            <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-amber-600/45 to-amber-300/75"></div>
-            <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-300 pointer-events-none pl-8 shimmer-hud-text">
-              <span>SLIDE TO CHECK IN</span>
-              <span class="chevron-anim text-xs">&gt;&gt;&gt;</span>
-            </div>
-            <div id="ignitionSlideThumb" class="slide-thumb chamfer-sm bg-gradient-to-br from-amber-200 via-amber-400 to-amber-700 text-black shadow-[0_0_22px_rgba(245,158,11,0.85)]">
-              <i class="fa-solid fa-angles-right text-base font-black"></i>
+            <div class="bg-black/80 border border-amber-500/25 rounded-lg p-1 grid grid-cols-2 gap-1">
+              <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 font-hud font-bold text-[10px]">FULL</button>
+              <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 font-hud font-bold text-[10px]">HALF</button>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-2 pt-0.5">
-            <button id="btnCheckIn" onclick="handleLiveCheckIn()" class="tactile-btn chamfer-sm py-2 px-3 bg-emerald-950/85 hover:bg-emerald-700 border border-emerald-500/50 text-emerald-300 hover:text-white flex items-center justify-between text-[10.5px] font-hud font-bold">
-              <span><i class="fa-solid fa-right-to-bracket mr-1"></i>IN NOW</span>
-              <span id="checkInStatusText" class="font-sans text-[9px] opacity-85 truncate max-w-[68px]">เข้างาน</span>
-            </button>
-            <button id="btnCheckOut" onclick="handleLiveCheckOut()" class="tactile-btn chamfer-sm py-2 px-3 bg-amber-950/85 hover:bg-amber-600 border border-amber-500/60 text-amber-200 hover:text-black flex items-center justify-between text-[10.5px] font-hud font-bold">
-              <span><i class="fa-solid fa-right-from-bracket mr-1"></i>OUT NOW</span>
-              <span id="checkOutStatusText" class="font-sans text-[9px] opacity-85 truncate max-w-[68px]">ออกงาน</span>
-            </button>
+          <!-- ตัวเลื่อนจำลองเวลาเลิกงาน / OT -->
+          <div class="bg-black/80 border border-amber-500/30 rounded-xl p-2.5 space-y-2">
+            <div class="flex justify-between items-center text-[10.5px]">
+              <span class="text-zinc-300 font-semibold flex items-center gap-1.5">
+                <i class="fa-solid fa-sliders text-amber-300"></i> จำลองเวลาออก / OT
+              </span>
+              <div class="flex items-center gap-2 font-mono">
+                <span id="simOutTimeLabel" class="text-amber-200 font-bold">16:50 (เลิกปกติ)</span>
+                <button type="button" onclick="resetSimScrubber()" class="text-[9px] text-amber-300/80 hover:text-amber-100 underline">รีเซ็ต</button>
+              </div>
+            </div>
+            <input
+              id="otSimScrubber"
+              type="range"
+              min="0"
+              max="140"
+              step="10"
+              value="0"
+              oninput="onSimScrubberChange(this.value)"
+              class="w-full accent-amber-400 cursor-pointer h-1.5 bg-zinc-800 rounded-lg"
+            />
+          </div>
+
+          <!-- สรุปประมาณการรายได้ต่อกะ -->
+          <div class="grid grid-cols-3 gap-2 font-mono text-center pt-0.5">
+            <div class="chamfer-sm bg-black/85 border border-amber-500/30 p-2">
+              <div id="estBaseLabel" class="text-[8.5px] text-zinc-400 uppercase">BASE PAY</div>
+              <div id="estBasePay" class="text-xs font-extrabold text-amber-100 mt-0.5">400 ฿</div>
+            </div>
+            <div class="chamfer-sm bg-black/85 border border-amber-500/30 p-2">
+              <div class="text-[8.5px] text-zinc-400 uppercase">ALLOWANCE</div>
+              <div id="estAllowanceVal" class="text-xs font-extrabold text-amber-200 mt-0.5">10 ฿</div>
+            </div>
+            <div class="chamfer-sm bg-gradient-to-br from-amber-950/80 to-black border border-amber-300/60 p-2">
+              <div class="text-[8.5px] text-amber-200/85 uppercase">EST. TOTAL</div>
+              <div id="estTotal" class="text-xs font-extrabold text-amber-300 mt-0.5">410 ฿</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- TAB 2: Manual Edit -->
+<!-- TAB 2: Manual Override -->
     <section id="tab-2" class="tab-content hidden space-y-3.5">
-      <div class="armor-frame chamfer-box">
-        <div class="armor-inner chamfer-box p-3.5 space-y-3">
-          <div class="border-b border-amber-500/25 pb-2.5 flex items-center justify-between">
+      <div class="sovereign-frame chamfer-box">
+        <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
+          <div class="border-b border-amber-500/25 pb-2.5 flex items-center justify-between gap-2">
             <div class="flex items-center space-x-2.5">
-              <div class="chamfer-sm w-7 h-7 bg-gradient-to-br from-amber-300 to-amber-600 text-black flex items-center justify-center text-xs shrink-0 shadow-[0_0_12px_rgba(245,158,11,0.55)]">
+              <div class="chamfer-sm w-7 h-7 gold-ingot-btn flex items-center justify-center text-xs shrink-0">
                 <i class="fa-solid fa-pen-to-square"></i>
               </div>
               <div>
@@ -808,18 +586,18 @@
                 <p class="text-[10px] text-zinc-400">บันทึกเวลาย้อนหลัง (08:00-16:50 | OT 17:10-19:10)</p>
               </div>
             </div>
-            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 border border-amber-400/50">EXISTING</span>
+            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-200 px-2 py-0.5 border border-amber-300/50">EXISTING</span>
           </div>
 
           <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-3 text-xs">
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">วันที่ต้องการบันทึก</label>
-                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="valk-field w-full font-mono text-xs outline-none">
+                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="sovereign-field w-full font-mono text-xs outline-none" />
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">สถานะการทำงาน</label>
-                <select id="manualWorkType" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
+                <select id="manualWorkType" onchange="updateManualPreview()" class="sovereign-field sovereign-select w-full text-xs outline-none">
                   <option value="FULL">เต็มวัน (8 ชม.)</option>
                   <option value="HALF">ลาครึ่งวัน (ครึ่งกะ)</option>
                 </select>
@@ -829,14 +607,14 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">กะการทำงาน</label>
-                <select id="manualShift" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
+                <select id="manualShift" onchange="updateManualPreview()" class="sovereign-field sovereign-select w-full text-xs outline-none">
                   <option value="DAY">กลางวัน (08:00-16:50)</option>
                   <option value="NIGHT">กลางคืน (20:00-04:50)</option>
                 </select>
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทวัน</label>
-                <select id="manualDayType" onchange="updateManualPreview()" class="valk-field hw-select w-full text-xs outline-none">
+                <select id="manualDayType" onchange="updateManualPreview()" class="sovereign-field sovereign-select w-full text-xs outline-none">
                   <option value="REGULAR">วันปกติ (OT 1.5)</option>
                   <option value="HOLIDAY">วันหยุด (OT 2.0)</option>
                 </select>
@@ -846,20 +624,20 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาเข้า</label>
-                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="valk-field w-full font-mono text-xs outline-none">
+                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="sovereign-field w-full font-mono text-xs outline-none" />
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาออก</label>
-                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="valk-field w-full font-mono text-xs outline-none">
+                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="sovereign-field w-full font-mono text-xs outline-none" />
               </div>
             </div>
 
-            <div id="manualPreviewBox" class="hidden chamfer-sm bg-black/85 text-amber-300 font-mono px-3 py-2 border border-amber-400/50 flex justify-between items-center text-[11px]">
+            <div id="manualPreviewBox" class="hidden chamfer-sm bg-black/90 text-amber-200 font-mono px-3 py-2 border border-amber-300/55 flex justify-between items-center text-[11px]">
               <span id="manPrevDetail">OT: 0h (0h)</span>
-              <span class="font-extrabold text-xs text-white">สุทธิ <span id="manPrevTotal" class="text-amber-400">0</span> ฿</span>
+              <span class="font-extrabold text-xs text-white">สุทธิ <span id="manPrevTotal" class="text-amber-300">0</span> ฿</span>
             </div>
 
-            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-gradient-to-r from-amber-300 via-amber-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs shadow-[0_4px_18px_rgba(245,158,11,0.5)] mt-1">
+            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 gold-ingot-btn hover:brightness-110 text-xs mt-1">
               คำนวณ & บันทึกย้อนหลัง
             </button>
           </form>
@@ -869,10 +647,10 @@
 
     <!-- TAB 3: Leave Form -->
     <section id="tab-3" class="tab-content hidden space-y-3.5">
-      <div class="armor-frame chamfer-box">
-        <div class="armor-inner chamfer-box p-3.5 space-y-3">
+      <div class="sovereign-frame chamfer-box">
+        <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
           <div class="border-b border-amber-500/25 pb-2.5 flex items-center space-x-2.5">
-            <div class="chamfer-sm w-7 h-7 bg-gradient-to-br from-amber-300 to-amber-600 text-black flex items-center justify-center text-xs shrink-0 shadow-[0_0_12px_rgba(245,158,11,0.55)]">
+            <div class="chamfer-sm w-7 h-7 gold-ingot-btn flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-calendar-minus"></i>
             </div>
             <div>
@@ -884,7 +662,7 @@
           <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-3 text-xs">
             <div>
               <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทการลา</label>
-              <select id="leaveType" required class="valk-field hw-select w-full text-xs outline-none">
+              <select id="leaveType" required class="sovereign-field sovereign-select w-full text-xs outline-none">
                 <option value="ลากิจ">ลากิจ (Personal Leave)</option>
                 <option value="ลาป่วย">ลาป่วย (Sick Leave)</option>
                 <option value="ลาพักร้อน">ลาพักร้อน (Annual Leave)</option>
@@ -894,94 +672,95 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ตั้งแต่วันที่</label>
-                <input type="date" id="leaveStartDate" required class="valk-field w-full font-mono text-xs outline-none">
+                <input type="date" id="leaveStartDate" required class="sovereign-field w-full font-mono text-xs outline-none" />
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ถึงวันที่</label>
-                <input type="date" id="leaveEndDate" required class="valk-field w-full font-mono text-xs outline-none">
+                <input type="date" id="leaveEndDate" required class="sovereign-field w-full font-mono text-xs outline-none" />
               </div>
             </div>
             <div>
               <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เหตุผลการลา</label>
-              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="valk-field w-full text-xs outline-none">
+              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="sovereign-field w-full text-xs outline-none" />
             </div>
-            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 bg-gradient-to-r from-amber-300 via-amber-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs shadow-[0_4px_16px_rgba(245,158,11,0.45)] mt-1">
+            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 gold-ingot-btn hover:brightness-110 text-xs mt-1">
               ส่งใบลางาน
             </button>
           </form>
         </div>
       </div>
+
       <div class="space-y-2">
-        <h3 class="text-[10.5px] font-mono font-bold text-amber-200/70 px-1">ประวัติการลาล่าสุด</h3>
+        <h3 class="text-[10.5px] font-mono font-bold text-amber-200/75 px-1">ประวัติการลาล่าสุด</h3>
         <div id="leaveHistoryList" class="space-y-2"></div>
       </div>
     </section>
 
     <!-- TAB 4: Telemetry Dashboard & Payslip -->
     <section id="tab-4" class="tab-content hidden space-y-3">
-      <div class="armor-frame chamfer-sm">
-        <div class="armor-inner chamfer-sm p-3 space-y-2.5">
+      <div class="sovereign-frame chamfer-sm">
+        <div class="sovereign-inner chamfer-sm p-3 space-y-2.5">
           <div class="flex flex-wrap justify-between items-center gap-1.5">
             <label class="text-[11px] font-bold text-amber-100 flex items-center gap-1.5">
-              <i class="fa-solid fa-filter text-amber-400"></i> รอบตัดยอด
+              <i class="fa-solid fa-filter text-amber-300"></i> รอบตัดยอด
             </label>
             <div class="flex gap-1.5">
               <button onclick="pullFromGoogleSheets(false)" class="tactile-btn chamfer-sm bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 text-[10px] font-bold flex items-center gap-1">
                 <i class="fa-solid fa-cloud-arrow-down"></i> ดึงข้อมูล
               </button>
-              <button onclick="exportCSV()" class="tactile-btn chamfer-sm bg-zinc-900 hover:bg-zinc-800 text-amber-100 border border-amber-500/40 px-2.5 py-1 text-[10px] font-mono font-bold flex items-center gap-1">
-                <i class="fa-solid fa-file-csv text-amber-400"></i> CSV
+              <button onclick="exportCSV()" class="tactile-btn chamfer-sm bg-zinc-900 hover:bg-zinc-800 text-amber-100 border border-amber-500/45 px-2.5 py-1 text-[10px] font-mono font-bold flex items-center gap-1">
+                <i class="fa-solid fa-file-csv text-amber-300"></i> CSV
               </button>
-              <button onclick="openPayslipModal()" class="tactile-btn chamfer-sm bg-gradient-to-r from-amber-300 via-amber-500 to-amber-600 hover:brightness-110 text-black px-2.5 py-1 text-[10px] font-extrabold flex items-center gap-1 shadow-[0_0_14px_rgba(245,158,11,0.55)]">
+              <button onclick="openPayslipModal()" class="tactile-btn chamfer-sm gold-ingot-btn hover:brightness-110 px-2.5 py-1 text-[10px] flex items-center gap-1">
                 <i class="fa-solid fa-file-invoice-dollar"></i> ออกสลิป
               </button>
             </div>
           </div>
-          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="valk-field hw-select w-full text-xs font-bold outline-none">
+          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="sovereign-field sovereign-select w-full text-xs font-bold outline-none">
           </select>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2.5 font-mono">
-        <div class="col-span-2 armor-frame chamfer-box">
-          <div class="armor-inner chamfer-box p-3.5 relative overflow-hidden space-y-2">
-            <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-24 h-20 opacity-15 pointer-events-none">
+        <div class="col-span-2 sovereign-frame chamfer-box">
+          <div class="sovereign-inner chamfer-box p-3.5 relative overflow-hidden space-y-2">
+            <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-24 h-20 opacity-15 pointer-events-none" />
             <div class="flex justify-between items-center">
               <span class="text-[10.5px] font-sans text-zinc-400">ยอดรวมค่าแรง + OT ในรอบนี้</span>
-              <span class="text-[10px] font-sans bg-amber-500/20 border border-amber-400/50 px-2.5 py-0.5 rounded-full text-amber-300 font-bold" id="summaryTotalRecords">0 รายการ</span>
+              <span class="text-[10px] font-sans bg-amber-500/20 border border-amber-300/50 px-2.5 py-0.5 rounded-full text-amber-200 font-bold" id="summaryTotalRecords">0 รายการ</span>
             </div>
-            <div class="text-2xl font-extrabold text-amber-300 tracking-tight relative z-10 drop-shadow-[0_0_12px_rgba(245,158,11,0.35)]" id="summaryTotalSalary">0.00 ฿</div>
+            <div class="text-2xl font-extrabold text-amber-200 tracking-tight relative z-10" id="summaryTotalSalary">0.00 ฿</div>
             <div class="space-y-1 pt-1">
               <div class="flex justify-between text-[9px] text-zinc-400">
                 <span>CYCLE BENCHMARK (10,000 ฿)</span>
                 <span id="cycleTargetPct" class="text-amber-300 font-bold">0%</span>
               </div>
-              <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-amber-500/30">
-                <div id="cycleTargetBar" class="h-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-200 transition-all duration-500" style="width: 0%"></div>
+              <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-amber-500/35">
+                <div id="cycleTargetBar" class="h-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-100 transition-all duration-500" style="width: 0%"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="armor-frame chamfer-sm">
-          <div class="armor-inner chamfer-sm p-3">
+        <div class="sovereign-frame chamfer-sm">
+          <div class="sovereign-inner chamfer-sm p-3">
             <span class="text-[10px] font-sans text-zinc-400 block font-semibold">ชั่วโมง OT รวม</span>
-            <span class="text-base font-extrabold text-amber-400" id="summaryTotalOT">0.0 ชม.</span>
+            <span class="text-base font-extrabold text-amber-300" id="summaryTotalOT">0.0 ชม.</span>
           </div>
         </div>
-        <div class="armor-frame chamfer-sm">
-          <div class="armor-inner chamfer-sm p-3">
+        <div class="sovereign-frame chamfer-sm">
+          <div class="sovereign-inner chamfer-sm p-3">
             <span class="text-[10px] font-sans text-zinc-400 block font-semibold">ค่าอาหารรวม</span>
-            <span class="text-base font-extrabold text-amber-200" id="summaryTotalMeals">0.00 ฿</span>
+            <span class="text-base font-extrabold text-amber-100" id="summaryTotalMeals">0.00 ฿</span>
           </div>
         </div>
       </div>
 
-      <div id="dailyChartPanel" class="armor-frame chamfer-sm hidden">
-        <div class="armor-inner chamfer-sm p-3 space-y-2">
+      <div id="dailyChartPanel" class="sovereign-frame chamfer-sm hidden">
+        <div class="sovereign-inner chamfer-sm p-3 space-y-2">
           <div class="flex justify-between items-center text-[9.5px] font-hud text-zinc-400">
-            <span><i class="fa-solid fa-chart-simple text-amber-400 mr-1"></i>DAILY PAY TELEMETRY</span>
-            <span class="text-amber-300">TAP BAR FOR DETAIL</span>
+            <span><i class="fa-solid fa-chart-simple text-amber-300 mr-1"></i>DAILY PAY TELEMETRY</span>
+            <span class="text-amber-200">TAP BAR FOR DETAIL</span>
           </div>
           <div id="dailyBarsContainer" class="flex items-end gap-1.5 h-20 pt-3 px-1 overflow-x-auto"></div>
         </div>
@@ -989,7 +768,7 @@
 
       <div class="space-y-2">
         <div class="flex justify-between items-center px-1">
-          <h3 class="text-[11px] font-bold text-amber-100/80">ประวัติบันทึกเวลา</h3>
+          <h3 class="text-[11px] font-bold text-amber-100/85">ประวัติบันทึกเวลา</h3>
           <button onclick="clearLocalStorageData()" class="text-[10px] text-rose-400 hover:underline font-semibold">ล้างประวัติในเครื่อง</button>
         </div>
         <div id="payrollHistoryList" class="space-y-2"></div>
@@ -998,10 +777,10 @@
 
   </main>
 
-  <!-- Floating Royal Gold Bottom Navigation Dock -->
-  <nav class="valk-dock fixed left-1/2 -translate-x-1/2 w-[calc(100%-1.75rem)] max-w-sm z-40 no-print">
-    <div class="chamfer-box bg-[#0A090D]/95 backdrop-blur-2xl border border-amber-400/65 p-1 flex justify-between shadow-[0_14px_38px_rgba(0,0,0,0.92),0_0_22px_rgba(245,158,11,0.25)]">
-      <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-black bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 font-extrabold transition-all shadow-[0_0_15px_rgba(245,158,11,0.7)]">
+  <!-- เมนูนำทางด้านล่าง -->
+  <nav class="sovereign-dock fixed left-1/2 -translate-x-1/2 w-[calc(100%-1.75rem)] max-w-sm z-40 no-print">
+    <div class="chamfer-box bg-[#080705]/95 backdrop-blur-2xl border border-amber-300/70 p-1 flex justify-between shadow-[0_14px_38px_rgba(0,0,0,0.95),0_0_24px_rgba(245,158,11,0.28)]">
+      <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn transition-all">
         <i class="fa-solid fa-gauge-high text-xs"></i>
         <span class="text-[10px] mt-0.5">บันทึกสด</span>
       </button>
@@ -1021,15 +800,15 @@
   </nav>
 
   <!-- Breakdown Modal -->
-  <div id="breakdownModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
-    <div class="armor-frame chamfer-box w-full max-w-xs">
-      <div class="armor-inner chamfer-box p-4 space-y-3">
-        <div class="flex justify-between items-center border-b border-amber-500/30 pb-2">
-          <h3 class="font-hud font-bold text-xs text-amber-300">TELEMETRY BREAKDOWN</h3>
-          <button onclick="closeBreakdownModal()" class="text-zinc-400 hover:text-amber-400 p-1"><i class="fa-solid fa-xmark"></i></button>
+  <div id="breakdownModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
+    <div class="sovereign-frame chamfer-box w-full max-w-xs">
+      <div class="sovereign-inner chamfer-box p-4 space-y-3">
+        <div class="flex justify-between items-center border-b border-amber-400/30 pb-2">
+          <h3 class="font-hud font-bold text-xs text-amber-200">TELEMETRY BREAKDOWN</h3>
+          <button onclick="closeBreakdownModal()" class="text-zinc-400 hover:text-amber-300 p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="modalContent" class="space-y-1.5 text-xs text-zinc-200"></div>
-        <button onclick="closeBreakdownModal()" class="chamfer-sm w-full bg-gradient-to-r from-amber-300 to-amber-500 text-black font-extrabold py-2 text-xs">ปิดหน้าต่าง</button>
+        <button onclick="closeBreakdownModal()" class="chamfer-sm w-full gold-ingot-btn py-2 text-xs">ปิดหน้าต่าง</button>
       </div>
     </div>
   </div>
@@ -1071,47 +850,47 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <div>
             <label class="block text-slate-500">เบี้ยขยัน (บาท)</label>
-            <input type="number" step="0.01" id="adjDiligence" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjDiligence" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div>
             <label class="block text-slate-500">ค่าเสี่ยงภัย (บาท)</label>
-            <input type="number" step="0.01" id="adjHazard" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjHazard" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div>
             <label class="block text-slate-500">Bonus/ค่ารถ (บาท)</label>
-            <input type="number" step="0.01" id="adjBonus" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjBonus" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div>
             <label class="block text-slate-500">ค่าแรง 75%/อื่นๆ</label>
-            <input type="number" step="0.01" id="adjOtherIncome" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjOtherIncome" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div>
             <label class="block text-slate-500">หักสมทบประกันสังคม</label>
-            <input type="number" step="0.01" id="adjSocSec" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjSocSec" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div>
             <label class="block text-slate-500">หักค่าชุดฟอร์ม</label>
-            <input type="number" step="0.01" id="adjUniform" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjUniform" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div>
             <label class="block text-slate-500">หักค่าอื่นๆ</label>
-            <input type="number" step="0.01" id="adjOtherDed" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjOtherDed" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div>
             <label class="block text-slate-500">หัก กยศ./กรอ</label>
-            <input type="number" step="0.01" id="adjStudentLoan" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="adjStudentLoan" oninput="saveAndRefreshPayslip()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div class="col-span-2">
             <label class="block text-indigo-700 font-semibold">เงินได้สะสมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDEarnings" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="baseYTDEarnings" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div class="col-span-2">
             <label class="block text-indigo-700 font-semibold">เงินประกันสังคมต่อปี (ยอดยกมาก่อนงวดนี้)</label>
-            <input type="number" step="0.01" id="baseYTDSocial" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="number" step="0.01" id="baseYTDSocial" oninput="saveAndRefreshPayslip()" class="w-full border border-indigo-300 rounded px-2 py-1 font-mono bg-white" />
           </div>
           <div class="col-span-2 sm:col-span-4">
             <label class="block text-slate-600 font-semibold">วันหยุดบริษัทเพิ่มเติม (คั่นด้วยลูกน้ำ เช่น 2026-12-25, 2026-12-28)</label>
-            <input type="text" id="customHolidaysInput" placeholder="YYYY-MM-DD, YYYY-MM-DD" oninput="saveCustomHolidays()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white">
+            <input type="text" id="customHolidaysInput" placeholder="YYYY-MM-DD, YYYY-MM-DD" oninput="saveCustomHolidays()" class="w-full border border-slate-300 rounded px-2 py-1 font-mono bg-white" />
             <div id="payDateRuleHint" class="text-[10px] text-emerald-700 font-medium mt-1"></div>
           </div>
         </div>
@@ -1219,38 +998,38 @@
           <span><i class="fa-solid fa-hand-pointer mr-1"></i>แตะค้างที่รูปด้านล่างเพื่อ "บันทึกลงเครื่อง"</span>
           <button onclick="document.getElementById('mobileSlipImageFallback').classList.add('hidden')" class="text-slate-500 hover:text-slate-800 px-1.5">ปิด</button>
         </div>
-        <img id="mobileSlipFallbackImgTag" alt="PaySlip A5" class="w-full rounded border border-slate-300 shadow-sm">
+        <img id="mobileSlipFallbackImgTag" alt="PaySlip A5" class="w-full rounded border border-slate-300 shadow-sm" />
       </div>
     </div>
   </div>
 
   <!-- Settings Config Modal -->
-  <div id="configModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
-    <div class="armor-frame chamfer-box w-full max-w-xs">
-      <div class="armor-inner chamfer-box p-4 space-y-3">
-        <div class="flex justify-between items-center border-b border-amber-500/30 pb-2">
-          <h3 class="font-hud font-bold text-xs text-amber-300">SYSTEM CONFIG</h3>
-          <button onclick="closeConfigModal()" class="text-zinc-400 hover:text-amber-400 p-1"><i class="fa-solid fa-xmark"></i></button>
+  <div id="configModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
+    <div class="sovereign-frame chamfer-box w-full max-w-xs">
+      <div class="sovereign-inner chamfer-box p-4 space-y-3">
+        <div class="flex justify-between items-center border-b border-amber-400/30 pb-2">
+          <h3 class="font-hud font-bold text-xs text-amber-200">SYSTEM CONFIG</h3>
+          <button onclick="closeConfigModal()" class="text-zinc-400 hover:text-amber-300 p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="space-y-2 text-xs">
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">Google Apps Script URL</label>
-            <input type="text" id="gasUrlInput" class="valk-field w-full text-[10px] font-mono outline-none">
+            <input type="text" id="gasUrlInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE Channel Token</label>
-            <input type="text" id="lineTokenInput" class="valk-field w-full text-[10px] font-mono outline-none">
+            <input type="text" id="lineTokenInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE User ID</label>
-            <input type="text" id="lineUserIdInput" class="valk-field w-full text-[10px] font-mono outline-none">
+            <input type="text" id="lineUserIdInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">เรตค่าเสี่ยงภัย (บาท/วัน)</label>
-            <input type="number" step="0.01" id="hazardRateInput" class="valk-field w-full text-[10px] font-mono outline-none">
+            <input type="number" step="0.01" id="hazardRateInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
           </div>
         </div>
-        <button onclick="saveConfigSettings()" class="tactile-btn chamfer-sm w-full bg-gradient-to-r from-amber-300 to-amber-500 text-black font-extrabold py-2 text-xs">
+        <button onclick="saveConfigSettings()" class="tactile-btn chamfer-sm w-full gold-ingot-btn py-2 text-xs">
           บันทึกการตั้งค่า
         </button>
       </div>
@@ -1258,13 +1037,12 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="chamfer-sm fixed left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 backdrop-blur-md text-amber-100 text-xs font-bold px-4 py-2.5 shadow-[0_0_24px_rgba(245,158,11,0.4)] hidden border border-amber-400/85" style="top: calc(max(env(safe-area-inset-top, 48px), 48px) + 1rem);">
+  <div id="toast" class="chamfer-sm fixed left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 backdrop-blur-md text-amber-100 text-xs font-bold px-4 py-2.5 shadow-[0_0_24px_rgba(245,158,11,0.45)] hidden border border-amber-300/85" style="top: calc(max(env(safe-area-inset-top, 48px), 48px) + 1rem);">
     <span id="toastMsg">แจ้งเตือนระบบ</span>
   </div>
-
-  <script>
+<script>
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbz9m1r1olY7mEnzNTEK9Ml3helG24iAJPzyvCEob1a9qO9JI0_G4LAdCsSloSZMivh9/exec";
-    const GAS_URL_VERSION = "v2026_11_20";
+    const GAS_URL_VERSION = "v2026_11_20_sovereign_full";
     const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
     const DEFAULT_HAZARD_RATE = 20;
@@ -1322,15 +1100,37 @@
     let isCapturingSlipImage = false;
     let latestRenderedSlipSnapshot = null;
 
+    function hasGasScriptBridge() {
+      return typeof google !== "undefined" && google.script && google.script.run;
+    }
+
+    function applyCompanyLogos() {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 96">
+        <defs>
+          <linearGradient id="pkGoldLogo" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFFBEB"/>
+            <stop offset="45%" stop-color="#FDE68A"/>
+            <stop offset="100%" stop-color="#F59E0B"/>
+          </linearGradient>
+        </defs>
+        <path d="M18 14 H56 C70 14 78 22 78 35 C78 48 70 56 56 56 H35 V82 H18 Z M35 28 V42 H53 C58 42 61 39 61 35 C61 31 58 28 53 28 Z" fill="url(#pkGoldLogo)"/>
+        <path d="M84 14 H101 V42 L116 14 H135 L114 48 L136 82 H116 L101 56 V82 H84 Z" fill="url(#pkGoldLogo)"/>
+      </svg>`;
+      const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+      document.querySelectorAll('.company-logo-slot').forEach(img => {
+        img.src = dataUri;
+      });
+    }
+
     function setSyncPillStatus(state) {
       const pill = document.getElementById('cloudSyncPill');
       if (!pill) return;
       if (state === 'LINKED') {
         pill.textContent = "LINKED";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.25)]";
+        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50";
       } else if (state === 'SYNCING') {
         pill.textContent = "SYNCING...";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-amber-500/20 text-amber-300 border border-amber-400/50";
+        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50";
       } else {
         pill.textContent = "OFFLINE";
         pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-rose-500/20 text-rose-400 border border-rose-500/50";
@@ -1351,13 +1151,13 @@
         window.addEventListener('resize', resize);
         resize();
 
-        const nodeCount = Math.min(34, Math.floor(w / 38));
+        const nodeCount = Math.min(34, Math.floor(w / 36));
         for (let i = 0; i < nodeCount; i++) {
           nodes.push({
             x: Math.random() * w,
             y: Math.random() * h,
-            vx: (Math.random() - 0.5) * 0.32,
-            vy: (Math.random() - 0.5) * 0.32,
+            vx: (Math.random() - 0.5) * 0.25,
+            vy: (Math.random() - 0.5) * 0.25,
             colorType: i % 3 === 0 ? 'champagne' : (i % 2 === 0 ? 'gold' : 'white')
           });
         }
@@ -1376,12 +1176,12 @@
               const dx = a.x - b.x;
               const dy = a.y - b.y;
               const dist = Math.hypot(dx, dy);
-              if (dist < 145) {
-                const alpha = (1 - dist / 145) * 0.3;
+              if (dist < 135) {
+                const alpha = (1 - dist / 135) * 0.25;
                 ctx.strokeStyle = a.colorType === 'champagne'
                   ? `rgba(253, 230, 138, ${alpha})`
                   : `rgba(245, 158, 11, ${alpha})`;
-                ctx.lineWidth = 0.85;
+                ctx.lineWidth = 0.8;
                 ctx.beginPath();
                 ctx.moveTo(a.x, a.y);
                 ctx.lineTo(b.x, b.y);
@@ -1390,10 +1190,10 @@
             }
 
             ctx.fillStyle = a.colorType === 'champagne'
-              ? 'rgba(253, 230, 138, 0.85)'
-              : (a.colorType === 'gold' ? 'rgba(245, 158, 11, 0.88)' : 'rgba(255, 251, 235, 0.5)');
+              ? 'rgba(253, 230, 138, 0.9)'
+              : (a.colorType === 'gold' ? 'rgba(245, 158, 11, 0.9)' : 'rgba(255, 251, 235, 0.55)');
             ctx.beginPath();
-            ctx.arc(a.x, a.y, a.colorType === 'white' ? 1.4 : 2.1, 0, Math.PI * 2);
+            ctx.arc(a.x, a.y, a.colorType === 'white' ? 1.25 : 1.9, 0, Math.PI * 2);
             ctx.fill();
           }
           requestAnimationFrame(draw);
@@ -1408,12 +1208,17 @@
       let html = '';
       for (let i = 0; i < 60; i++) {
         const angle = i * 6;
+        const isCardinal = i % 15 === 0;
         const isMajor = i % 5 === 0;
-        const y1 = isMajor ? 9 : 12;
-        const y2 = isMajor ? 18 : 16;
-        const stroke = i === 0 ? '#FDE68A' : (isMajor ? 'rgba(245,158,11,0.9)' : 'rgba(253,230,138,0.24)');
-        const width = isMajor ? '1.8' : '0.9';
-        html += `<line x1="120" y1="${y1}" x2="120" y2="${y2}" stroke="${stroke}" stroke-width="${width}" transform="rotate(${angle} 120 120)"/>`;
+        if (isCardinal) {
+          html += `<polygon points="120,8 123,16 120,21 117,16" fill="#FFFBEB" stroke="#B45309" stroke-width="0.6" transform="rotate(${angle} 120 120)"/>`;
+        } else {
+          const y1 = isMajor ? 10 : 12;
+          const y2 = isMajor ? 18 : 16;
+          const stroke = isMajor ? 'rgba(245,158,11,0.92)' : 'rgba(253,230,138,0.22)';
+          const width = isMajor ? '1.7' : '0.85';
+          html += `<line x1="120" y1="${y1}" x2="120" y2="${y2}" stroke="${stroke}" stroke-width="${width}" transform="rotate(${angle} 120 120)"/>`;
+        }
       }
       group.innerHTML = html;
     }
@@ -1426,8 +1231,8 @@
       const applyTilt = (rx, ry, gx, gy) => {
         card.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
         if (glare) {
-          glare.style.setProperty('--glare-x', `${gx}%`);
-          glare.style.setProperty('--glare-y', `${gy}%`);
+          glare.style.setProperty('--gx', `${gx}%`);
+          glare.style.setProperty('--gy', `${gy}%`);
         }
       };
 
@@ -1446,9 +1251,7 @@
         if (e.gamma === null || e.beta === null) return;
         const ry = Math.max(-6, Math.min(6, e.gamma * 0.18));
         const rx = Math.max(-6, Math.min(6, (e.beta - 45) * 0.15));
-        const gx = Math.round(50 + ry * 6);
-        const gy = Math.round(30 - rx * 6);
-        applyTilt(rx, ry, gx, gy);
+        applyTilt(rx, ry, Math.round(50 + ry * 6), Math.round(30 - rx * 6));
       }, { passive: true });
     }
 
@@ -1628,23 +1431,21 @@
       if (savedMode === 'auto') {
         shouldBeDark = getAutoThemeIsDark();
         if (labelEl) labelEl.textContent = 'AUTO';
-        if (iconEl) {
-          iconEl.className = shouldBeDark
-            ? 'fa-solid fa-crown text-[10px] text-amber-400'
-            : 'fa-solid fa-shield-halved text-[10px] text-amber-300';
-        }
       } else if (savedMode === 'dark') {
         shouldBeDark = true;
         if (labelEl) labelEl.textContent = 'OBSIDIAN';
-        if (iconEl) iconEl.className = 'fa-solid fa-crown text-[10px] text-amber-400';
       } else {
         shouldBeDark = false;
         if (labelEl) labelEl.textContent = 'BRONZE';
-        if (iconEl) iconEl.className = 'fa-solid fa-shield-halved text-[10px] text-amber-300';
+      }
+      if (iconEl) {
+        iconEl.className = shouldBeDark
+          ? 'fa-solid fa-crown text-[10px] text-amber-300'
+          : 'fa-solid fa-shield-halved text-[10px] text-amber-200';
       }
       html.classList.toggle('dark', shouldBeDark);
       const metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (metaTheme) metaTheme.setAttribute('content', shouldBeDark ? '#050507' : '#1C1915');
+      if (metaTheme) metaTheme.setAttribute('content', shouldBeDark ? '#050403' : '#120e0a');
     }
 
     function cycleThemeMode() {
@@ -1655,8 +1456,8 @@
       applyThemeMode(next);
       const msgMap = {
         auto: "โหมดธีมอัตโนมัติ (AUTO: 06:00 บรอนซ์โกลด์ / 18:00 ดำทอง)",
-        light: "ล็อกโหมดบรอนซ์แชมเปญ (CHAMPAGNE BRONZE)",
-        dark: "ล็อกโหมดดำสนิทตัดทอง 24K (ROYAL OBSIDIAN)"
+        light: "ล็อกโหมดบรอนซ์แชมเปญ (BRONZE)",
+        dark: "ล็อกโหมดคาร์บอนดำทอง 24K (OBSIDIAN)"
       };
       showToast(msgMap[next]);
     }
@@ -1676,7 +1477,7 @@
       if (!badge) return;
       if (isShiftAutoMode()) {
         badge.textContent = "AUTO";
-        badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-300 border border-amber-400/50";
+        badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/50";
       } else {
         badge.textContent = "MANUAL";
         badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-zinc-800 text-zinc-400 border border-zinc-700";
@@ -2000,7 +1801,7 @@
       soundEnabled = !soundEnabled;
       document.getElementById('audioIcon').className = soundEnabled ? "fa-solid fa-volume-high text-[11px]" : "fa-solid fa-volume-xmark text-[11px] text-zinc-500";
       if (soundEnabled) playClick('confirm');
-      showToast(soundEnabled ? "เปิดเสียงกลไกห้องนักบินแล้ว" : "ปิดเสียงกลไกแล้ว");
+      showToast(soundEnabled ? "เปิดเสียงกลไกโครโนกราฟแล้ว" : "ปิดเสียงกลไกแล้ว");
     }
 
     function playClick(type = 'normal') {
@@ -2020,7 +1821,7 @@
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(680, now);
           osc.frequency.exponentialRampToValueAtTime(1520, now + 0.065);
-          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.setValueAtTime(0.2, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
@@ -2028,19 +1829,19 @@
           osc.stop(now + 0.085);
         } else if (type === 'detent') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(1250, now);
-          osc.frequency.exponentialRampToValueAtTime(480, now + 0.018);
-          gain.gain.setValueAtTime(0.14, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
+          osc.frequency.setValueAtTime(1320, now);
+          osc.frequency.exponentialRampToValueAtTime(520, now + 0.016);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
           osc.start(now);
-          osc.stop(now + 0.025);
+          osc.stop(now + 0.022);
         } else {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(980, now);
           osc.frequency.exponentialRampToValueAtTime(260, now + 0.028);
-          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.setValueAtTime(0.2, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
@@ -2081,17 +1882,17 @@
     }
 
     function renderSwitchStates() {
-      const activeCls = "chamfer-sm bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 text-black font-extrabold shadow-[0_0_14px_rgba(245,158,11,0.7)] border-t border-amber-100";
-      const inactiveCls = "text-zinc-400 hover:text-amber-200";
+      const activeCls = "chamfer-sm gold-ingot-btn transition";
+      const inactiveCls = "text-zinc-400 hover:text-amber-200 transition";
 
-      document.getElementById('swShiftDay').className = `py-1.5 font-hud font-bold text-[10px] transition ${currentShift === 'DAY' ? activeCls : inactiveCls}`;
-      document.getElementById('swShiftNight').className = `py-1.5 font-hud font-bold text-[10px] transition ${currentShift === 'NIGHT' ? activeCls : inactiveCls}`;
+      document.getElementById('swShiftDay').className = `py-1.5 font-hud font-bold text-[10px] ${currentShift === 'DAY' ? activeCls : inactiveCls}`;
+      document.getElementById('swShiftNight').className = `py-1.5 font-hud font-bold text-[10px] ${currentShift === 'NIGHT' ? activeCls : inactiveCls}`;
 
-      document.getElementById('swDayReg').className = `py-1.5 font-hud font-bold text-[10px] transition ${currentDayType === 'REGULAR' ? activeCls : inactiveCls}`;
-      document.getElementById('swDayHol').className = `py-1.5 font-hud font-bold text-[10px] transition ${currentDayType === 'HOLIDAY' ? activeCls : inactiveCls}`;
+      document.getElementById('swDayReg').className = `py-1.5 font-hud font-bold text-[10px] ${currentDayType === 'REGULAR' ? activeCls : inactiveCls}`;
+      document.getElementById('swDayHol').className = `py-1.5 font-hud font-bold text-[10px] ${currentDayType === 'HOLIDAY' ? activeCls : inactiveCls}`;
 
-      document.getElementById('swModeFull').className = `py-1.5 font-hud font-bold text-[10px] transition ${currentWorkType === 'FULL' ? activeCls : inactiveCls}`;
-      document.getElementById('swModeHalf').className = `py-1.5 font-hud font-bold text-[10px] transition ${currentWorkType === 'HALF' ? activeCls : inactiveCls}`;
+      document.getElementById('swModeFull').className = `py-1.5 font-hud font-bold text-[10px] ${currentWorkType === 'FULL' ? activeCls : inactiveCls}`;
+      document.getElementById('swModeHalf').className = `py-1.5 font-hud font-bold text-[10px] ${currentWorkType === 'HALF' ? activeCls : inactiveCls}`;
 
       const ratePill = document.getElementById('otRateGaugePill');
       if (ratePill) {
@@ -2159,7 +1960,7 @@
       for (let i = 1; i <= 4; i++) {
         const navBtn = document.getElementById(`nav-${i}`);
         if (i === tabNum) {
-          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-black bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 font-extrabold transition-all shadow-[0_0_16px_rgba(245,158,11,0.7)]";
+          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn transition-all";
         } else {
           navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all";
         }
@@ -2169,12 +1970,12 @@
     }
 
     function startLiveChronograph() {
-      const ARC_CIRCUMFERENCE = 578.05;
+      const ARC_CIRCUMFERENCE = 584.34;
       const update = () => {
         const now = new Date();
         const timeStr = now.toTimeString().split(' ')[0];
         const ms = Math.floor(now.getMilliseconds() / 100);
-        document.getElementById('liveClock').innerHTML = `${timeStr}<span class="text-xs text-amber-400 font-bold">.${ms}</span>`;
+        document.getElementById('liveClock').innerHTML = `${timeStr}<span class="text-xs text-amber-300 font-bold">.${ms}</span>`;
         document.querySelector('#currentDateDisplay span').textContent = now.toLocaleDateString('th-TH', {
           weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
         });
@@ -2183,16 +1984,12 @@
         const minVal = now.getMinutes() + secVal / 60;
         const hrVal = (now.getHours() % 12) + minVal / 60;
 
-        const secAngle = secVal * 6;
-        const minAngle = minVal * 6;
-        const hrAngle = hrVal * 30;
-
         const handEl = document.getElementById('chronoSecondHand');
         const minHandEl = document.getElementById('chronoMinuteHand');
         const hrHandEl = document.getElementById('chronoHourHand');
-        if (handEl) handEl.setAttribute('transform', `rotate(${secAngle.toFixed(1)} 120 120)`);
-        if (minHandEl) minHandEl.setAttribute('transform', `rotate(${minAngle.toFixed(1)} 120 120)`);
-        if (hrHandEl) hrHandEl.setAttribute('transform', `rotate(${hrAngle.toFixed(1)} 120 120)`);
+        if (handEl) handEl.setAttribute('transform', `rotate(${(secVal * 6).toFixed(1)} 120 120)`);
+        if (minHandEl) minHandEl.setAttribute('transform', `rotate(${(minVal * 6).toFixed(1)} 120 120)`);
+        if (hrHandEl) hrHandEl.setAttribute('transform', `rotate(${(hrVal * 30).toFixed(1)} 120 120)`);
 
         const activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
         const activeIn = activeCheckins[currentEmpId];
@@ -2203,8 +2000,8 @@
 
         if (activeIn) {
           elapsedBar.classList.remove('hidden');
-          lcdTag.textContent = "THRUST ACTIVE";
-          lcdTag.className = "chamfer-sm bg-amber-400/25 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/65 tracking-wider shadow-[0_0_12px_rgba(245,158,11,0.4)]";
+          lcdTag.textContent = "CHRONO ACTIVE";
+          lcdTag.className = "chamfer-sm bg-amber-400/25 text-amber-100 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/70 tracking-wider";
 
           const inDateTime = new Date(`${activeIn.date}T${activeIn.time}:00`);
           const diffMs = Math.max(0, now - inDateTime);
@@ -2222,19 +2019,19 @@
           document.getElementById('liveAccruedPay').textContent = `${fmtNum(liveCalc.totalSalary)} ฿`;
 
           if (reactorBadge) {
-            reactorBadge.textContent = totalMins > 550 ? `OVERDRIVE +OT` : `${pctInt}% SHIFT`;
+            reactorBadge.textContent = totalMins > 550 ? "OVERDRIVE +OT" : `${pctInt}% SHIFT`;
             reactorBadge.className = totalMins > 550
-              ? "px-2 py-0.5 rounded bg-amber-950/90 border border-amber-400 text-[9px] font-mono font-bold text-amber-300"
-              : "px-2 py-0.5 rounded bg-black/85 border border-amber-400/50 text-[9px] font-mono font-bold text-amber-200";
+              ? "px-2 py-0.5 rounded bg-amber-950/90 border border-amber-300 text-[9px] font-mono font-bold text-amber-200"
+              : "px-2 py-0.5 rounded bg-black/90 border border-amber-300/55 text-[9px] font-mono font-bold text-amber-100";
           }
         } else {
           elapsedBar.classList.add('hidden');
-          lcdTag.textContent = "CORE READY";
-          lcdTag.className = "chamfer-sm bg-amber-500/15 text-amber-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-400/50 tracking-wider shadow-[0_0_10px_rgba(245,158,11,0.25)]";
+          lcdTag.textContent = "CALIBRATED";
+          lcdTag.className = "chamfer-sm bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/50 tracking-wider";
           if (arcEl) arcEl.style.strokeDashoffset = ARC_CIRCUMFERENCE;
           if (reactorBadge) {
             reactorBadge.textContent = "0% SHIFT";
-            reactorBadge.className = "px-2 py-0.5 rounded bg-black/85 border border-amber-500/30 text-[9px] font-mono font-bold text-zinc-400";
+            reactorBadge.className = "px-2 py-0.5 rounded bg-black/90 border border-amber-500/35 text-[9px] font-mono font-bold text-zinc-400";
           }
         }
       };
@@ -2441,21 +2238,21 @@
         inText.textContent = activeIn.time;
         outText.textContent = 'กดออก';
         badge.textContent = "ON DUTY";
-        badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-amber-400/25 border border-amber-300/65 font-hud font-bold text-amber-200 shrink-0 tracking-wider shadow-[0_0_10px_rgba(245,158,11,0.35)]";
+        badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-amber-400/25 border border-amber-300/70 font-hud font-bold text-amber-100 tracking-wider";
 
-        track.className = "slide-track chamfer-sm bg-black/90 border border-rose-500/60 flex items-center justify-center select-none shadow-inner";
-        fill.className = "slide-fill bg-gradient-to-r from-rose-600/45 to-amber-500/75";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-rose-300 pointer-events-none pl-8 shimmer-hud-text";
+        track.className = "slide-track chamfer-sm bg-black/95 border border-rose-500/65 flex items-center justify-center select-none shadow-inner";
+        fill.className = "slide-fill bg-gradient-to-r from-rose-700/45 to-amber-500/75";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-rose-300 pointer-events-none pl-8";
         label.innerHTML = `<span>SLIDE TO CHECK OUT</span><span class="chevron-anim text-xs">&gt;&gt;&gt;</span>`;
-        thumb.className = "slide-thumb chamfer-sm bg-gradient-to-br from-amber-300 via-rose-500 to-rose-800 text-white shadow-[0_0_22px_rgba(244,63,94,0.8)]";
+        thumb.className = "slide-thumb chamfer-sm bg-gradient-to-br from-amber-200 via-rose-500 to-rose-800 text-white shadow-[0_0_22px_rgba(244,63,94,0.8)]";
         hint.textContent = "SLIDE TO DISENGAGE";
         hint.className = "font-hud text-[9px] text-rose-400 tracking-wider";
       } else {
-        track.className = "slide-track chamfer-sm bg-black/90 border border-amber-400/60 flex items-center justify-center select-none shadow-inner";
-        fill.className = "slide-fill bg-gradient-to-r from-amber-600/45 to-amber-300/75";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-300 pointer-events-none pl-8 shimmer-hud-text";
+        track.className = "slide-track chamfer-sm bg-black/95 border border-amber-300/65 flex items-center justify-center select-none shadow-inner";
+        fill.className = "slide-fill bg-gradient-to-r from-amber-700/50 to-amber-300/80";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8";
         label.innerHTML = `<span>SLIDE TO CHECK IN</span><span class="chevron-anim text-xs">&gt;&gt;&gt;</span>`;
-        thumb.className = "slide-thumb chamfer-sm bg-gradient-to-br from-amber-200 via-amber-400 to-amber-700 text-black shadow-[0_0_22px_rgba(245,158,11,0.85)]";
+        thumb.className = "slide-thumb chamfer-sm gold-ingot-btn";
         hint.textContent = "SLIDE TO ENGAGE";
         hint.className = "font-hud text-[9px] text-amber-300 tracking-wider";
 
@@ -2465,14 +2262,14 @@
           inText.textContent = todayRecord.checkIn || '-';
           outText.textContent = todayRecord.checkOut || '-';
           badge.textContent = "COMPLETED";
-          badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-emerald-500/20 border border-emerald-400/50 font-hud font-bold text-emerald-300 shrink-0 tracking-wider";
+          badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-emerald-500/20 border border-emerald-400/55 font-hud font-bold text-emerald-300 tracking-wider";
         } else {
           inEl.textContent = '--:--';
           outEl.textContent = '--:--';
           inText.textContent = 'เข้างาน';
           outText.textContent = 'ออกงาน';
           badge.textContent = "STANDBY";
-          badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-900 border border-amber-500/40 font-hud font-bold text-amber-200 shrink-0 tracking-wider";
+          badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-900 border border-amber-400/50 font-hud font-bold text-amber-200 tracking-wider";
         }
       }
     }
@@ -2500,7 +2297,7 @@
 
       localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
       playClick('confirm');
-      showToast(`IGNITION // บันทึกเข้างาน (${currentShift}) สำเร็จ`);
+      showToast(`ENGAGED // บันทึกเข้างาน (${currentShift}) สำเร็จ`);
       loadTodayLiveStatus();
 
       const lineMsg = `⏰ [CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (กะ ${currentShift})\nเวลา: ${timeStr} น.`;
@@ -2681,6 +2478,13 @@
       };
 
       setSyncPillStatus('SYNCING');
+      if (hasGasScriptBridge()) {
+        google.script.run
+          .withSuccessHandler(() => setSyncPillStatus('LINKED'))
+          .withFailureHandler(() => setSyncPillStatus('OFFLINE'))
+          .processWebAppPayload(payload);
+      }
+
       fetch(localStorage.getItem("gas_url") || DEFAULT_GAS_URL, {
         method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
       }).then(() => {
@@ -2704,21 +2508,69 @@
         lineMessage, payrolls, leaves, payslip
       };
 
+      const bridgePromise = hasGasScriptBridge()
+        ? new Promise((resolve) => {
+            try {
+              google.script.run
+                .withSuccessHandler(() => resolve(true))
+                .withFailureHandler(() => resolve(false))
+                .processWebAppPayload(payload);
+            } catch (_) {
+              resolve(false);
+            }
+          })
+        : Promise.resolve(false);
+
       return fetch(gasUrl, {
         method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
-      }).then(() => {
+      }).then(async () => {
+        await bridgePromise;
         setSyncPillStatus('LINKED');
         showToast("ซิงค์ข้อมูลเรียบร้อย");
-      }).catch(err => {
-        setSyncPillStatus('OFFLINE');
-        console.error(err);
+      }).catch(async (err) => {
+        const ok = await bridgePromise;
+        if (ok) {
+          setSyncPillStatus('LINKED');
+          showToast("ซิงค์ข้อมูลเรียบร้อย");
+        } else {
+          setSyncPillStatus('OFFLINE');
+          console.error(err);
+        }
       });
+    }
+
+    function applyFetchedData(data, silent) {
+      if (data && data.status === "success") {
+        if (Array.isArray(data.payrolls)) {
+          const cloudRecords = data.payrolls.map(normalizeRecordItem);
+          const localRecords = getStoredPayrollRecords();
+          const mergedMap = new Map();
+          localRecords.forEach(r => mergedMap.set(`${r.id}_${r.date}`, r));
+          cloudRecords.forEach(r => mergedMap.set(`${r.id}_${r.date}`, r));
+          localStorage.setItem("payroll_records", JSON.stringify(Array.from(mergedMap.values())));
+        }
+        if (Array.isArray(data.leaves)) {
+          const normLeaves = data.leaves.map(l => ({ ...l, id: String(l.id || '').trim() }));
+          localStorage.setItem("leave_records", JSON.stringify(normLeaves));
+        }
+        loadTodayLiveStatus();
+        renderHistories();
+        prefillManualByDate();
+        setSyncPillStatus('LINKED');
+        if (!silent) {
+          playClick('confirm');
+          showToast(`ซิงค์สำเร็จ (${(data.payrolls || []).length} รายการ)`);
+        }
+      } else {
+        setSyncPillStatus('OFFLINE');
+        if (!silent) showToast("ไม่พบข้อมูลหรือสิทธิ์การเข้าถึงไม่ถูกต้อง");
+      }
     }
 
     function pullFromGoogleSheets(silent = false) {
       if (isPullingSheets) return;
       const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
-      if (!gasUrl) {
+      if (!gasUrl && !hasGasScriptBridge()) {
         if (!silent) showToast("ยังไม่ได้ตั้งค่า Google Apps Script URL");
         return;
       }
@@ -2729,44 +2581,40 @@
       setSyncPillStatus('SYNCING');
       if (!silent) showToast("กำลังดึงข้อมูลจาก Google Sheets...");
 
+      const finishPull = () => {
+        isPullingSheets = false;
+        if (icon) icon.classList.remove('fa-spin');
+      };
+
+      if (hasGasScriptBridge()) {
+        try {
+          google.script.run
+            .withSuccessHandler((res) => {
+              const parsed = typeof res === "string" ? JSON.parse(res) : res;
+              applyFetchedData(parsed, silent);
+              finishPull();
+            })
+            .withFailureHandler(() => {
+              fetchDirectGasUrl(gasUrl, silent, finishPull);
+            })
+            .getAllData();
+          return;
+        } catch (_) {}
+      }
+
+      fetchDirectGasUrl(gasUrl, silent, finishPull);
+    }
+
+    function fetchDirectGasUrl(gasUrl, silent, doneCb) {
       const url = `${gasUrl}${gasUrl.includes('?') ? '&' : '?'}action=getAllData&t=${Date.now()}`;
       fetch(url)
         .then(res => res.json())
-        .then(data => {
-          if (data && data.status === "success") {
-            if (Array.isArray(data.payrolls)) {
-              const cloudRecords = data.payrolls.map(normalizeRecordItem);
-              const localRecords = getStoredPayrollRecords();
-              const mergedMap = new Map();
-              localRecords.forEach(r => mergedMap.set(`${r.id}_${r.date}`, r));
-              cloudRecords.forEach(r => mergedMap.set(`${r.id}_${r.date}`, r));
-              localStorage.setItem("payroll_records", JSON.stringify(Array.from(mergedMap.values())));
-            }
-            if (Array.isArray(data.leaves)) {
-              const normLeaves = data.leaves.map(l => ({ ...l, id: String(l.id || '').trim() }));
-              localStorage.setItem("leave_records", JSON.stringify(normLeaves));
-            }
-            loadTodayLiveStatus();
-            renderHistories();
-            prefillManualByDate();
-            setSyncPillStatus('LINKED');
-            if (!silent) {
-              playClick('confirm');
-              showToast(`ซิงค์สำเร็จ (${(data.payrolls || []).length} รายการ)`);
-            }
-          } else {
-            setSyncPillStatus('OFFLINE');
-            if (!silent) showToast("ไม่พบข้อมูลหรือสิทธิ์การเข้าถึงไม่ถูกต้อง");
-          }
-        })
+        .then(data => applyFetchedData(data, silent))
         .catch(() => {
           setSyncPillStatus('OFFLINE');
           if (!silent) showToast("ไม่สามารถเชื่อมต่อ Google Sheets ได้");
         })
-        .finally(() => {
-          isPullingSheets = false;
-          if (icon) icon.classList.remove('fa-spin');
-        });
+        .finally(doneCb);
     }
 
     function buildCutoffOptions() {
@@ -2826,8 +2674,8 @@
             const hPct = Math.max(18, Math.round((r.totalSalary / maxDayPay) * 100));
             const dayNum = r.date.split('-')[2];
             const barColor = r.dayType === 'HOLIDAY'
-              ? 'from-amber-600 via-amber-400 to-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.5)]'
-              : (r.otHours > 0 ? 'from-amber-700 to-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.3)]' : 'from-zinc-600 to-zinc-400');
+              ? 'from-amber-600 via-amber-400 to-amber-100'
+              : (r.otHours > 0 ? 'from-amber-700 to-amber-300' : 'from-zinc-600 to-zinc-400');
             return `
               <button onclick="openBreakdownByDate('${r.id}', '${r.date}')" title="${formatThaiBE(r.date)}: ${fmtNum(r.totalSalary)} ฿" class="tactile-btn flex-1 min-w-[20px] h-full flex flex-col items-center justify-end gap-1 group">
                 <div class="w-full rounded-t bg-gradient-to-t ${barColor} group-hover:brightness-125 transition-all" style="height: ${hPct}%"></div>
@@ -2847,7 +2695,7 @@
             : `<span class="text-[9px] px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 font-bold">กะเช้า</span>`;
 
           const holBadge = r.dayType === 'HOLIDAY'
-            ? `<span class="text-[9px] px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-300 border border-amber-400/45 font-bold">วันหยุด</span>`
+            ? `<span class="text-[9px] px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/45 font-bold">วันหยุด</span>`
             : '';
 
           const otTag = r.otHours > 0
@@ -2857,8 +2705,8 @@
           const hrsWorkedText = `(${r.workedHours} ชม.)`;
 
           return `
-            <div class="armor-frame chamfer-sm">
-              <div class="armor-inner chamfer-sm p-3 flex justify-between items-center text-xs hover:bg-zinc-900/90 transition">
+            <div class="sovereign-frame chamfer-sm">
+              <div class="sovereign-inner chamfer-sm p-3 flex justify-between items-center text-xs hover:bg-zinc-900/90 transition">
                 <div onclick="openBreakdownByDate('${r.id}', '${r.date}')" class="cursor-pointer flex-1 min-w-0">
                   <div class="font-mono font-bold text-amber-50 flex items-center gap-1.5 flex-wrap">
                     <span class="text-sm">${formatThaiBE(r.date)}</span>
@@ -2870,7 +2718,7 @@
                 </div>
                 <div class="flex items-center gap-2.5 shrink-0">
                   <div onclick="openBreakdownByDate('${r.id}', '${r.date}')" class="cursor-pointer text-right">
-                    <div class="font-mono font-extrabold text-amber-300 text-sm">${fmtNum(r.totalSalary)} ฿</div>
+                    <div class="font-mono font-extrabold text-amber-200 text-sm">${fmtNum(r.totalSalary)} ฿</div>
                     <span class="text-[9.5px] text-amber-400/85 font-bold hover:underline">ดูบิล</span>
                   </div>
                   <button onclick="deleteRecord('${r.id}', '${r.date}')" aria-label="ลบรายการ" class="tactile-btn chamfer-sm w-7 h-7 bg-rose-950/75 hover:bg-rose-600 border border-rose-500/40 text-rose-400 hover:text-white flex items-center justify-center transition">
@@ -2899,8 +2747,8 @@
         .sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''));
       const leaveListEl = document.getElementById('leaveHistoryList');
       leaveListEl.innerHTML = leaves.length ? leaves.map(l => `
-        <div class="armor-frame chamfer-sm">
-          <div class="armor-inner chamfer-sm p-2.5 text-xs">
+        <div class="sovereign-frame chamfer-sm">
+          <div class="sovereign-inner chamfer-sm p-2.5 text-xs">
             <div class="flex justify-between font-bold text-amber-50">
               <span>${l.leaveType}</span>
               <span class="text-amber-300 font-mono">${formatThaiBE(l.startDate)}${l.endDate && l.endDate !== l.startDate ? ' - ' + formatThaiBE(l.endDate) : ''}</span>
@@ -2960,7 +2808,7 @@
 
       const content = document.getElementById('modalContent');
       content.innerHTML = `
-        <div class="chamfer-sm bg-black/75 p-2.5 space-y-1 border border-amber-500/30">
+        <div class="chamfer-sm bg-black/75 p-2.5 space-y-1 border border-amber-400/30">
           <div class="font-bold text-amber-100">${item.employeeName} (${formatThaiBE(item.date)})</div>
           <div>กะการทำงาน: <span class="font-bold">${item.shift === 'DAY' ? 'กลางวัน (08:00-16:50)' : 'กลางคืน (20:00-04:50)'}</span></div>
           <div>ประเภทวัน: <span class="font-bold">${item.dayType === 'REGULAR' ? 'วันปกติ' : 'วันหยุด (OT 2.0)'}</span></div>
@@ -2971,7 +2819,7 @@
           ${otBreakdownHtml}
           <div class="flex justify-between"><span>ค่ากะกลางคืน:</span> <span class="font-bold font-mono">+${fmtNum(item.shiftAllowance)} ฿</span></div>
           <div class="flex justify-between"><span>ค่าอาหารรวม:</span> <span class="font-bold font-mono">+${fmtNum(item.totalMealAllowance)} ฿</span></div>
-          <div class="border-t border-amber-500/30 pt-2 flex justify-between font-bold text-sm text-amber-400">
+          <div class="border-t border-amber-400/30 pt-2 flex justify-between font-bold text-sm text-amber-300">
             <span>รวมรายได้สุทธิ:</span> <span class="font-mono">${fmtNum(item.totalSalary)} ฿</span>
           </div>
         </div>
