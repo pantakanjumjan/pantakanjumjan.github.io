@@ -197,7 +197,7 @@
   <div id="bootOverlay" class="fixed inset-0 z-[100] bg-[#05070A] flex flex-col items-center justify-center p-6 transition-opacity duration-300">
     <div class="w-full max-w-xs space-y-3 font-mono text-xs">
       <div class="flex items-center justify-between text-cyan-400 border-b border-cyan-500/30 pb-1.5">
-        <span class="font-hud font-bold tracking-widest">VALKYRIE OS v4.3</span>
+        <span class="font-hud font-bold tracking-widest">VALKYRIE OS v4.4</span>
         <span class="animate-pulse text-[10px]">BOOTING...</span>
       </div>
       <div id="bootLogLines" class="space-y-1 text-[10.5px] text-zinc-400 min-h-[54px]">
@@ -646,6 +646,7 @@
         </div>
         <div id="autoBonusRuleHint" class="text-[10px] text-cyan-300 bg-black/60 p-2 rounded border border-cyan-500/20"></div>
         <div id="payDateRuleHint" class="text-[10px] text-zinc-400"></div>
+        <div id="ytdCarrySourceHint" class="text-[10px] text-emerald-300 bg-emerald-950/35 p-2 rounded border border-emerald-500/25"></div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <div>
@@ -829,7 +830,7 @@
   </div>
 
   <script>
-    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzIC7PtGt_PeyQ7Co1GTiC0Ev6dPfDSiGhhyHClbKL1yMzUCTmeju8JKOYAtNGJZaB7/exec";
+    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwOXRJRBfeTTN-JnYdLKK_epT-TsrfIMoKLckXxh0GyY07VP7JVSLrAqinOAUwLpmZ6ng/exec";
     const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
 
@@ -2280,6 +2281,19 @@
               const normLeaves = data.leaves.map(l => ({ ...l, id: String(l.id || '').trim() }));
               localStorage.setItem("leave_records", JSON.stringify(normLeaves));
             }
+            if (Array.isArray(data.payslips)) {
+              const localSlips = JSON.parse(localStorage.getItem("payslip_history") || "[]");
+              const slipMap = new Map();
+              localSlips.forEach(s => {
+                const k = `${String(s.id || '').trim()}_${String(s.periodLabel || '').trim()}`;
+                slipMap.set(k, s);
+              });
+              data.payslips.forEach(s => {
+                const k = `${String(s.id || '').trim()}_${String(s.periodLabel || '').trim()}`;
+                slipMap.set(k, s);
+              });
+              localStorage.setItem("payslip_history", JSON.stringify(Array.from(slipMap.values())));
+            }
             loadTodayLiveStatus();
             buildCutoffOptions(true);
             renderHistories();
@@ -2531,6 +2545,89 @@
       return `slip_adj_${currentEmpId}_${period}`;
     }
 
+    function parsePeriodRangeSortKey(periodValOrLabel = "") {
+      const isoRangeMatch = String(periodValOrLabel).match(/(\d{4}-\d{2}-\d{2})\|(\d{4}-\d{2}-\d{2})/);
+      if (isoRangeMatch) {
+        return {
+          startKey: Number(isoRangeMatch[1].replace(/-/g, '')),
+          endKey: Number(isoRangeMatch[2].replace(/-/g, ''))
+        };
+      }
+
+      const thaiRangeMatch = String(periodValOrLabel).match(/งวด\s*(\d{1,2})\s*-\s*(\d{1,2})\s+([^\s]+)\s+(\d{4})/);
+      if (thaiRangeMatch) {
+        const d1 = Number(thaiRangeMatch[1]);
+        const d2 = Number(thaiRangeMatch[2]);
+        const monthMap = {
+          "มกราคม": 1, "กุมภาพันธ์": 2, "มีนาคม": 3, "เมษายน": 4,
+          "พฤษภาคม": 5, "มิถุนายน": 6, "กรกฎาคม": 7, "สิงหาคม": 8,
+          "กันยายน": 9, "ตุลาคม": 10, "พฤศจิกายน": 11, "ธันวาคม": 12
+        };
+        const m = monthMap[thaiRangeMatch[3]] || 1;
+        let y = Number(thaiRangeMatch[4]);
+        if (y > 2400) y -= 543;
+        return {
+          startKey: y * 10000 + m * 100 + d1,
+          endKey: y * 10000 + m * 100 + d2
+        };
+      }
+
+      const dateMatch = String(periodValOrLabel).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (dateMatch) {
+        let y = Number(dateMatch[3]);
+        if (y > 2400) y -= 543;
+        const key = y * 10000 + Number(dateMatch[2]) * 100 + Number(dateMatch[1]);
+        return { startKey: key, endKey: key };
+      }
+
+      return { startKey: 0, endKey: 0 };
+    }
+
+    function getCarryForwardYTDForSlip(startStr = "", endStr = "") {
+      const isMainEmp = currentEmpId === "50001024";
+      const fallbackEarnings = isMainEmp ? 43625.00 : 0.00;
+      const fallbackSocial = isMainEmp ? 1200.00 : 0.00;
+
+      const curRange = parsePeriodRangeSortKey(`${startStr}|${endStr}`);
+      if (!curRange.startKey) {
+        return {
+          carryEarnings: fallbackEarnings,
+          carrySocial: fallbackSocial,
+          sourceText: `ยอดยกมาตั้งต้น (${fmtNum(fallbackEarnings)} ฿ / ประกันสังคม ${fmtNum(fallbackSocial)} ฿)`
+        };
+      }
+
+      const historyList = JSON.parse(localStorage.getItem("payslip_history") || "[]");
+      const prevSlips = (Array.isArray(historyList) ? historyList : [])
+        .filter(item => {
+          if (String(item.id || '').trim() !== currentEmpId) return false;
+          const r = parsePeriodRangeSortKey(item.periodRange || item.periodLabel || item.payDate || "");
+          return r.endKey > 0 && r.endKey < curRange.startKey;
+        })
+        .sort((a, b) => {
+          const rA = parsePeriodRangeSortKey(a.periodRange || a.periodLabel || a.payDate || "");
+          const rB = parsePeriodRangeSortKey(b.periodRange || b.periodLabel || b.payDate || "");
+          return rB.endKey - rA.endKey;
+        });
+
+      if (prevSlips.length > 0) {
+        const latestPrev = prevSlips[0];
+        const prevYtdEarn = Number(latestPrev.ytdEarnings) || fallbackEarnings;
+        const prevYtdSoc = Number(latestPrev.ytdSocial) || fallbackSocial;
+        return {
+          carryEarnings: prevYtdEarn,
+          carrySocial: prevYtdSoc,
+          sourceText: `ดึงอัตโนมัติจากงวดก่อนหน้า (${latestPrev.periodLabel || 'งวดก่อน'}) → เงินได้สะสม ${fmtNum(prevYtdEarn)} ฿ | ประกันสังคมสะสม ${fmtNum(prevYtdSoc)} ฿`
+        };
+      }
+
+      return {
+        carryEarnings: fallbackEarnings,
+        carrySocial: fallbackSocial,
+        sourceText: `ยังไม่พบประวัติงวดก่อนหน้า → ใช้ยอดยกมาตั้งต้น (${fmtNum(fallbackEarnings)} ฿ / ประกันสังคม ${fmtNum(fallbackSocial)} ฿)`
+      };
+    }
+
     function isLeaveInMonth(leaveItem, yearNum, monthNum) {
       const ymStr = `${yearNum}-${String(monthNum).padStart(2, '0')}`;
       const start = normalizeDateToISO(leaveItem.startDate);
@@ -2614,9 +2711,9 @@
       return { autoHazard, autoDiligence, ruleSummary };
     }
 
-    function getDefaultSlipAdj(autoSocSec = 0, autoHazard = 0, autoDiligence = 0) {
+    function getDefaultSlipAdj(autoSocSec = 0, autoHazard = 0, autoDiligence = 0, startStr = "", endStr = "") {
       const saved = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "null");
-      const isMainEmp = currentEmpId === "50001024";
+      const carry = getCarryForwardYTDForSlip(startStr, endStr);
       return {
         diligence: (saved && saved.manualDiligence) ? saved.diligence : autoDiligence,
         hazard: (saved && saved.manualHazard) ? saved.hazard : autoHazard,
@@ -2626,8 +2723,9 @@
         uniform: saved?.uniform ?? 0,
         otherDed: saved?.otherDed ?? 0,
         studentLoan: saved?.studentLoan ?? 0,
-        baseYTDEarnings: saved?.baseYTDEarnings ?? (isMainEmp ? 43625.00 : 0.00),
-        baseYTDSocial: saved?.baseYTDSocial ?? (isMainEmp ? 1200.00 : 0.00)
+        baseYTDEarnings: (saved && saved.manualYtdEarnings) ? saved.baseYTDEarnings : carry.carryEarnings,
+        baseYTDSocial: (saved && saved.manualYtdSocial) ? saved.baseYTDSocial : carry.carrySocial,
+        carrySourceText: carry.sourceText
       };
     }
 
@@ -2642,6 +2740,7 @@
 
     function saveAndRefreshPayslip() {
       const prev = JSON.parse(localStorage.getItem(getSlipAdjKey()) || "{}");
+      const activeId = document.activeElement?.id || "";
       const adj = {
         diligence: parseFloat(document.getElementById('adjDiligence').value) || 0,
         hazard: parseFloat(document.getElementById('adjHazard').value) || 0,
@@ -2653,9 +2752,11 @@
         studentLoan: parseFloat(document.getElementById('adjStudentLoan').value) || 0,
         baseYTDEarnings: parseFloat(document.getElementById('baseYTDEarnings').value) || 0,
         baseYTDSocial: parseFloat(document.getElementById('baseYTDSocial').value) || 0,
-        manualDiligence: document.activeElement?.id === 'adjDiligence' ? true : (prev.manualDiligence || false),
-        manualHazard: document.activeElement?.id === 'adjHazard' ? true : (prev.manualHazard || false),
-        manualSocSec: document.activeElement?.id === 'adjSocSec' ? true : (prev.manualSocSec || false)
+        manualDiligence: activeId === 'adjDiligence' ? true : (prev.manualDiligence || false),
+        manualHazard: activeId === 'adjHazard' ? true : (prev.manualHazard || false),
+        manualSocSec: activeId === 'adjSocSec' ? true : (prev.manualSocSec || false),
+        manualYtdEarnings: activeId === 'baseYTDEarnings' ? true : (prev.manualYtdEarnings || false),
+        manualYtdSocial: activeId === 'baseYTDSocial' ? true : (prev.manualYtdSocial || false)
       };
       localStorage.setItem(getSlipAdjKey(), JSON.stringify(adj));
       renderPayslipContent(false);
@@ -2664,7 +2765,7 @@
     function resetSlipAdjustments() {
       localStorage.removeItem(getSlipAdjKey());
       renderPayslipContent(true);
-      showToast("รีเซ็ตค่าปรับปรุงสลิปแล้ว");
+      showToast("รีเซ็ตค่าปรับปรุงสลิปและดึงยอดยกมาอัตโนมัติแล้ว");
     }
 
     function openPayslipModal() {
@@ -2758,6 +2859,7 @@
       const records = getStoredPayrollRecords().filter(r => r.id === currentEmpId);
       const cutoffSelect = document.getElementById('cutoffPeriodSelect');
       const periodLabelText = cutoffSelect?.options[cutoffSelect.selectedIndex]?.text || 'งวดปัจจุบัน';
+      const periodRangeVal = cutoffSelect?.value || '';
 
       let startStr = '', endStr = '';
       let empRecords = records;
@@ -2803,10 +2905,13 @@
       const baseEarnings = sumBase + sumOT15 + sumOT20 + sumOT30 + sumShift + sumMeal + sumOTMeal;
       const autoSocSec = baseEarnings > 0 ? Math.min(Math.round(baseEarnings * 0.05), 200.00) : 0.00;
       const { autoHazard, autoDiligence, ruleSummary } = computeAutoMonthlyBonusAndHazard(startStr);
-      const adj = getDefaultSlipAdj(autoSocSec, autoHazard, autoDiligence);
+      const adj = getDefaultSlipAdj(autoSocSec, autoHazard, autoDiligence, startStr, endStr);
 
       const autoRuleEl = document.getElementById('autoBonusRuleHint');
       if (autoRuleEl) autoRuleEl.textContent = ruleSummary;
+
+      const ytdHintEl = document.getElementById('ytdCarrySourceHint');
+      if (ytdHintEl) ytdHintEl.textContent = `ยอดสะสมยกมา: ${adj.carrySourceText}`;
 
       if (syncInputs) {
         document.getElementById('adjDiligence').value = adj.diligence;
@@ -2837,7 +2942,7 @@
       const ytdSocialTotal = Math.round((adj.baseYTDSocial + adj.socSec) * 100) / 100;
 
       latestRenderedSlipSnapshot = {
-        emp, periodLabelText,
+        emp, periodLabelText, periodRangeVal,
         payDateStr: payDateInfo.payDateStr,
         payDateBE: formatThaiBE(payDateInfo.payDateStr),
         workDaysCount, sumBase, sumOT15, minsOT15, sumOT20, minsOT20, sumOT30, minsOT30,
@@ -2957,6 +3062,7 @@
         id: s.emp.id,
         employeeName: s.emp.name,
         periodLabel: s.periodLabelText,
+        periodRange: s.periodRangeVal,
         payDate: s.payDateBE,
         workDays: s.workDaysCount,
         diligence: s.adj.diligence,
@@ -2967,6 +3073,14 @@
         ytdEarnings: s.ytdEarningsTotal,
         ytdSocial: s.ytdSocialTotal
       };
+
+      const savedSlips = JSON.parse(localStorage.getItem("payslip_history") || "[]");
+      const filteredSlips = savedSlips.filter(item =>
+        !(String(item.id || '').trim() === String(slipRecord.id).trim() &&
+          String(item.periodLabel || '').trim() === String(slipRecord.periodLabel).trim())
+      );
+      filteredSlips.push(slipRecord);
+      localStorage.setItem("payslip_history", JSON.stringify(filteredSlips));
 
       playClick('confirm');
       syncToGoogleSheets([], lineMsg, [], slipRecord).finally(() => {
@@ -3031,6 +3145,7 @@
           if (
             k === "payroll_records" ||
             k === "leave_records" ||
+            k === "payslip_history" ||
             k === "active_checkins" ||
             k === "deleted_payroll_keys" ||
             k.startsWith("slip_adj_")
