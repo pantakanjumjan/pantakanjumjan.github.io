@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#050403" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>PK SOVEREIGN MK-XII </title>
+  <title>PK SOVEREIGN // SHIFT & OT CHRONOGRAPH</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 96'%3E%3Crect width='120' height='96' rx='18' fill='%23050403'/%3E%3Cpath d='M12 14 H48 C61 14 68 22 68 35 C68 48 61 56 48 56 H28 V82 H12 Z M28 27 V43 H46 C51 43 53 40 53 35 C53 30 51 27 46 27 Z' fill='%23F59E0B'/%3E%3Cpath d='M75 14 H91 V42 L106 14 H120 L100 47 L120 82 H104 L91 57 V82 H75 Z' fill='%23FDE68A'/%3E%3C/svg%3E" />
   <link id="appleTouchIconPng" rel="apple-touch-icon" sizes="180x180" href="" />
 
@@ -29,7 +29,7 @@
       --gold-ivory: #fffbeb;
       --text-main: #fafaf9;
       --text-muted: #a8a29e;
-      --safe-top: max(env(safe-area-inset-top, 20px), 20px);
+      --safe-top: max(env(safe-area-inset-top, 28px), 28px);
       --safe-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
     }
 
@@ -50,12 +50,15 @@
       color: var(--text-main);
       min-height: 100dvh;
       overflow-x: hidden;
-      padding-top: calc(var(--safe-top) + 6px);
       padding-bottom: calc(var(--safe-bottom) + 86px);
       background-image:
         radial-gradient(circle at 50% -10%, rgba(245, 158, 11, 0.16), transparent 55%),
         radial-gradient(circle at 85% 25%, rgba(253, 230, 138, 0.06), transparent 40%),
         linear-gradient(180deg, #070503 0%, #040302 100%);
+    }
+
+    header {
+      padding-top: calc(var(--safe-top) + 4px);
     }
 
     .font-hud {
@@ -311,23 +314,23 @@
 <body>
   <canvas id="constellationCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-75"></canvas>
 
-  <header class="sticky top-0 z-30 px-3.5 pb-2.5 backdrop-blur-xl bg-[#050403]/85 border-b border-amber-400/25">
+  <header class="sticky top-0 z-30 px-3.5 pb-2.5 backdrop-blur-xl bg-[#050403]/90 border-b border-amber-400/25">
     <div class="max-w-md mx-auto space-y-2">
       <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2.5 min-w-0">
+        <div class="flex items-center gap-2 min-w-0 flex-1">
           <div class="chamfer-sm w-9 h-9 gold-ingot-btn flex items-center justify-center shrink-0">
             <img alt="PK" class="company-logo-slot w-7 h-6 object-contain drop-shadow" />
           </div>
           <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <span class="font-hud font-extrabold text-xs tracking-wider text-amber-100 truncate">PK CHRONOGRAPH</span>
-              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50">SYNCING...</span>
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="font-hud font-extrabold text-xs tracking-wider text-amber-100 truncate">PK SHIFT</span>
+              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50 shrink-0">SYNCING...</span>
             </div>
-            <p class="text-[10px] text-amber-200/65 truncate">Pantakan J. MK-XII</p>
+            <p class="text-[10px] text-amber-200/65 truncate">บันทึกเวลา • OT • สลิป</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 shrink-0">
+        <div class="flex items-center gap-1 shrink-0">
           <button onclick="cycleThemeMode()" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center gap-1 text-[9px] font-mono font-bold">
             <i id="themeIcon" class="fa-solid fa-crown text-[10px] text-amber-300"></i>
             <span id="themeLabel">AUTO</span>
@@ -1020,7 +1023,7 @@
 
   <script>
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbz9m1r1olY7mEnzNTEK9Ml3helG24iAJPzyvCEob1a9qO9JI0_G4LAdCsSloSZMivh9/exec";
-    const GAS_URL_VERSION = "v2026_11_21_sovereign_pk_icon";
+    const GAS_URL_VERSION = "v2026_11_21_sovereign_pk_header_clean";
     const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
     const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
     const DEFAULT_HAZARD_RATE = 20;
@@ -1136,13 +1139,13 @@
       if (!pill) return;
       if (state === 'LINKED') {
         pill.textContent = "LINKED";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50";
+        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shrink-0";
       } else if (state === 'SYNCING') {
         pill.textContent = "SYNCING...";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50";
+        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50 shrink-0";
       } else {
         pill.textContent = "OFFLINE";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-2 py-[1px] bg-rose-500/20 text-rose-400 border border-rose-500/50";
+        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-rose-500/20 text-rose-400 border border-rose-500/50 shrink-0";
       }
     }
 
