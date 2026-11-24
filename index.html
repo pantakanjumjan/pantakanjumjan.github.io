@@ -34,7 +34,7 @@
       --text-main: #fafaf9;
       --text-muted: #a8a29e;
       --safe-top: max(env(safe-area-inset-top, 36px), 36px);
-      --safe-bottom: max(env(safe-area-inset-bottom, 20px), 20px);
+      --safe-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
     }
 
     html:not(.dark) {
@@ -54,7 +54,8 @@
       color: var(--text-main);
       min-height: 100dvh;
       overflow-x: hidden;
-      padding-bottom: calc(var(--safe-bottom) + 32px);
+      /* เผื่อระยะด้านล่างกันแถบเมนู Fixed ทับเนื้อหา */
+      padding-bottom: calc(var(--safe-bottom) + 92px);
       background-image:
         radial-gradient(ellipse 120% 60% at 50% -8%, rgba(245, 158, 11, 0.28), transparent 55%),
         radial-gradient(circle at 95% 15%, rgba(244, 114, 182, 0.12), transparent 40%),
@@ -83,6 +84,26 @@
 
     header {
       padding-top: calc(var(--safe-top) + 6px);
+    }
+
+    /* แถบเมนูด้านล่างลอยติดจอตลอดเวลา */
+    .floating-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      padding: 8px 14px calc(var(--safe-bottom) + 6px);
+      background: linear-gradient(180deg, rgba(3, 2, 1, 0) 0%, rgba(3, 2, 1, 0.85) 28%, rgba(3, 2, 1, 0.98) 100%);
+      pointer-events: none;
+    }
+
+    .floating-bottom-nav > div {
+      pointer-events: auto;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(12, 10, 7, 0.92);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.92), 0 0 20px rgba(245, 158, 11, 0.16);
     }
 
     .font-hud {
@@ -1013,28 +1034,29 @@
       </div>
     </section>
 
-    <nav class="pt-1 no-print">
-      <div class="chamfer-box bg-[#080705]/95 border border-amber-300/70 p-1 flex justify-between shadow-[0_10px_28px_rgba(0,0,0,0.85)]">
-        <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn transition-all">
-          <i class="fa-solid fa-gauge-high text-xs"></i>
-          <span class="text-[10px] mt-0.5">บันทึกสด</span>
-        </button>
-        <button onclick="switchTab(2)" id="nav-2" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
-          <i class="fa-solid fa-pen-to-square text-xs"></i>
-          <span class="text-[10px] mt-0.5">ย้อนหลัง</span>
-        </button>
-        <button onclick="switchTab(3)" id="nav-3" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
-          <i class="fa-solid fa-calendar-minus text-xs"></i>
-          <span class="text-[10px] mt-0.5">วันลา</span>
-        </button>
-        <button onclick="switchTab(4)" id="nav-4" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
-          <i class="fa-solid fa-chart-pie text-xs"></i>
-          <span class="text-[10px] mt-0.5">สรุปผล</span>
-        </button>
-      </div>
-    </nav>
-
   </main>
+
+  <!-- Floating Bottom Navigation Bar (ลอยติดขอบล่างจอตลอดเวลา กดสลับแท็บได้ทันทีไม่ต้องเลื่อนสุด) -->
+  <nav class="floating-bottom-nav no-print">
+    <div class="max-w-md mx-auto chamfer-box border border-amber-300/70 p-1 flex justify-between">
+      <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn transition-all">
+        <i class="fa-solid fa-gauge-high text-xs"></i>
+        <span class="text-[10px] mt-0.5">บันทึกสด</span>
+      </button>
+      <button onclick="switchTab(2)" id="nav-2" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
+        <i class="fa-solid fa-pen-to-square text-xs"></i>
+        <span class="text-[10px] mt-0.5">ย้อนหลัง</span>
+      </button>
+      <button onclick="switchTab(3)" id="nav-3" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
+        <i class="fa-solid fa-calendar-minus text-xs"></i>
+        <span class="text-[10px] mt-0.5">วันลา</span>
+      </button>
+      <button onclick="switchTab(4)" id="nav-4" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
+        <i class="fa-solid fa-chart-pie text-xs"></i>
+        <span class="text-[10px] mt-0.5">สรุปผล</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- Breakdown Modal -->
   <div id="breakdownModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
@@ -1287,7 +1309,6 @@
     const DEFAULT_HAZARD_RATE = 20;
     const SSO_MONTHLY_CAP = 750.00;
 
-    // โลโก้ SVG Base64 สำรองกรณีไฟล์ tg_emblem.png โหลดไม่ขึ้น (เช่น รันบน GAS HtmlService)
     const FALLBACK_EMBLEM_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
         <polygon points="50,5 93,28 93,72 50,95 7,72 7,28" fill="#100b04" stroke="#f59e0b" stroke-width="5"/>
@@ -2316,6 +2337,7 @@
           navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 hover:bg-white/5 transition-all";
         }
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       if (tabNum === 2) prefillManualByDate();
       if (tabNum === 4) renderHistories();
     }
@@ -2422,7 +2444,6 @@
       const inMins = timeToMins(checkInTime);
       let outMins = timeToMins(checkOutTime);
 
-      // Guard: ป้องกันกรณีกดออกก่อนเวลาเข้าไม่กี่นาทีในวันเดียวกันแล้วโดนบวกข้ามวัน 24 ชม.
       if (outMins < inMins) {
         if ((inMins - outMins) < 60) {
           outMins = inMins;
@@ -2861,9 +2882,6 @@
       }, true);
     }
 
-    /**
-     * ส่งข้อมูลไปยัง Google Apps Script แบบอ่าน JSON Response จริง (ไม่ใช้ no-cors)
-     */
     async function sendBackendPayload(extraPayload = {}, silent = false) {
       const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
       const lineToken = localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN;
@@ -2878,7 +2896,6 @@
         ...extraPayload
       };
 
-      // แนบ Token เฉพาะกรณีที่ผู้ใช้กรอกไว้ใน Config Modal เองเท่านั้น
       if (lineToken) payload.channelAccessToken = lineToken;
       if (lineUserId) payload.userId = lineUserId;
 
@@ -2916,7 +2933,6 @@
       }
 
       try {
-        // ใช้ text/plain เพื่อหลีกเลี่ยง CORS Preflight (OPTIONS) และยังอ่าน JSON Response จาก GAS ได้จริง
         const res = await fetch(gasUrl, {
           method: "POST",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -2959,7 +2975,6 @@
           }));
           localStorage.setItem("leave_records", JSON.stringify(normLeaves));
         }
-        // ซิงค์ค่าปรับปรุงสลิป (SlipAdjustments) จาก Cloud มาลงเครื่อง
         if (data.slipAdjustments && typeof data.slipAdjustments === 'object') {
           Object.entries(data.slipAdjustments).forEach(([storageKey, adjObj]) => {
             if (storageKey && adjObj && typeof adjObj === 'object') {
@@ -3299,7 +3314,6 @@
       localStorage.setItem(adjKey, JSON.stringify(adj));
       renderPayslipContent(false, false);
 
-      // ซิงค์ค่าปรับปรุงสลิปขึ้น Google Sheets อัตโนมัติ (Debounce 1 วินาที) เพื่อให้ตรงกันทุกเครื่อง
       clearTimeout(slipAdjSyncTimer);
       slipAdjSyncTimer = setTimeout(() => {
         sendBackendPayload({
