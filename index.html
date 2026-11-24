@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#050403" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>PK SOVEREIGN MK-XII </title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 96'%3E%3Crect width='120' height='96' rx='18' fill='%23050403'/%3E%3Cpath d='M12 14 H48 C61 14 68 22 68 35 C68 48 61 56 48 56 H28 V82 H12 Z M28 27 V43 H46 C51 43 53 40 53 35 C53 30 51 27 46 27 Z' fill='%23F59E0B'/%3E%3Cpath d='M75 14 H91 V42 L106 14 H120 L100 47 L120 82 H104 L91 57 V82 H75 Z' fill='%23FDE68A'/%3E%3C/svg%3E" />
-  <link id="appleTouchIconPng" rel="apple-touch-icon" sizes="180x180" href="" />
+  <title>TG • PK บันทึกเวลาทำงาน & คำนวณเงินเดือน (TOYODA GOSEI)</title>
+  <link rel="icon" type="image/png" href="tg_emblem.png" />
+  <link id="appleTouchIconPng" rel="apple-touch-icon" sizes="180x180" href="tg_emblem.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -19,14 +19,18 @@
 
   <style>
     :root {
-      --obsidian-void: #050403;
-      --obsidian-panel: #0c0a07;
-      --obsidian-elevated: #14100b;
+      --obsidian-void: #030201;
+      --obsidian-panel: #080604;
+      --obsidian-elevated: #110d08;
       --gold-deep: #78350f;
       --gold-rich: #d97706;
       --gold-bright: #f59e0b;
       --gold-champagne: #fde68a;
       --gold-ivory: #fffbeb;
+      --crimson-laser: #ef4444;
+      --neon-cyan: #22d3ee;
+      --neon-magenta: #f472b6;
+      --neon-emerald: #34d399;
       --text-main: #fafaf9;
       --text-muted: #a8a29e;
       --safe-top: max(env(safe-area-inset-top, 36px), 36px);
@@ -34,9 +38,9 @@
     }
 
     html:not(.dark) {
-      --obsidian-void: #120e0a;
-      --obsidian-panel: #1b150f;
-      --obsidian-elevated: #261e15;
+      --obsidian-void: #0e0a06;
+      --obsidian-panel: #160f09;
+      --obsidian-elevated: #221a11;
     }
 
     * {
@@ -50,11 +54,31 @@
       color: var(--text-main);
       min-height: 100dvh;
       overflow-x: hidden;
-      padding-bottom: calc(var(--safe-bottom) + 24px);
+      padding-bottom: calc(var(--safe-bottom) + 32px);
       background-image:
-        radial-gradient(circle at 50% -10%, rgba(245, 158, 11, 0.16), transparent 55%),
-        radial-gradient(circle at 85% 25%, rgba(253, 230, 138, 0.06), transparent 40%),
-        linear-gradient(180deg, #070503 0%, #040302 100%);
+        radial-gradient(ellipse 120% 60% at 50% -8%, rgba(245, 158, 11, 0.28), transparent 55%),
+        radial-gradient(circle at 95% 15%, rgba(244, 114, 182, 0.12), transparent 40%),
+        radial-gradient(circle at 5% 80%, rgba(34, 211, 238, 0.09), transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(245, 158, 11, 0.08), transparent 50%),
+        repeating-linear-gradient(0deg, transparent 0, transparent 1px, rgba(245, 158, 11, 0.018) 1px, rgba(245, 158, 11, 0.018) 2px),
+        linear-gradient(180deg, #050302 0%, #020101 100%);
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, 0.08) 3px,
+        rgba(0, 0, 0, 0.08) 4px
+      );
+      mix-blend-mode: overlay;
     }
 
     header {
@@ -89,38 +113,93 @@
 
     .sovereign-frame {
       position: relative;
-      background: linear-gradient(135deg, rgba(255, 251, 235, 0.72), rgba(245, 158, 11, 0.45), rgba(120, 53, 15, 0.75), rgba(253, 230, 138, 0.6));
-      padding: 1.25px;
+      background: linear-gradient(var(--sov-angle, 135deg), rgba(255, 251, 235, 0.92) 0%, rgba(245, 158, 11, 0.75) 22%, rgba(34, 211, 238, 0.3) 44%, rgba(220, 38, 38, 0.5) 62%, rgba(120, 53, 15, 0.9) 80%, rgba(253, 230, 138, 0.85) 100%);
+      padding: 1.5px;
       box-shadow:
-        0 14px 36px rgba(0, 0, 0, 0.88),
-        0 0 22px rgba(245, 158, 11, 0.12);
+        0 20px 50px rgba(0, 0, 0, 0.96),
+        0 0 32px rgba(245, 158, 11, 0.18),
+        0 0 60px rgba(245, 158, 11, 0.06);
+      transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.25s ease;
+      animation: borderGlow 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes borderGlow {
+      0% { --sov-angle: 135deg; box-shadow: 0 20px 50px rgba(0,0,0,0.96), 0 0 28px rgba(245,158,11,0.16); }
+      50% { box-shadow: 0 20px 50px rgba(0,0,0,0.96), 0 0 40px rgba(245,158,11,0.28), 0 0 8px rgba(34,211,238,0.12); }
+      100% { box-shadow: 0 20px 50px rgba(0,0,0,0.96), 0 0 28px rgba(245,158,11,0.16); }
     }
 
     .sovereign-inner {
       position: relative;
       background:
-        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08), transparent 65%),
+        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.14), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(34, 211, 238, 0.04), transparent 50%),
         repeating-linear-gradient(
           45deg,
-          rgba(255, 251, 235, 0.012) 0px,
-          rgba(255, 251, 235, 0.012) 1px,
+          rgba(255, 251, 235, 0.018) 0px,
+          rgba(255, 251, 235, 0.018) 1px,
           transparent 1px,
-          transparent 9px
+          transparent 7px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(0, 0, 0, 0.5) 0px,
+          rgba(0, 0, 0, 0.5) 2px,
+          transparent 2px,
+          transparent 7px
         ),
         var(--obsidian-panel);
       overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(1px);
+    }
+
+    .cyber-bracket {
+      position: relative;
+    }
+    .cyber-bracket::before,
+    .cyber-bracket::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      z-index: 15;
+      border-color: rgba(245, 158, 11, 0.85);
+      transition: border-color 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.5));
+    }
+    .cyber-bracket::before {
+      top: 3px;
+      left: 3px;
+      border-top: 2px solid;
+      border-left: 2px solid;
+    }
+    .cyber-bracket::after {
+      bottom: 3px;
+      right: 3px;
+      border-bottom: 2px solid;
+      border-right: 2px solid;
     }
 
     .gold-ingot-btn {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #fffbeb 0%, #fde68a 22%, #f59e0b 55%, #b45309 100%);
-      color: #140d04;
+      background: linear-gradient(135deg, #fffbeb 0%, #fde68a 20%, #f59e0b 55%, #b45309 100%);
+      color: #100b04;
       font-weight: 800;
-      border: 1px solid rgba(255, 251, 235, 0.75);
+      border: 1px solid rgba(255, 251, 235, 0.9);
       box-shadow:
-        0 6px 20px rgba(245, 158, 11, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        0 8px 28px rgba(245, 158, 11, 0.5),
+        0 0 12px rgba(245, 158, 11, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      transition: box-shadow 0.2s ease, transform 0.15s ease;
+    }
+    .gold-ingot-btn:hover {
+      box-shadow:
+        0 8px 32px rgba(245, 158, 11, 0.65),
+        0 0 20px rgba(245, 158, 11, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
     }
 
     .gold-ingot-btn::after {
@@ -128,39 +207,56 @@
       position: absolute;
       top: -40%;
       left: -120%;
-      width: 55%;
+      width: 50%;
       height: 180%;
       transform: rotate(24deg);
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-      animation: ingotSweep 4.2s ease-in-out infinite;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+      animation: ingotSweep 3.6s ease-in-out infinite;
       pointer-events: none;
     }
 
     @keyframes ingotSweep {
-      0%, 72% { left: -120%; }
-      100% { left: 160%; }
+      0%, 65% { left: -120%; }
+      100% { left: 170%; }
+    }
+
+    .crimson-ingot-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fee2e2 0%, #ef4444 36%, #b91c1c 72%, #7f1d1d 100%);
+      color: #ffffff;
+      font-weight: 800;
+      border: 1px solid rgba(254, 202, 202, 0.9);
+      box-shadow:
+        0 8px 28px rgba(239, 68, 68, 0.6),
+        0 0 14px rgba(239, 68, 68, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
     .tactile-btn {
-      transition: transform 0.14s cubic-bezier(0.2, 0.9, 0.3, 1), filter 0.15s ease;
+      transition: transform 0.14s cubic-bezier(0.2, 0.9, 0.3, 1), filter 0.15s ease, box-shadow 0.15s ease;
     }
-
     .tactile-btn:active {
-      transform: scale(0.965);
+      transform: scale(0.96) translateY(0.5px);
+      filter: brightness(0.92);
+    }
+    .tactile-btn:hover {
+      filter: brightness(1.08);
     }
 
     .sovereign-field {
-      background: rgba(6, 5, 4, 0.92);
-      border: 1px solid rgba(245, 158, 11, 0.38);
+      background: rgba(6, 5, 3, 0.95);
+      border: 1px solid rgba(245, 158, 11, 0.4);
       color: #fffbeb;
       border-radius: 10px;
       padding: 8px 10px;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.2s ease;
     }
 
     .sovereign-field:focus {
       border-color: #fde68a;
-      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+      box-shadow: 0 0 0 2.5px rgba(245, 158, 11, 0.22), 0 0 18px rgba(245, 158, 11, 0.18);
+      background: rgba(10, 8, 5, 0.98);
     }
 
     .sovereign-select {
@@ -173,12 +269,12 @@
     }
 
     .chrono-3d-wrap {
-      perspective: 1100px;
+      perspective: 1200px;
     }
 
     .chrono-3d-card {
       transform-style: preserve-3d;
-      transition: transform 0.22s ease-out;
+      transition: transform 0.28s ease-out;
       will-change: transform;
     }
 
@@ -188,12 +284,14 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: radial-gradient(
-        circle at var(--gx) var(--gy),
-        rgba(255, 251, 235, 0.14),
-        rgba(253, 230, 138, 0.04) 30%,
-        transparent 62%
-      );
+      background:
+        radial-gradient(
+          circle at var(--gx) var(--gy),
+          rgba(255, 251, 235, 0.22),
+          rgba(253, 230, 138, 0.08) 25%,
+          rgba(34, 211, 238, 0.03) 50%,
+          transparent 65%
+        );
       z-index: 20;
     }
 
@@ -201,10 +299,15 @@
       background:
         repeating-conic-gradient(
           from 0deg at 120px 120px,
-          rgba(245, 158, 11, 0.06) 0deg 3deg,
-          transparent 3deg 12deg
+          rgba(245, 158, 11, 0.09) 0deg 2.5deg,
+          transparent 2.5deg 10deg
         ),
-        radial-gradient(circle at 50% 45%, #19130c 0%, #090705 68%, #040302 100%);
+        radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.16) 0%, #14100a 48%, #050302 100%);
+      box-shadow:
+        0 0 36px rgba(0, 0, 0, 0.98),
+        inset 0 0 22px rgba(0, 0, 0, 0.94),
+        inset 0 1px 1px rgba(255, 251, 235, 0.45),
+        0 0 8px rgba(245, 158, 11, 0.12);
     }
 
     @keyframes slowSpin {
@@ -219,19 +322,34 @@
 
     .ring-cw {
       transform-origin: 120px 120px;
-      animation: slowSpin 38s linear infinite;
+      animation: slowSpin 32s linear infinite;
     }
 
     .ring-ccw {
       transform-origin: 120px 120px;
-      animation: reverseSpin 26s linear infinite;
+      animation: reverseSpin 20s linear infinite;
+    }
+
+    .ring-fast-cw {
+      transform-origin: 120px 120px;
+      animation: slowSpin 12s linear infinite;
+    }
+
+    @keyframes heartbeatPulse {
+      0%, 100% { opacity: 0.4; r: 96; }
+      15% { opacity: 0.9; r: 97.5; }
+      30% { opacity: 0.4; r: 96; }
+      45% { opacity: 0.75; r: 97; }
+      60% { opacity: 0.4; r: 96; }
     }
 
     .slide-track {
       position: relative;
-      height: 52px;
+      height: 56px;
       overflow: hidden;
       touch-action: none;
+      border-radius: 12px;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .slide-fill {
@@ -239,14 +357,15 @@
       inset: 0 auto 0 0;
       width: 0%;
       pointer-events: none;
+      border-radius: 11px;
     }
 
     .slide-thumb {
       position: absolute;
       top: 4px;
       left: 4px;
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -254,6 +373,7 @@
       z-index: 10;
       user-select: none;
       touch-action: none;
+      border-radius: 10px;
     }
 
     .slide-thumb:active {
@@ -261,12 +381,87 @@
     }
 
     @keyframes chevronPulse {
-      0%, 100% { opacity: 0.35; transform: translateX(0); }
-      50% { opacity: 1; transform: translateX(4px); }
+      0%, 100% { opacity: 0.3; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(6px); }
     }
 
     .chevron-anim {
-      animation: chevronPulse 1.3s ease-in-out infinite;
+      animation: chevronPulse 1s ease-in-out infinite;
+    }
+
+    .cockpit-group {
+      background: rgba(6, 5, 3, 0.96);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.9);
+    }
+
+    .cockpit-btn {
+      transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+      position: relative;
+    }
+    .cockpit-btn:active {
+      transform: scale(0.95) translateY(1px);
+    }
+    .cockpit-btn-active {
+      background: linear-gradient(135deg, #fffbeb 0%, #fde68a 22%, #f59e0b 58%, #b45309 100%) !important;
+      color: #100b04 !important;
+      font-weight: 800 !important;
+      border: 1px solid rgba(255, 251, 235, 0.9) !important;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.55), 0 0 6px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+    }
+    .cockpit-btn-inactive {
+      background: transparent !important;
+      color: #78716c !important;
+      border: 1px solid transparent !important;
+    }
+    .cockpit-btn-inactive:hover {
+      color: #fde68a !important;
+      background: rgba(245, 158, 11, 0.1) !important;
+      border-color: rgba(245, 158, 11, 0.2) !important;
+    }
+
+    .hud-glow {
+      text-shadow: 0 0 14px rgba(245, 158, 11, 0.8), 0 0 28px rgba(245, 158, 11, 0.4), 0 0 56px rgba(245, 158, 11, 0.15);
+    }
+    .hud-red-glow {
+      text-shadow: 0 0 14px rgba(239, 68, 68, 0.9), 0 0 28px rgba(239, 68, 68, 0.5), 0 0 56px rgba(239, 68, 68, 0.2);
+    }
+    .telemetry-beacon {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+      animation: beaconBlink 1.2s ease-in-out infinite;
+    }
+    @keyframes beaconBlink {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+      50% { opacity: 0.25; transform: scale(0.7); box-shadow: 0 0 4px currentColor; }
+    }
+
+    .text-gradient-gold {
+      background: linear-gradient(135deg, #fffbeb, #fde68a, #f59e0b, #fde68a, #fffbeb);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 4s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .tab-content {
+      animation: tabSlideIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    .tab-content.hidden { animation: none; }
+
+    @keyframes tabSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .a5-payslip-sheet {
@@ -299,6 +494,17 @@
         padding: 0 !important;
         margin: 0 auto !important;
         max-width: 100% !important;
+        width: 100% !important;
+      }
+      #payslipCaptureContent {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+      }
+      .overflow-x-auto {
+        overflow: visible !important;
       }
       .no-print {
         display: none !important;
@@ -310,26 +516,26 @@
 <body>
   <canvas id="constellationCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-75"></canvas>
 
-  <header class="relative z-20 px-3.5 pb-3 bg-[#050403]/95 border-b border-amber-400/25">
+  <header class="relative z-20 px-3.5 pb-3 bg-[#030201]/90 backdrop-blur-xl border-b border-amber-400/30" style="box-shadow: 0 4px 30px rgba(0,0,0,0.8), 0 1px 0 rgba(245,158,11,0.15);">
     <div class="max-w-md mx-auto space-y-2.5">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 min-w-0 flex-1">
-          <div class="chamfer-sm w-9 h-9 gold-ingot-btn flex items-center justify-center shrink-0">
-            <img alt="PK" class="company-logo-slot w-7 h-6 object-contain drop-shadow" />
+          <div class="chamfer-sm w-9 h-9 gold-ingot-btn flex items-center justify-center shrink-0 p-1">
+            <img alt="TG" class="company-logo-slot w-full h-full object-contain drop-shadow" />
           </div>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5 min-w-0">
-              <span class="font-hud font-extrabold text-xs tracking-wider text-amber-100 truncate">PK SHIFT</span>
-              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50 shrink-0">SYNCING...</span>
+              <span class="font-hud font-extrabold text-xs tracking-wider text-gradient-gold truncate">TG • PK บันทึกเวลา</span>
+              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50 shrink-0">กำลังซิงค์...</span>
             </div>
-            <p class="text-[10px] text-amber-200/65 truncate">Pantakan J. MK-XII</p>
+            <p class="text-[10px] text-amber-200/65 truncate">พันธกานต์ จ. MK-XII</p>
           </div>
         </div>
 
         <div class="flex items-center gap-1 shrink-0">
           <button onclick="cycleThemeMode()" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center gap-1 text-[9px] font-mono font-bold">
             <i id="themeIcon" class="fa-solid fa-crown text-[10px] text-amber-300"></i>
-            <span id="themeLabel">AUTO</span>
+            <span id="themeLabel">อัตโนมัติ</span>
           </button>
           <button id="audioToggleBtn" onclick="toggleAudio()" aria-label="เสียง" class="tactile-btn chamfer-sm w-8 h-8 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center justify-center">
             <i id="audioIcon" class="fa-solid fa-volume-high text-[11px]"></i>
@@ -365,71 +571,121 @@
                 <span></span>
               </div>
               <div class="flex items-center gap-1.5">
-                <span id="reactorLiveBadge" class="px-2 py-0.5 rounded bg-black/90 border border-amber-500/40 text-[9px] font-mono font-bold text-zinc-400">0% SHIFT</span>
-                <span id="lcdModeTag" class="chamfer-sm bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/50 tracking-wider">CALIBRATED</span>
+                <span id="reactorLiveBadge" class="px-2 py-0.5 rounded bg-black/90 border border-amber-500/40 text-[9px] font-mono font-bold text-zinc-400">0% เวลากะ</span>
+                <span id="lcdModeTag" class="chamfer-sm bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/50 tracking-wider">พร้อมทำงาน</span>
               </div>
             </div>
 
             <div class="relative flex items-center justify-center py-1 z-10">
-              <div class="relative w-56 h-56 flex items-center justify-center">
-                <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_24px_rgba(245,158,11,0.28)]">
+              <div class="relative w-60 h-60 flex items-center justify-center">
+                <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_28px_rgba(245,158,11,0.32)]">
                   <defs>
                     <linearGradient id="goldRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stop-color="#FFFBEB" />
-                      <stop offset="30%" stop-color="#FDE68A" />
-                      <stop offset="68%" stop-color="#D97706" />
+                      <stop offset="28%" stop-color="#FDE68A" />
+                      <stop offset="65%" stop-color="#F59E0B" />
+                      <stop offset="85%" stop-color="#D97706" />
                       <stop offset="100%" stop-color="#FEF3C7" />
                     </linearGradient>
+                    <linearGradient id="crimsonLaserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FEE2E2" />
+                      <stop offset="35%" stop-color="#EF4444" />
+                      <stop offset="80%" stop-color="#DC2626" />
+                      <stop offset="100%" stop-color="#991B1B" />
+                    </linearGradient>
+                    <linearGradient id="reactorPlasmaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FFFBEB" />
+                      <stop offset="35%" stop-color="#FDE68A" />
+                      <stop offset="65%" stop-color="#F59E0B" />
+                      <stop offset="90%" stop-color="#EF4444" />
+                      <stop offset="100%" stop-color="#DC2626" />
+                    </linearGradient>
+                    <filter id="laserNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
+                      <feGaussianBlur stdDeviation="2.2" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
                   </defs>
 
-                  <circle cx="120" cy="120" r="115" fill="none" stroke="url(#goldRimGrad)" stroke-width="2.2" />
-                  <circle cx="120" cy="120" r="108" fill="none" stroke="rgba(253,230,138,0.22)" stroke-width="1" stroke-dasharray="4 4" />
+                  <circle cx="120" cy="120" r="116" fill="none" stroke="url(#goldRimGrad)" stroke-width="2.2" />
+                  <circle cx="120" cy="120" r="110" fill="none" stroke="rgba(245,158,11,0.22)" stroke-width="1.2" stroke-dasharray="1.5 4" />
+
+                  <path d="M 120 5 A 115 115 0 0 1 201 38" fill="none" stroke="url(#crimsonLaserGrad)" stroke-width="3" stroke-linecap="round" filter="url(#laserNeonGlow)" />
+                  <text x="168" y="22" font-family="'JetBrains Mono', sans-serif" font-size="6" font-weight="800" fill="#EF4444" letter-spacing="1">REDLINE</text>
 
                   <g class="ring-cw">
-                    <circle cx="120" cy="120" r="102" fill="none" stroke="rgba(245,158,11,0.35)" stroke-width="1.2" stroke-dasharray="14 8" />
-                    <circle cx="120" cy="18" r="3" fill="#FDE68A" />
-                    <circle cx="120" cy="222" r="3" fill="#F59E0B" />
+                    <circle cx="120" cy="120" r="103" fill="none" stroke="rgba(245,158,11,0.38)" stroke-width="1.5" stroke-dasharray="16 7 4 7" />
+                    <circle cx="120" cy="17" r="3.2" fill="#FDE68A" filter="url(#laserNeonGlow)" />
+                    <circle cx="120" cy="223" r="3.2" fill="#EF4444" filter="url(#laserNeonGlow)" />
+                    <circle cx="17" cy="120" r="2.5" fill="#F59E0B" />
+                    <circle cx="223" cy="120" r="2.5" fill="#F59E0B" />
                   </g>
 
                   <g class="ring-ccw">
-                    <circle cx="120" cy="120" r="88" fill="none" stroke="rgba(253,230,138,0.25)" stroke-width="1" stroke-dasharray="6 9" />
+                    <circle cx="120" cy="120" r="88" fill="none" stroke="rgba(253,230,138,0.28)" stroke-width="1" stroke-dasharray="6 8" />
+                    <circle cx="120" cy="32" r="1.8" fill="#FFFBEB" />
+                    <circle cx="120" cy="208" r="1.8" fill="#FFFBEB" />
                   </g>
 
                   <g id="chronoTicksGroup"></g>
 
-                  <circle cx="120" cy="120" r="93" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
+                  <circle cx="120" cy="120" r="96" fill="none" stroke="rgba(34,211,238,0.35)" stroke-width="1" stroke-dasharray="3 6" style="animation: heartbeatPulse 1.6s ease-in-out infinite;" />
+
+                  <g class="ring-fast-cw">
+                    <circle cx="120" cy="24" r="1.5" fill="#22d3ee" opacity="0.6" />
+                    <circle cx="216" cy="120" r="1.2" fill="#f472b6" opacity="0.5" />
+                    <circle cx="120" cy="216" r="1.5" fill="#34d399" opacity="0.5" />
+                    <circle cx="24" cy="120" r="1.2" fill="#fde68a" opacity="0.4" />
+                  </g>
+
+                  <circle cx="120" cy="120" r="94" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3.5" />
                   <circle
                     id="reactorProgressArc"
                     cx="120"
                     cy="120"
-                    r="93"
+                    r="94"
                     fill="none"
-                    stroke="url(#goldRimGrad)"
-                    stroke-width="3.2"
+                    stroke="url(#reactorPlasmaGrad)"
+                    stroke-width="3.8"
                     stroke-linecap="round"
-                    stroke-dasharray="584.34"
-                    stroke-dashoffset="584.34"
+                    stroke-dasharray="590.62"
+                    stroke-dashoffset="590.62"
                     transform="rotate(-90 120 120)"
+                    filter="url(#laserNeonGlow)"
                   />
 
                   <g id="chronoHourHand" transform="rotate(0 120 120)">
-                    <polygon points="117.5,126 122.5,126 121.2,72 118.8,72" fill="#FDE68A" />
+                    <polygon points="115.5,126 124.5,126 122,66 120,58 118,66" fill="url(#goldRimGrad)" stroke="#78350F" stroke-width="0.75" />
+                    <polygon points="118,106 122,106 121,72 119,72" fill="#090705" />
+                    <line x1="120" y1="64" x2="120" y2="70" stroke="#FFFBEB" stroke-width="2" stroke-linecap="round" />
                   </g>
+
                   <g id="chronoMinuteHand" transform="rotate(0 120 120)">
-                    <polygon points="118.5,128 121.5,128 120.7,52 119.3,52" fill="#FFFBEB" />
+                    <polygon points="116.5,128 123.5,128 121.5,42 120,34 118.5,42" fill="#FFFBEB" stroke="#D97706" stroke-width="0.75" />
+                    <polygon points="118.5,108 121.5,108 120.8,48 119.2,48" fill="#090705" />
+                    <line x1="120" y1="40" x2="120" y2="46" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" />
                   </g>
+
                   <g id="chronoSecondHand" transform="rotate(0 120 120)">
-                    <line x1="120" y1="138" x2="120" y2="34" stroke="#F59E0B" stroke-width="1.6" stroke-linecap="round" />
-                    <circle cx="120" cy="40" r="3.5" fill="#FDE68A" />
+                    <line x1="120" y1="144" x2="120" y2="20" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" filter="url(#laserNeonGlow)" />
+                    <circle cx="120" cy="28" r="3.2" fill="#FDE68A" stroke="#EF4444" stroke-width="1" />
+                    <circle cx="120" cy="132" r="4.5" fill="none" stroke="#EF4444" stroke-width="1.6" />
                   </g>
-                  <circle cx="120" cy="120" r="5.5" fill="#D97706" stroke="#FFFBEB" stroke-width="1.5" />
+
+                  <circle cx="120" cy="120" r="7" fill="#120E09" stroke="url(#goldRimGrad)" stroke-width="2" />
+                  <circle cx="120" cy="120" r="3" fill="#EF4444" />
                 </svg>
 
-                <div class="guilloche-dial chamfer-box absolute w-36 h-24 border border-amber-300/45 flex flex-col items-center justify-center px-2 shadow-[0_0_24px_rgba(0,0,0,0.9)]">
-                  <span class="text-[8px] font-hud tracking-[0.22em] text-amber-300/80 uppercase">CHRONO TIME</span>
-                  <div id="liveClock" class="font-mono text-xl font-extrabold text-amber-50 tracking-tight mt-0.5">00:00:00<span class="text-xs text-amber-300 font-bold">.0</span></div>
+                <div class="guilloche-dial chamfer-box absolute w-40 h-28 border border-amber-300/50 flex flex-col items-center justify-center px-2.5 py-1.5 shadow-[0_0_28px_rgba(0,0,0,0.95)]">
+                  <div class="flex items-center gap-1.5 mb-0.5">
+                    <span id="liveClockBeacon" class="telemetry-beacon text-emerald-400"></span>
+                    <span class="text-[7.5px] font-hud tracking-[0.24em] text-amber-300/85 uppercase font-bold">TG • CHRONO CORE</span>
+                  </div>
+                  <div id="liveClock" class="hud-glow font-mono text-xl font-extrabold text-amber-50 tracking-tight">00:00:00<span class="text-xs text-amber-300 font-bold">.0</span></div>
                   <div class="flex items-center gap-1.5 mt-1">
-                    <span id="dutyBadge" class="chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-900 border border-amber-400/50 font-hud font-bold text-amber-200 tracking-wider">STANDBY</span>
+                    <span id="dutyBadge" class="chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-950 border border-amber-400/60 font-hud font-bold text-amber-200 tracking-wider">รอเข้างาน</span>
                   </div>
                 </div>
               </div>
@@ -464,17 +720,17 @@
 
             <div class="space-y-1.5 relative z-10">
               <div class="flex justify-between items-center px-0.5">
-                <span class="font-hud text-[9px] text-amber-200/75 tracking-wider">IGNITION SLIDER</span>
-                <span id="ignitionStatusHint" class="font-hud text-[9px] text-amber-300 tracking-wider">SLIDE TO ENGAGE</span>
+                <span class="font-hud text-[9px] text-amber-200/75 tracking-wider font-bold">// SYS.03 IGNITION CONTROL</span>
+                <span id="ignitionStatusHint" class="font-hud text-[9px] text-amber-300 font-bold tracking-wider">เลื่อนเพื่อลงเวลาเข้างาน</span>
               </div>
-              <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-black/95 border border-amber-300/65 flex items-center justify-center select-none shadow-inner">
-                <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-amber-700/50 to-amber-300/80"></div>
-                <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8">
-                  <span>SLIDE TO CHECK IN</span>
+              <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-[#060403] border border-amber-300/70 flex items-center justify-center select-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.95),0_0_16px_rgba(245,158,11,0.2)]">
+                <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-amber-700/60 via-amber-500/70 to-amber-300/90"></div>
+                <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8 hud-glow">
+                  <span>◀◀ สไลด์เพื่อลงเวลาเข้างาน</span>
                   <span class="chevron-anim text-xs">&gt;&gt;&gt;</span>
                 </div>
                 <div id="ignitionSlideThumb" class="slide-thumb chamfer-sm gold-ingot-btn">
-                  <i class="fa-solid fa-bolt text-sm"></i>
+                  <i class="fa-solid fa-bolt text-base text-zinc-950 drop-shadow"></i>
                 </div>
               </div>
             </div>
@@ -482,30 +738,30 @@
         </div>
       </div>
 
-      <div class="sovereign-frame chamfer-box">
+      <div class="sovereign-frame chamfer-box cyber-bracket">
         <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
           <div class="flex items-center justify-between border-b border-amber-500/25 pb-2">
             <div class="flex items-center gap-2">
-              <span class="font-hud font-bold text-xs tracking-wider text-amber-100">SHIFT & OT CALIBRATION</span>
-              <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/50">AUTO</button>
+              <span class="font-hud font-bold text-xs tracking-wider text-amber-100">ตั้งค่ากะ & อัตรา OT</span>
+              <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/50">อัตโนมัติ</button>
             </div>
-            <span id="otRateGaugePill" class="chamfer-sm px-2 py-0.5 bg-amber-500/15 border border-amber-300/50 font-mono text-[10px] font-extrabold text-amber-200">1.5X</span>
+            <span id="otRateGaugePill" class="chamfer-sm px-2.5 py-0.5 bg-amber-500/15 border border-amber-300/50 font-mono text-[10px] font-extrabold text-amber-200">1.5X</span>
           </div>
 
           <div class="grid grid-cols-3 gap-2">
-            <div class="bg-black/80 border border-amber-500/25 rounded-lg p-1 grid grid-cols-2 gap-1">
-              <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px]">DAY</button>
-              <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 font-hud font-bold text-[10px]">NIGHT</button>
+            <div class="cockpit-group chamfer-sm p-1 grid grid-cols-2 gap-1">
+              <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px]">กะเช้า</button>
+              <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 font-hud font-bold text-[10px]">กะดึก</button>
             </div>
 
-            <div class="bg-black/80 border border-amber-500/25 rounded-lg p-1 grid grid-cols-2 gap-1">
-              <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 font-hud font-bold text-[10px]">REG</button>
-              <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 font-hud font-bold text-[10px]">HOL</button>
+            <div class="cockpit-group chamfer-sm p-1 grid grid-cols-2 gap-1">
+              <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 font-hud font-bold text-[10px]">วันปกติ</button>
+              <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 font-hud font-bold text-[10px]">วันหยุด</button>
             </div>
 
-            <div class="bg-black/80 border border-amber-500/25 rounded-lg p-1 grid grid-cols-2 gap-1">
-              <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 font-hud font-bold text-[10px]">FULL</button>
-              <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 font-hud font-bold text-[10px]">HALF</button>
+            <div class="cockpit-group chamfer-sm p-1 grid grid-cols-2 gap-1">
+              <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 font-hud font-bold text-[10px]">เต็มวัน</button>
+              <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 font-hud font-bold text-[10px]">ครึ่งวัน</button>
             </div>
           </div>
 
@@ -533,15 +789,15 @@
 
           <div class="grid grid-cols-3 gap-2 font-mono text-center pt-0.5">
             <div class="chamfer-sm bg-black/85 border border-amber-500/30 p-2">
-              <div id="estBaseLabel" class="text-[8.5px] text-zinc-400 uppercase">BASE PAY</div>
+              <div id="estBaseLabel" class="text-[8.5px] text-zinc-400 uppercase">ค่าแรงปกติ</div>
               <div id="estBasePay" class="text-xs font-extrabold text-amber-100 mt-0.5">400 ฿</div>
             </div>
             <div class="chamfer-sm bg-black/85 border border-amber-500/30 p-2">
-              <div class="text-[8.5px] text-zinc-400 uppercase">ALLOWANCE</div>
+              <div class="text-[8.5px] text-zinc-400 uppercase">ค่าอาหาร/กะ</div>
               <div id="estAllowanceVal" class="text-xs font-extrabold text-amber-200 mt-0.5">10 ฿</div>
             </div>
             <div class="chamfer-sm bg-gradient-to-br from-amber-950/80 to-black border border-amber-300/60 p-2">
-              <div class="text-[8.5px] text-amber-200/85 uppercase">EST. TOTAL</div>
+              <div class="text-[8.5px] text-amber-200/85 uppercase">ประมาณการยอด</div>
               <div id="estTotal" class="text-xs font-extrabold text-amber-300 mt-0.5">410 ฿</div>
             </div>
           </div>
@@ -551,7 +807,7 @@
 
     <!-- TAB 2: Manual Override -->
     <section id="tab-2" class="tab-content hidden space-y-3.5">
-      <div class="sovereign-frame chamfer-box">
+      <div class="sovereign-frame chamfer-box cyber-bracket">
         <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
           <div class="border-b border-amber-500/25 pb-2.5 flex items-center justify-between gap-2">
             <div class="flex items-center space-x-2.5">
@@ -559,11 +815,12 @@
                 <i class="fa-solid fa-pen-to-square"></i>
               </div>
               <div>
-                <h2 class="font-hud font-bold text-xs tracking-wide text-amber-50">MANUAL OVERRIDE</h2>
-                <p class="text-[10px] text-zinc-400">บันทึกเวลาย้อนหลัง (08:00-16:50 | OT 17:10-19:10)</p>
+                <div class="text-[7.5px] font-mono tracking-widest text-amber-400/80 uppercase font-bold">// SYS.04 MANUAL LOGS</div>
+                <h2 class="font-hud font-bold text-xs tracking-wide text-amber-50">บันทึกเวลาย้อนหลัง</h2>
+                <p class="text-[10px] text-zinc-400">กรอกเวลาทำงานย้อนหลัง (08:00-16:50 | OT 17:10-19:10)</p>
               </div>
             </div>
-            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-200 px-2 py-0.5 border border-amber-300/50">EXISTING</span>
+            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-200 px-2 py-0.5 border border-amber-300/50 shadow-[0_0_8px_rgba(245,158,11,0.25)]">มีข้อมูลเดิม</span>
           </div>
 
           <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-3 text-xs">
@@ -624,14 +881,15 @@
 
     <!-- TAB 3: Leave Form -->
     <section id="tab-3" class="tab-content hidden space-y-3.5">
-      <div class="sovereign-frame chamfer-box">
+      <div class="sovereign-frame chamfer-box cyber-bracket">
         <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
           <div class="border-b border-amber-500/25 pb-2.5 flex items-center space-x-2.5">
             <div class="chamfer-sm w-7 h-7 gold-ingot-btn flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-calendar-minus"></i>
             </div>
             <div>
-              <h2 class="font-hud font-bold text-xs tracking-wide text-amber-50">LEAVE DISPATCH</h2>
+              <div class="text-[7.5px] font-mono tracking-widest text-amber-400/80 uppercase font-bold">// SYS.05 LEAVE DISPATCH</div>
+              <h2 class="font-hud font-bold text-xs tracking-wide text-amber-50">ส่งใบลาออนไลน์</h2>
               <p class="text-[10px] text-zinc-400">บันทึกการลางานและส่งแจ้งเตือนเข้า LINE</p>
             </div>
           </div>
@@ -699,17 +957,20 @@
       </div>
 
       <div class="grid grid-cols-2 gap-2.5 font-mono">
-        <div class="col-span-2 sovereign-frame chamfer-box">
+        <div class="col-span-2 sovereign-frame chamfer-box cyber-bracket">
           <div class="sovereign-inner chamfer-box p-3.5 relative overflow-hidden space-y-2">
-            <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-24 h-20 opacity-15 pointer-events-none" />
+            <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-28 h-20 opacity-20 pointer-events-none object-contain" />
             <div class="flex justify-between items-center">
-              <span class="text-[10.5px] font-sans text-zinc-400">ยอดรวมค่าแรง + OT ในรอบนี้</span>
-              <span class="text-[10px] font-sans bg-amber-500/20 border border-amber-300/50 px-2.5 py-0.5 rounded-full text-amber-200 font-bold" id="summaryTotalRecords">0 รายการ</span>
+              <div>
+                <span class="text-[7.5px] font-mono tracking-widest text-amber-400/80 uppercase font-bold block">// SYS.06 TELEMETRY AGGREGATE</span>
+                <span class="text-[10.5px] font-sans text-zinc-400">ยอดรวมค่าแรง + OT ในรอบนี้</span>
+              </div>
+              <span class="text-[10px] font-sans bg-amber-500/20 border border-amber-300/50 px-2.5 py-0.5 rounded-full text-amber-200 font-bold shadow-[0_0_8px_rgba(245,158,11,0.25)]" id="summaryTotalRecords">0 รายการ</span>
             </div>
-            <div class="text-2xl font-extrabold text-amber-200 tracking-tight relative z-10" id="summaryTotalSalary">0.00 ฿</div>
+            <div class="text-2xl font-extrabold text-amber-200 tracking-tight relative z-10 hud-glow" id="summaryTotalSalary">0.00 ฿</div>
             <div class="space-y-1 pt-1">
               <div class="flex justify-between text-[9px] text-zinc-400">
-                <span>CYCLE BENCHMARK (10,000 ฿)</span>
+                <span>เป้าหมายรายได้งวดนี้ (10,000 ฿)</span>
                 <span id="cycleTargetPct" class="text-amber-300 font-bold">0%</span>
               </div>
               <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-amber-500/35">
@@ -736,8 +997,8 @@
       <div id="dailyChartPanel" class="sovereign-frame chamfer-sm hidden">
         <div class="sovereign-inner chamfer-sm p-3 space-y-2">
           <div class="flex justify-between items-center text-[9.5px] font-hud text-zinc-400">
-            <span><i class="fa-solid fa-chart-simple text-amber-300 mr-1"></i>DAILY PAY TELEMETRY</span>
-            <span class="text-amber-200">TAP BAR FOR DETAIL</span>
+            <span><i class="fa-solid fa-chart-simple text-amber-300 mr-1"></i>กราฟรายได้รายวัน</span>
+            <span class="text-amber-200">แตะแท่งกราฟเพื่อดูรายละเอียด</span>
           </div>
           <div id="dailyBarsContainer" class="flex items-end gap-1.5 h-20 pt-3 px-1 overflow-x-auto"></div>
         </div>
@@ -780,7 +1041,7 @@
     <div class="sovereign-frame chamfer-box w-full max-w-xs">
       <div class="sovereign-inner chamfer-box p-4 space-y-3">
         <div class="flex justify-between items-center border-b border-amber-400/30 pb-2">
-          <h3 class="font-hud font-bold text-xs text-amber-200">TELEMETRY BREAKDOWN</h3>
+          <h3 class="font-hud font-bold text-xs text-amber-200">รายละเอียดรายได้รายวัน</h3>
           <button onclick="closeBreakdownModal()" class="text-zinc-400 hover:text-amber-300 p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="modalContent" class="space-y-1.5 text-xs text-zinc-200"></div>
@@ -984,7 +1245,7 @@
     <div class="sovereign-frame chamfer-box w-full max-w-xs">
       <div class="sovereign-inner chamfer-box p-4 space-y-3">
         <div class="flex justify-between items-center border-b border-amber-400/30 pb-2">
-          <h3 class="font-hud font-bold text-xs text-amber-200">SYSTEM CONFIG</h3>
+          <h3 class="font-hud font-bold text-xs text-amber-200">ตั้งค่าระบบ & การเชื่อมต่อ</h3>
           <button onclick="closeConfigModal()" class="text-zinc-400 hover:text-amber-300 p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="space-y-2 text-xs">
@@ -993,12 +1254,12 @@
             <input type="text" id="gasUrlInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
           </div>
           <div>
-            <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE Channel Token</label>
-            <input type="text" id="lineTokenInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
+            <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE Channel Token (เว้นว่างได้ถ้าตั้งใน GAS)</label>
+            <input type="text" id="lineTokenInput" placeholder="ตั้งค่าใน GAS Script Properties จะปลอดภัยกว่า" class="sovereign-field w-full text-[10px] font-mono outline-none" />
           </div>
           <div>
-            <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE User ID</label>
-            <input type="text" id="lineUserIdInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
+            <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE User ID (เว้นว่างได้ถ้าตั้งใน GAS)</label>
+            <input type="text" id="lineUserIdInput" placeholder="ตั้งค่าใน GAS Script Properties จะปลอดภัยกว่า" class="sovereign-field w-full text-[10px] font-mono outline-none" />
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">เรตค่าเสี่ยงภัย (บาท/วัน)</label>
@@ -1019,10 +1280,20 @@
 
   <script>
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbz9m1r1olY7mEnzNTEK9Ml3helG24iAJPzyvCEob1a9qO9JI0_G4LAdCsSloSZMivh9/exec";
-    const GAS_URL_VERSION = "v2026_12_19_sovereign_pk_calendar_fix";
-    const DEFAULT_LINE_TOKEN = "NCURffVn9SZ4I+MpbibQluWUNeLs5BM7xXT9lrs7HnE+IlDaKy9muokRv3gvBqsNDH0quqVo/PqSvf9kebRHZEPfLx7I4RJzjBUTEwSHbRewZ61/uhLgQjfUWjY1LpA8khVSbngeM6ewKPB5bw8qdAdB04t89/1O/w1cDnyilFU=";
-    const DEFAULT_LINE_USER_ID = "U2fd9fade0d6d5c8b5df8582841fbbb9e";
+    const GAS_URL_VERSION = "v2026_12_20_sovereign_pk_full_sync";
+
+    const DEFAULT_LINE_TOKEN = "";
+    const DEFAULT_LINE_USER_ID = "";
     const DEFAULT_HAZARD_RATE = 20;
+    const SSO_MONTHLY_CAP = 750.00;
+
+    // โลโก้ SVG Base64 สำรองกรณีไฟล์ tg_emblem.png โหลดไม่ขึ้น (เช่น รันบน GAS HtmlService)
+    const FALLBACK_EMBLEM_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <polygon points="50,5 93,28 93,72 50,95 7,72 7,28" fill="#100b04" stroke="#f59e0b" stroke-width="5"/>
+        <text x="50" y="58" font-family="Arial, sans-serif" font-weight="900" font-size="30" fill="#fde68a" text-anchor="middle">TG</text>
+      </svg>`
+    );
 
     const employeeList = [
       { id: "50001024", name: "นายพันธกานต์  จูมจันทร์", dept: "MAT", startDate: "2026-08-03", bankAcc: "5052911817", initialDiligenceStep: 3 },
@@ -1076,71 +1347,38 @@
     let isPullingSheets = false;
     let isCapturingSlipImage = false;
     let latestRenderedSlipSnapshot = null;
+    let slipAdjSyncTimer = null;
 
     function hasGasScriptBridge() {
       return typeof google !== "undefined" && google.script && google.script.run;
     }
 
     function applyCompanyLogos() {
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 96">
-        <defs>
-          <linearGradient id="pkDarkGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#291906"/>
-            <stop offset="55%" stop-color="#140c03"/>
-            <stop offset="100%" stop-color="#050403"/>
-          </linearGradient>
-        </defs>
-        <path d="M12 14 H48 C61 14 68 22 68 35 C68 48 61 56 48 56 H28 V82 H12 Z M28 27 V43 H46 C51 43 53 40 53 35 C53 30 51 27 46 27 Z" fill="url(#pkDarkGold)"/>
-        <path d="M75 14 H91 V42 L106 14 H120 L100 47 L120 82 H104 L91 57 V82 H75 Z" fill="url(#pkDarkGold)"/>
-      </svg>`;
-      const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
       document.querySelectorAll('.company-logo-slot').forEach(img => {
-        img.src = dataUri;
+        img.onerror = () => {
+          img.onerror = null;
+          img.src = FALLBACK_EMBLEM_SVG;
+        };
+        img.src = 'tg_emblem.png';
       });
     }
 
     function generateGoldPkTouchIcon() {
-      try {
-        const c = document.createElement('canvas');
-        c.width = 180;
-        c.height = 180;
-        const ctx = c.getContext('2d');
-
-        ctx.fillStyle = '#050403';
-        ctx.fillRect(0, 0, 180, 180);
-
-        const grad = ctx.createLinearGradient(16, 16, 164, 164);
-        grad.addColorStop(0, '#FFFBEB');
-        grad.addColorStop(0.35, '#FDE68A');
-        grad.addColorStop(0.7, '#F59E0B');
-        grad.addColorStop(1, '#B45309');
-
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 4;
-        ctx.strokeRect(10, 10, 160, 160);
-
-        ctx.fillStyle = grad;
-        ctx.font = '800 76px "Cinzel", Georgia, serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('PK', 90, 95);
-
-        const link = document.getElementById('appleTouchIconPng');
-        if (link) link.href = c.toDataURL('image/png');
-      } catch (e) {}
+      const link = document.getElementById('appleTouchIconPng');
+      if (link) link.href = 'tg_emblem.png';
     }
 
     function setSyncPillStatus(state) {
       const pill = document.getElementById('cloudSyncPill');
       if (!pill) return;
       if (state === 'LINKED') {
-        pill.textContent = "LINKED";
+        pill.textContent = "เชื่อมต่อแล้ว";
         pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shrink-0";
       } else if (state === 'SYNCING') {
-        pill.textContent = "SYNCING...";
+        pill.textContent = "กำลังซิงค์...";
         pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50 shrink-0";
       } else {
-        pill.textContent = "OFFLINE";
+        pill.textContent = "ออฟไลน์";
         pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-rose-500/20 text-rose-400 border border-rose-500/50 shrink-0";
       }
     }
@@ -1218,14 +1456,25 @@
         const angle = i * 6;
         const isCardinal = i % 15 === 0;
         const isMajor = i % 5 === 0;
+        const isRedline = angle >= 270 && angle <= 360;
+
         if (isCardinal) {
-          html += `<polygon points="120,8 123,16 120,21 117,16" fill="#FFFBEB" stroke="#B45309" stroke-width="0.6" transform="rotate(${angle} 120 120)"/>`;
+          const fillCol = isRedline ? '#FEE2E2' : '#FFFBEB';
+          const strokeCol = isRedline ? '#EF4444' : '#D97706';
+          html += `<polygon points="120,6 123.5,15 120,21 116.5,15" fill="${fillCol}" stroke="${strokeCol}" stroke-width="1.2" transform="rotate(${angle} 120 120)"/>`;
         } else {
-          const y1 = isMajor ? 10 : 12;
-          const y2 = isMajor ? 18 : 16;
-          const stroke = isMajor ? 'rgba(245,158,11,0.92)' : 'rgba(253,230,138,0.22)';
-          const width = isMajor ? '1.7' : '0.85';
-          html += `<line x1="120" y1="${y1}" x2="120" y2="${y2}" stroke="${stroke}" stroke-width="${width}" transform="rotate(${angle} 120 120)"/>`;
+          const y1 = isMajor ? 9 : 12;
+          const y2 = isMajor ? 19 : 16;
+          let stroke = '';
+          let width = '';
+          if (isRedline) {
+            stroke = isMajor ? '#EF4444' : 'rgba(239,68,68,0.7)';
+            width = isMajor ? '2.4' : '1.2';
+          } else {
+            stroke = isMajor ? 'rgba(245,158,11,0.95)' : 'rgba(253,230,138,0.3)';
+            width = isMajor ? '2.0' : '0.9';
+          }
+          html += `<line x1="120" y1="${y1}" x2="120" y2="${y2}" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" transform="rotate(${angle} 120 120)"/>`;
         }
       }
       group.innerHTML = html;
@@ -1357,7 +1606,7 @@
 
     function normalizeDateToISO(rawDate) {
       if (!rawDate) return '';
-      const str = String(rawDate).trim();
+      const str = String(rawDate).trim().replace(/^'/, '');
       if (str.includes('T')) {
         const d = new Date(str);
         if (!isNaN(d.getTime())) return getLocalDateStr(d);
@@ -1383,7 +1632,10 @@
       if (!checkIn || !checkOut) return 8;
       const inMins = timeToMins(checkIn);
       let outMins = timeToMins(checkOut);
-      if (outMins < inMins) outMins += 1440;
+      if (outMins < inMins) {
+        if ((inMins - outMins) < 60) return 0;
+        outMins += 1440;
+      }
       const netMins = Math.max(0, (outMins - inMins) - 50);
       return Math.round((netMins / 60) * 100) / 100;
     }
@@ -1392,8 +1644,8 @@
       const shift = r.shift || 'DAY';
       const dayType = r.dayType || 'REGULAR';
       const workType = r.workType || 'FULL';
-      const checkIn = r.checkIn || '';
-      const checkOut = r.checkOut || '';
+      const checkIn = String(r.checkIn || '').replace(/^'/, '');
+      const checkOut = String(r.checkOut || '').replace(/^'/, '');
       const workedHours = (r.workedHours !== undefined && r.workedHours !== null && r.workedHours !== '')
         ? Number(r.workedHours)
         : computeWorkedHoursFallback(shift, checkIn, checkOut);
@@ -1410,7 +1662,7 @@
 
       return {
         ...r,
-        id: String(r.id || '').trim(),
+        id: String(r.id || '').trim().replace(/^'/, ''),
         employeeName: String(r.employeeName || '').trim(),
         date: normalizeDateToISO(r.date),
         shift, dayType, workType, checkIn, checkOut, workedHours,
@@ -1484,10 +1736,10 @@
       const badge = document.getElementById('btnAutoShiftMode');
       if (!badge) return;
       if (isShiftAutoMode()) {
-        badge.textContent = "AUTO";
+        badge.textContent = "อัตโนมัติ";
         badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/50";
       } else {
-        badge.textContent = "MANUAL";
+        badge.textContent = "ปรับเอง";
         badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-zinc-800 text-zinc-400 border border-zinc-700";
       }
     }
@@ -1528,9 +1780,6 @@
       if (dayOfWeek === 0) return true;
       if (dayOfWeek === 6) {
         if (COMPANY_WORKING_SATURDAYS_2026.has(dateStr)) return false;
-        const year = dateObj.getFullYear();
-        const month = dateObj.getMonth();
-        if (year === 2026 && month === 10) return false;
         return true;
       }
       return false;
@@ -1723,6 +1972,56 @@
       };
     }
 
+    function calcSocialSecurityM33(allEmpRecords, startStr, endStr, latestRecordDateStr = '') {
+      let refYear, refMonth, isSecondHalf;
+      if (!startStr || startStr === '2000-01-01') {
+        const refDate = latestRecordDateStr ? new Date(latestRecordDateStr + 'T00:00:00') : new Date();
+        refYear = refDate.getFullYear();
+        refMonth = refDate.getMonth() + 1;
+        isSecondHalf = refDate.getDate() >= 16;
+      } else {
+        const [y, m, d] = startStr.split('-').map(Number);
+        refYear = y;
+        refMonth = m;
+        isSecondHalf = d >= 16;
+      }
+
+      const ymPrefix = `${refYear}-${String(refMonth).padStart(2, '0')}`;
+      const firstHalfStart = `${ymPrefix}-01`;
+      const firstHalfEnd = `${ymPrefix}-15`;
+      const lastDay = new Date(refYear, refMonth, 0).getDate();
+      const secondHalfStart = `${ymPrefix}-16`;
+      const secondHalfEnd = `${ymPrefix}-${String(lastDay).padStart(2, '0')}`;
+
+      const baseFirstHalf = allEmpRecords
+        .filter(r => r.date >= firstHalfStart && r.date <= firstHalfEnd)
+        .reduce((sum, r) => sum + (Number(r.baseSalary) || 0), 0);
+
+      const ssoFirstHalf = baseFirstHalf > 0
+        ? Math.min(Math.round(baseFirstHalf * 0.05), SSO_MONTHLY_CAP)
+        : 0;
+
+      if (!isSecondHalf) {
+        return ssoFirstHalf;
+      }
+
+      const firstHalfKey = `slip_adj_${currentEmpId}_${firstHalfStart}|${firstHalfEnd}`;
+      const savedFirstHalf = JSON.parse(localStorage.getItem(firstHalfKey) || "null");
+      const actualFirstHalfSso = (savedFirstHalf && typeof savedFirstHalf.socSec === 'number')
+        ? savedFirstHalf.socSec
+        : ssoFirstHalf;
+
+      const baseSecondHalf = allEmpRecords
+        .filter(r => r.date >= secondHalfStart && r.date <= secondHalfEnd)
+        .reduce((sum, r) => sum + (Number(r.baseSalary) || 0), 0);
+
+      const totalMonthBase = baseFirstHalf + baseSecondHalf;
+      if (totalMonthBase <= 0) return 0;
+
+      const totalMonthSso = Math.min(Math.round(totalMonthBase * 0.05), SSO_MONTHLY_CAP);
+      return Math.max(0, Math.round((totalMonthSso - actualFirstHalfSso) * 100) / 100);
+    }
+
     function computePreviousPeriodYTD(allEmpRecords, allEmpLeaves, startStr, latestRecordDateStr = '') {
       let refYear, refMonth, isFirstHalf;
       if (!startStr || startStr === '2000-01-01') {
@@ -1772,9 +2071,7 @@
           const pOtherIncome = savedAdj?.otherIncome ?? 0;
 
           const pTotalEarnings = pBaseEarnings + pDiligence + pHazard + pBonus + pOtherIncome;
-          const autoSoc = (pBaseEarnings + pHazard + pDiligence) > 0
-            ? Math.min(Math.round((pBaseEarnings + pHazard + pDiligence) * 0.05), 200.00)
-            : 0.00;
+          const autoSoc = calcSocialSecurityM33(allEmpRecords, h.start, h.end, h.end);
           const pSocSec = savedAdj?.socSec ?? autoSoc;
 
           if (pTotalEarnings > 0 || savedAdj) {
@@ -1815,48 +2112,67 @@
     function playClick(type = 'normal') {
       if (!soundEnabled) return;
       const nowMs = Date.now();
-      if (type === 'normal' && nowMs - lastClickTime < 60) return;
+      if (type === 'normal' && nowMs - lastClickTime < 50) return;
       lastClickTime = nowMs;
 
       try {
         initAudio();
         if (!sharedAudioCtx) return;
         const now = sharedAudioCtx.currentTime;
-        const osc = sharedAudioCtx.createOscillator();
-        const gain = sharedAudioCtx.createGain();
 
         if (type === 'confirm') {
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(680, now);
-          osc.frequency.exponentialRampToValueAtTime(1520, now + 0.065);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-          osc.connect(gain);
-          gain.connect(sharedAudioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.085);
+          const subOsc = sharedAudioCtx.createOscillator();
+          const subGain = sharedAudioCtx.createGain();
+          subOsc.type = 'sine';
+          subOsc.frequency.setValueAtTime(140, now);
+          subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.11);
+          subGain.gain.setValueAtTime(0.35, now);
+          subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          subOsc.connect(subGain);
+          subGain.connect(sharedAudioCtx.destination);
+          subOsc.start(now);
+          subOsc.stop(now + 0.125);
+
+          const surgeOsc = sharedAudioCtx.createOscillator();
+          const surgeGain = sharedAudioCtx.createGain();
+          surgeOsc.type = 'sawtooth';
+          surgeOsc.frequency.setValueAtTime(420, now);
+          surgeOsc.frequency.exponentialRampToValueAtTime(1860, now + 0.085);
+          surgeGain.gain.setValueAtTime(0.18, now);
+          surgeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+          surgeOsc.connect(surgeGain);
+          surgeGain.connect(sharedAudioCtx.destination);
+          surgeOsc.start(now);
+          surgeOsc.stop(now + 0.095);
+
+          if (navigator.vibrate) navigator.vibrate([22, 28, 30]);
         } else if (type === 'detent') {
+          const osc = sharedAudioCtx.createOscillator();
+          const gain = sharedAudioCtx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(1320, now);
-          osc.frequency.exponentialRampToValueAtTime(520, now + 0.016);
-          gain.gain.setValueAtTime(0.12, now);
+          osc.frequency.setValueAtTime(1850, now);
+          osc.frequency.exponentialRampToValueAtTime(680, now + 0.016);
+          gain.gain.setValueAtTime(0.16, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
           osc.start(now);
           osc.stop(now + 0.022);
+          if (navigator.vibrate) navigator.vibrate(8);
         } else {
+          const osc = sharedAudioCtx.createOscillator();
+          const gain = sharedAudioCtx.createGain();
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(980, now);
-          osc.frequency.exponentialRampToValueAtTime(260, now + 0.028);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+          osc.frequency.setValueAtTime(1150, now);
+          osc.frequency.exponentialRampToValueAtTime(220, now + 0.025);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.032);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
           osc.start(now);
-          osc.stop(now + 0.038);
+          osc.stop(now + 0.035);
+          if (navigator.vibrate) navigator.vibrate(10);
         }
-        if (navigator.vibrate) navigator.vibrate(type === 'confirm' ? [16, 20, 20] : 8);
       } catch (e) {}
     }
 
@@ -1890,21 +2206,43 @@
     }
 
     function renderSwitchStates() {
-      const activeCls = "chamfer-sm gold-ingot-btn transition";
-      const inactiveCls = "text-zinc-400 hover:text-amber-200 transition";
+      const activeCls = "chamfer-sm cockpit-btn cockpit-btn-active text-[10px] py-1.5";
+      const inactiveCls = "chamfer-sm cockpit-btn cockpit-btn-inactive text-[10px] py-1.5";
+      const ledPip = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399] inline-block mr-1"></span>`;
 
-      document.getElementById('swShiftDay').className = `py-1.5 font-hud font-bold text-[10px] ${currentShift === 'DAY' ? activeCls : inactiveCls}`;
-      document.getElementById('swShiftNight').className = `py-1.5 font-hud font-bold text-[10px] ${currentShift === 'NIGHT' ? activeCls : inactiveCls}`;
+      const swDay = document.getElementById('swShiftDay');
+      const swNight = document.getElementById('swShiftNight');
+      if (swDay && swNight) {
+        swDay.className = currentShift === 'DAY' ? activeCls : inactiveCls;
+        swDay.innerHTML = `${currentShift === 'DAY' ? ledPip : ''}กะเช้า`;
+        swNight.className = currentShift === 'NIGHT' ? activeCls : inactiveCls;
+        swNight.innerHTML = `${currentShift === 'NIGHT' ? ledPip : ''}กะดึก`;
+      }
 
-      document.getElementById('swDayReg').className = `py-1.5 font-hud font-bold text-[10px] ${currentDayType === 'REGULAR' ? activeCls : inactiveCls}`;
-      document.getElementById('swDayHol').className = `py-1.5 font-hud font-bold text-[10px] ${currentDayType === 'HOLIDAY' ? activeCls : inactiveCls}`;
+      const swReg = document.getElementById('swDayReg');
+      const swHol = document.getElementById('swDayHol');
+      if (swReg && swHol) {
+        swReg.className = currentDayType === 'REGULAR' ? activeCls : inactiveCls;
+        swReg.innerHTML = `${currentDayType === 'REGULAR' ? ledPip : ''}วันปกติ`;
+        swHol.className = currentDayType === 'HOLIDAY' ? activeCls : inactiveCls;
+        swHol.innerHTML = `${currentDayType === 'HOLIDAY' ? ledPip : ''}วันหยุด`;
+      }
 
-      document.getElementById('swModeFull').className = `py-1.5 font-hud font-bold text-[10px] ${currentWorkType === 'FULL' ? activeCls : inactiveCls}`;
-      document.getElementById('swModeHalf').className = `py-1.5 font-hud font-bold text-[10px] ${currentWorkType === 'HALF' ? activeCls : inactiveCls}`;
+      const swFull = document.getElementById('swModeFull');
+      const swHalf = document.getElementById('swModeHalf');
+      if (swFull && swHalf) {
+        swFull.className = currentWorkType === 'FULL' ? activeCls : inactiveCls;
+        swFull.innerHTML = `${currentWorkType === 'FULL' ? ledPip : ''}เต็มวัน`;
+        swHalf.className = currentWorkType === 'HALF' ? activeCls : inactiveCls;
+        swHalf.innerHTML = `${currentWorkType === 'HALF' ? ledPip : ''}ครึ่งวัน`;
+      }
 
       const ratePill = document.getElementById('otRateGaugePill');
       if (ratePill) {
         ratePill.textContent = currentDayType === 'HOLIDAY' ? '2.0X' : '1.5X';
+        ratePill.className = currentDayType === 'HOLIDAY'
+          ? "chamfer-sm px-2.5 py-0.5 bg-rose-500/20 border border-rose-400/70 font-mono text-[10px] font-extrabold text-rose-300 shadow-[0_0_10px_rgba(239,68,68,0.3)]"
+          : "chamfer-sm px-2.5 py-0.5 bg-amber-500/20 border border-amber-300/60 font-mono text-[10px] font-extrabold text-amber-200 shadow-[0_0_10px_rgba(245,158,11,0.2)]";
       }
 
       updateAutoShiftBadge();
@@ -1922,8 +2260,12 @@
         localStorage.setItem("gas_url", DEFAULT_GAS_URL);
         localStorage.setItem("gas_url_ver", GAS_URL_VERSION);
       }
-      if (!localStorage.getItem("line_token")) localStorage.setItem("line_token", DEFAULT_LINE_TOKEN);
-      if (!localStorage.getItem("line_user_id")) localStorage.setItem("line_user_id", DEFAULT_LINE_USER_ID);
+      if (!localStorage.getItem("line_token") && DEFAULT_LINE_TOKEN) {
+        localStorage.setItem("line_token", DEFAULT_LINE_TOKEN);
+      }
+      if (!localStorage.getItem("line_user_id") && DEFAULT_LINE_USER_ID) {
+        localStorage.setItem("line_user_id", DEFAULT_LINE_USER_ID);
+      }
       if (!localStorage.getItem("hazard_rate_per_day")) localStorage.setItem("hazard_rate_per_day", String(DEFAULT_HAZARD_RATE));
 
       renderEmployeeDropdowns();
@@ -1969,9 +2311,9 @@
       for (let i = 1; i <= 4; i++) {
         const navBtn = document.getElementById(`nav-${i}`);
         if (i === tabNum) {
-          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn transition-all";
+          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn shadow-[0_0_16px_rgba(245,158,11,0.55)] transition-all";
         } else {
-          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all";
+          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 hover:bg-white/5 transition-all";
         }
       }
       if (tabNum === 2) prefillManualByDate();
@@ -1979,7 +2321,7 @@
     }
 
     function startLiveChronograph() {
-      const ARC_CIRCUMFERENCE = 584.34;
+      const ARC_CIRCUMFERENCE = 590.62;
       const update = () => {
         const now = new Date();
         const timeStr = now.toTimeString().split(' ')[0];
@@ -2006,11 +2348,13 @@
         const lcdTag = document.getElementById('lcdModeTag');
         const arcEl = document.getElementById('reactorProgressArc');
         const reactorBadge = document.getElementById('reactorLiveBadge');
+        const beacon = document.getElementById('liveClockBeacon');
 
         if (activeIn) {
+          if (beacon) beacon.className = "telemetry-beacon text-emerald-400";
           elapsedBar.classList.remove('hidden');
-          lcdTag.textContent = "CHRONO ACTIVE";
-          lcdTag.className = "chamfer-sm bg-amber-400/25 text-amber-100 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/70 tracking-wider";
+          lcdTag.textContent = "กำลังทำงาน";
+          lcdTag.className = "chamfer-sm bg-amber-400/25 text-amber-100 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/70 tracking-wider shadow-[0_0_12px_rgba(245,158,11,0.35)]";
 
           const inDateTime = new Date(`${activeIn.date}T${activeIn.time}:00`);
           const diffMs = Math.max(0, now - inDateTime);
@@ -2028,18 +2372,19 @@
           document.getElementById('liveAccruedPay').textContent = `${fmtNum(liveCalc.totalSalary)} ฿`;
 
           if (reactorBadge) {
-            reactorBadge.textContent = totalMins > 550 ? "OVERDRIVE +OT" : `${pctInt}% SHIFT`;
+            reactorBadge.textContent = totalMins > 550 ? "เกินเวลากะ +OT" : `${pctInt}% เวลากะ`;
             reactorBadge.className = totalMins > 550
-              ? "px-2 py-0.5 rounded bg-amber-950/90 border border-amber-300 text-[9px] font-mono font-bold text-amber-200"
+              ? "px-2 py-0.5 rounded bg-rose-950/90 border border-rose-400 text-[9px] font-mono font-bold text-rose-200 shadow-[0_0_10px_rgba(239,68,68,0.5)]"
               : "px-2 py-0.5 rounded bg-black/90 border border-amber-300/55 text-[9px] font-mono font-bold text-amber-100";
           }
         } else {
+          if (beacon) beacon.className = "telemetry-beacon text-amber-400";
           elapsedBar.classList.add('hidden');
-          lcdTag.textContent = "CALIBRATED";
+          lcdTag.textContent = "พร้อมทำงาน";
           lcdTag.className = "chamfer-sm bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/50 tracking-wider";
           if (arcEl) arcEl.style.strokeDashoffset = ARC_CIRCUMFERENCE;
           if (reactorBadge) {
-            reactorBadge.textContent = "0% SHIFT";
+            reactorBadge.textContent = "0% เวลากะ";
             reactorBadge.className = "px-2 py-0.5 rounded bg-black/90 border border-amber-500/35 text-[9px] font-mono font-bold text-zinc-400";
           }
         }
@@ -2076,7 +2421,15 @@
 
       const inMins = timeToMins(checkInTime);
       let outMins = timeToMins(checkOutTime);
-      if (outMins < inMins) outMins += 1440;
+
+      // Guard: ป้องกันกรณีกดออกก่อนเวลาเข้าไม่กี่นาทีในวันเดียวกันแล้วโดนบวกข้ามวัน 24 ชม.
+      if (outMins < inMins) {
+        if ((inMins - outMins) < 60) {
+          outMins = inMins;
+        } else {
+          outMins += 1440;
+        }
+      }
 
       let totalWorkedMinutes = 0;
       let afterShiftOtHours = 0;
@@ -2215,7 +2568,7 @@
       }
 
       const baseAndOt = calc.baseSalary + calc.otPay;
-      document.getElementById('estBaseLabel').textContent = calc.otHours > 0 ? `BASE+OT(${calc.otHours}h)` : "BASE PAY";
+      document.getElementById('estBaseLabel').textContent = calc.otHours > 0 ? `ค่าแรง+OT(${calc.otHours}ชม.)` : "ค่าแรงปกติ";
       document.getElementById('estBasePay').textContent = `${baseAndOt} ฿`;
       document.getElementById('estAllowanceVal').textContent = `${calc.shiftAllowance + calc.totalMealAllowance} ฿`;
       document.getElementById('estTotal').textContent = `${calc.totalSalary} ฿`;
@@ -2246,38 +2599,40 @@
         outEl.textContent = '--:--';
         inText.textContent = activeIn.time;
         outText.textContent = 'กดออก';
-        badge.textContent = "ON DUTY";
-        badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-amber-400/25 border border-amber-300/70 font-hud font-bold text-amber-100 tracking-wider";
+        badge.textContent = "กำลังทำงาน";
+        badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-amber-400/25 border border-amber-300/70 font-hud font-bold text-amber-100 tracking-wider shadow-[0_0_12px_rgba(245,158,11,0.35)]";
 
-        track.className = "slide-track chamfer-sm bg-black/95 border border-rose-500/65 flex items-center justify-center select-none shadow-inner";
-        fill.className = "slide-fill bg-gradient-to-r from-rose-700/45 to-amber-500/75";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-rose-300 pointer-events-none pl-8";
-        label.innerHTML = `<span>SLIDE TO CHECK OUT</span><span class="chevron-anim text-xs">&gt;&gt;&gt;</span>`;
-        thumb.className = "slide-thumb chamfer-sm bg-gradient-to-br from-amber-200 via-rose-500 to-rose-800 text-white shadow-[0_0_22px_rgba(244,63,94,0.8)]";
-        hint.textContent = "SLIDE TO DISENGAGE";
-        hint.className = "font-hud text-[9px] text-rose-400 tracking-wider";
+        track.className = "slide-track chamfer-sm bg-[#060403] border border-rose-500/80 flex items-center justify-center select-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.95),0_0_20px_rgba(239,68,68,0.3)]";
+        fill.className = "slide-fill bg-gradient-to-r from-rose-800/70 via-rose-600/80 to-amber-400/90";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-rose-200 pointer-events-none pl-8 hud-red-glow";
+        label.innerHTML = `<span>◀◀ สไลด์เพื่อลงเวลาออกงาน</span><span class="chevron-anim text-xs text-rose-300">&gt;&gt;&gt;</span>`;
+        thumb.className = "slide-thumb chamfer-sm crimson-ingot-btn text-white";
+        thumb.innerHTML = `<i class="fa-solid fa-power-off text-base text-white drop-shadow"></i>`;
+        hint.textContent = "▶ เลื่อนตัดรอบออกงาน";
+        hint.className = "font-hud text-[9px] text-rose-400 font-bold tracking-wider";
       } else {
-        track.className = "slide-track chamfer-sm bg-black/95 border border-amber-300/65 flex items-center justify-center select-none shadow-inner";
-        fill.className = "slide-fill bg-gradient-to-r from-amber-700/50 to-amber-300/80";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8";
-        label.innerHTML = `<span>SLIDE TO CHECK IN</span><span class="chevron-anim text-xs">&gt;&gt;&gt;</span>`;
+        track.className = "slide-track chamfer-sm bg-[#060403] border border-amber-400/70 flex items-center justify-center select-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.95),0_0_18px_rgba(245,158,11,0.22)]";
+        fill.className = "slide-fill bg-gradient-to-r from-amber-700/60 via-amber-500/75 to-amber-300/90";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8 hud-glow";
+        label.innerHTML = `<span>◀◀ สไลด์เพื่อลงเวลาเข้างาน</span><span class="chevron-anim text-xs text-amber-300">&gt;&gt;&gt;</span>`;
         thumb.className = "slide-thumb chamfer-sm gold-ingot-btn";
-        hint.textContent = "SLIDE TO ENGAGE";
-        hint.className = "font-hud text-[9px] text-amber-300 tracking-wider";
+        thumb.innerHTML = `<i class="fa-solid fa-bolt text-base text-zinc-950 drop-shadow"></i>`;
+        hint.textContent = "▶ เลื่อนจุดระเบิดเข้างาน";
+        hint.className = "font-hud text-[9px] text-amber-300 font-bold tracking-wider";
 
         if (todayRecord) {
           inEl.textContent = todayRecord.checkIn || '--:--';
           outEl.textContent = todayRecord.checkOut || '--:--';
           inText.textContent = todayRecord.checkIn || '-';
           outText.textContent = todayRecord.checkOut || '-';
-          badge.textContent = "COMPLETED";
+          badge.textContent = "ออกงานแล้ว";
           badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-emerald-500/20 border border-emerald-400/55 font-hud font-bold text-emerald-300 tracking-wider";
         } else {
           inEl.textContent = '--:--';
           outEl.textContent = '--:--';
           inText.textContent = 'เข้างาน';
           outText.textContent = 'ออกงาน';
-          badge.textContent = "STANDBY";
+          badge.textContent = "รอเข้างาน";
           badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-900 border border-amber-400/50 font-hud font-bold text-amber-200 tracking-wider";
         }
       }
@@ -2306,11 +2661,11 @@
 
       localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
       playClick('confirm');
-      showToast(`ENGAGED // บันทึกเข้างาน (${currentShift}) สำเร็จ`);
+      showToast(`บันทึกเข้างาน (${currentShift === 'DAY' ? 'กะเช้า' : 'กะดึก'}) สำเร็จ`);
       loadTodayLiveStatus();
 
-      const lineMsg = `⏰ [CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (กะ ${currentShift})\nเวลา: ${timeStr} น.`;
-      syncToGoogleSheets([], lineMsg);
+      const lineMsg = `⏰ [CHECK IN]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (กะ ${currentShift === 'DAY' ? 'เช้า' : 'ดึก'})\nเวลา: ${timeStr} น.`;
+      sendBackendPayload({ sendLine: true, lineMessage: lineMsg });
     }
 
     function handleLiveCheckOut() {
@@ -2343,12 +2698,12 @@
       localStorage.setItem("active_checkins", JSON.stringify(activeCheckins));
 
       playClick('confirm');
-      showToast("DISENGAGED // ลงเวลาออก & คำนวณเงินสำเร็จ");
+      showToast("ลงเวลาออก & คำนวณเงินสำเร็จ");
       loadTodayLiveStatus();
       renderHistories();
 
       const lineMsg = `✅ [CHECK OUT & PAYROLL]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${activeIn.shift} / ${activeIn.dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${activeIn.time} - ${timeStr} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
-      syncToGoogleSheets([recordObj], lineMsg);
+      sendBackendPayload({ sendLine: true, lineMessage: lineMsg, payrolls: [recordObj] });
     }
 
     function prefillManualByDate() {
@@ -2429,7 +2784,7 @@
       renderHistories();
 
       const lineMsg = `📝 [MANUAL EDIT]\nพนักงาน: ${emp.name} (${emp.id})\nวันที่: ${formatThaiBE(dateStr)} (${dayType === 'HOLIDAY' ? 'วันหยุด OT 2.0' : 'วันปกติ'})\nเวลา: ${checkIn} - ${checkOut} (${calc.workedHours} ชม.)\n💰 สุทธิ: ${calc.totalSalary} บาท`;
-      syncToGoogleSheets([recordObj], lineMsg);
+      sendBackendPayload({ sendLine: true, lineMessage: lineMsg, payrolls: [recordObj] });
     }
 
     function handleLeaveSubmit(e) {
@@ -2452,6 +2807,7 @@
       };
 
       let leaves = JSON.parse(localStorage.getItem("leave_records") || "[]");
+      leaves = leaves.filter(l => !(String(l.id).trim() === emp.id && l.startDate === startDate && l.leaveType === leaveObj.leaveType));
       leaves.push(leaveObj);
       localStorage.setItem("leave_records", JSON.stringify(leaves));
 
@@ -2461,7 +2817,27 @@
       renderHistories();
 
       const lineMsg = `🏖️ [LEAVE REQUEST]\nพนักงาน: ${emp.name} (${emp.id})\nประเภท: ${leaveObj.leaveType}\nช่วงวัน: ${formatThaiBE(leaveObj.startDate)} ถึง ${formatThaiBE(leaveObj.endDate)}\nเหตุผล: ${leaveObj.reason || '-'}`;
-      syncToGoogleSheets([], lineMsg, [leaveObj]);
+      sendBackendPayload({ sendLine: true, lineMessage: lineMsg, leaves: [leaveObj] });
+    }
+
+    function deleteLeaveRecord(empId, startDate, leaveType) {
+      if (!confirm(`ยืนยันการลบใบลา "${leaveType}" วันที่ ${formatThaiBE(startDate)} ใช่หรือไม่?`)) return;
+
+      const targetId = String(empId).trim();
+      let leaves = JSON.parse(localStorage.getItem("leave_records") || "[]");
+      leaves = leaves.filter(l => !(String(l.id).trim() === targetId && normalizeDateToISO(l.startDate) === startDate && l.leaveType === leaveType));
+      localStorage.setItem("leave_records", JSON.stringify(leaves));
+
+      showToast("ลบใบลาสำเร็จ");
+      renderHistories();
+
+      sendBackendPayload({
+        action: "deleteLeave",
+        id: targetId,
+        startDate,
+        leaveType,
+        sendLine: false
+      }, true);
     }
 
     function deleteRecord(empId, recordDate) {
@@ -2476,76 +2852,92 @@
       loadTodayLiveStatus();
       renderHistories();
 
-      const payload = {
+      sendBackendPayload({
         action: "deletePayroll",
         id: targetId,
         date: recordDate,
         sendLine: true,
-        channelAccessToken: localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN,
-        userId: localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID,
         lineMessage: `🗑️ [DELETE RECORD]\nพนักงาน ID: ${targetId}\nวันที่ลบ: ${formatThaiBE(recordDate)}`
-      };
-
-      setSyncPillStatus('SYNCING');
-      if (hasGasScriptBridge()) {
-        google.script.run
-          .withSuccessHandler(() => setSyncPillStatus('LINKED'))
-          .withFailureHandler(() => setSyncPillStatus('OFFLINE'))
-          .processWebAppPayload(payload);
-      }
-
-      fetch(localStorage.getItem("gas_url") || DEFAULT_GAS_URL, {
-        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
-      }).then(() => {
-        setSyncPillStatus('LINKED');
-      }).catch(err => {
-        setSyncPillStatus('OFFLINE');
-        console.error(err);
-      });
+      }, true);
     }
 
-    function syncToGoogleSheets(payrolls = [], lineMessage = '', leaves = [], payslip = null) {
+    /**
+     * ส่งข้อมูลไปยัง Google Apps Script แบบอ่าน JSON Response จริง (ไม่ใช้ no-cors)
+     */
+    async function sendBackendPayload(extraPayload = {}, silent = false) {
       const gasUrl = localStorage.getItem("gas_url") || DEFAULT_GAS_URL;
       const lineToken = localStorage.getItem("line_token") || DEFAULT_LINE_TOKEN;
       const lineUserId = localStorage.getItem("line_user_id") || DEFAULT_LINE_USER_ID;
-      setSyncPillStatus('SYNCING');
 
       const payload = {
-        sendLine: true,
-        channelAccessToken: lineToken,
-        userId: lineUserId,
-        lineMessage, payrolls, leaves, payslip
+        sendLine: false,
+        lineMessage: '',
+        payrolls: [],
+        leaves: [],
+        payslip: null,
+        ...extraPayload
       };
 
-      const bridgePromise = hasGasScriptBridge()
-        ? new Promise((resolve) => {
-            try {
-              google.script.run
-                .withSuccessHandler(() => resolve(true))
-                .withFailureHandler(() => resolve(false))
-                .processWebAppPayload(payload);
-            } catch (_) {
-              resolve(false);
-            }
-          })
-        : Promise.resolve(false);
+      // แนบ Token เฉพาะกรณีที่ผู้ใช้กรอกไว้ใน Config Modal เองเท่านั้น
+      if (lineToken) payload.channelAccessToken = lineToken;
+      if (lineUserId) payload.userId = lineUserId;
 
-      return fetch(gasUrl, {
-        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
-      }).then(async () => {
-        await bridgePromise;
-        setSyncPillStatus('LINKED');
-        showToast("ซิงค์ข้อมูลเรียบร้อย");
-      }).catch(async (err) => {
-        const ok = await bridgePromise;
-        if (ok) {
+      setSyncPillStatus('SYNCING');
+
+      if (hasGasScriptBridge()) {
+        return new Promise((resolve) => {
+          try {
+            google.script.run
+              .withSuccessHandler((res) => {
+                const parsed = typeof res === "string" ? JSON.parse(res) : res;
+                if (parsed && parsed.status === "success") {
+                  setSyncPillStatus('LINKED');
+                  if (!silent) showToast("ซิงค์ข้อมูลเรียบร้อย");
+                  resolve(true);
+                } else {
+                  setSyncPillStatus('OFFLINE');
+                  if (!silent) showToast("ซิงค์ไม่สำเร็จ: " + (parsed?.message || 'Error'));
+                  resolve(false);
+                }
+              })
+              .withFailureHandler((err) => {
+                console.error(err);
+                setSyncPillStatus('OFFLINE');
+                if (!silent) showToast("เกิดข้อผิดพลาดในการเชื่อมต่อ GAS");
+                resolve(false);
+              })
+              .processWebAppPayload(payload);
+          } catch (err) {
+            console.error(err);
+            setSyncPillStatus('OFFLINE');
+            resolve(false);
+          }
+        });
+      }
+
+      try {
+        // ใช้ text/plain เพื่อหลีกเลี่ยง CORS Preflight (OPTIONS) และยังอ่าน JSON Response จาก GAS ได้จริง
+        const res = await fetch(gasUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data && data.status === "success") {
           setSyncPillStatus('LINKED');
-          showToast("ซิงค์ข้อมูลเรียบร้อย");
+          if (!silent) showToast("ซิงค์ข้อมูลเรียบร้อย");
+          return true;
         } else {
           setSyncPillStatus('OFFLINE');
-          console.error(err);
+          if (!silent) showToast("ซิงค์ไม่สำเร็จ: " + (data?.message || 'ตรวจสอบสิทธิ์ GAS'));
+          return false;
         }
-      });
+      } catch (err) {
+        setSyncPillStatus('OFFLINE');
+        console.error(err);
+        if (!silent) showToast("เชื่อมต่อ Google Sheets ไม่ได้ (บันทึกในเครื่องแล้ว)");
+        return false;
+      }
     }
 
     function applyFetchedData(data, silent) {
@@ -2559,8 +2951,21 @@
           localStorage.setItem("payroll_records", JSON.stringify(Array.from(mergedMap.values())));
         }
         if (Array.isArray(data.leaves)) {
-          const normLeaves = data.leaves.map(l => ({ ...l, id: String(l.id || '').trim() }));
+          const normLeaves = data.leaves.map(l => ({
+            ...l,
+            id: String(l.id || '').trim(),
+            startDate: normalizeDateToISO(l.startDate),
+            endDate: normalizeDateToISO(l.endDate)
+          }));
           localStorage.setItem("leave_records", JSON.stringify(normLeaves));
+        }
+        // ซิงค์ค่าปรับปรุงสลิป (SlipAdjustments) จาก Cloud มาลงเครื่อง
+        if (data.slipAdjustments && typeof data.slipAdjustments === 'object') {
+          Object.entries(data.slipAdjustments).forEach(([storageKey, adjObj]) => {
+            if (storageKey && adjObj && typeof adjObj === 'object') {
+              localStorage.setItem(storageKey, JSON.stringify(adjObj));
+            }
+          });
         }
         loadTodayLiveStatus();
         renderHistories();
@@ -2757,12 +3162,17 @@
       const leaveListEl = document.getElementById('leaveHistoryList');
       leaveListEl.innerHTML = leaves.length ? leaves.map(l => `
         <div class="sovereign-frame chamfer-sm">
-          <div class="sovereign-inner chamfer-sm p-2.5 text-xs">
-            <div class="flex justify-between font-bold text-amber-50">
-              <span>${l.leaveType}</span>
-              <span class="text-amber-300 font-mono">${formatThaiBE(l.startDate)}${l.endDate && l.endDate !== l.startDate ? ' - ' + formatThaiBE(l.endDate) : ''}</span>
+          <div class="sovereign-inner chamfer-sm p-2.5 text-xs flex justify-between items-center gap-2">
+            <div class="min-w-0 flex-1">
+              <div class="flex justify-between font-bold text-amber-50 gap-2">
+                <span>${l.leaveType}</span>
+                <span class="text-amber-300 font-mono text-[11px]">${formatThaiBE(l.startDate)}${l.endDate && l.endDate !== l.startDate ? ' - ' + formatThaiBE(l.endDate) : ''}</span>
+              </div>
+              <div class="text-[10.5px] text-zinc-400 mt-0.5 truncate">เหตุผล: ${l.reason || '-'}</div>
             </div>
-            <div class="text-[10.5px] text-zinc-400 mt-0.5">เหตุผล: ${l.reason || '-'}</div>
+            <button onclick="deleteLeaveRecord('${l.id}', '${l.startDate}', '${l.leaveType}')" aria-label="ลบใบลา" class="tactile-btn chamfer-sm w-7 h-7 bg-rose-950/75 hover:bg-rose-600 border border-rose-500/40 text-rose-400 hover:text-white flex items-center justify-center shrink-0 transition">
+              <i class="fa-solid fa-trash-can text-[10px]"></i>
+            </button>
           </div>
         </div>
       `).join('') : `<p class="text-center text-xs text-zinc-400 py-3">ยังไม่มีประวัติการลา</p>`;
@@ -2873,6 +3283,7 @@
     }
 
     function saveAndRefreshPayslip() {
+      const adjKey = getSlipAdjKey();
       const adj = {
         diligence: parseFloat(document.getElementById('adjDiligence').value) || 0,
         hazard: parseFloat(document.getElementById('adjHazard').value) || 0,
@@ -2885,8 +3296,19 @@
         baseYTDEarnings: parseFloat(document.getElementById('baseYTDEarnings').value) || 0,
         baseYTDSocial: parseFloat(document.getElementById('baseYTDSocial').value) || 0
       };
-      localStorage.setItem(getSlipAdjKey(), JSON.stringify(adj));
+      localStorage.setItem(adjKey, JSON.stringify(adj));
       renderPayslipContent(false, false);
+
+      // ซิงค์ค่าปรับปรุงสลิปขึ้น Google Sheets อัตโนมัติ (Debounce 1 วินาที) เพื่อให้ตรงกันทุกเครื่อง
+      clearTimeout(slipAdjSyncTimer);
+      slipAdjSyncTimer = setTimeout(() => {
+        sendBackendPayload({
+          action: "saveSlipAdj",
+          storageKey: adjKey,
+          adjustment: adj,
+          sendLine: false
+        }, true);
+      }, 1000);
     }
 
     function pullPrevYTDToInputs() {
@@ -2912,8 +3334,14 @@
     }
 
     function resetSlipAdjustments() {
-      localStorage.removeItem(getSlipAdjKey());
+      const adjKey = getSlipAdjKey();
+      localStorage.removeItem(adjKey);
       renderPayslipContent(true, true);
+      sendBackendPayload({
+        action: "deleteSlipAdj",
+        storageKey: adjKey,
+        sendLine: false
+      }, true);
       showToast("รีเซ็ตค่าปรับปรุงสลิปแล้ว");
     }
 
@@ -2926,7 +3354,7 @@
         showToast("สลับเป็นรอบตัดยอดล่าสุดให้อัตโนมัติ");
       }
       document.getElementById('mobileSlipImageFallback').classList.add('hidden');
-      renderPayslipContent(true, true);
+      renderPayslipContent(true, false);
       document.getElementById('payslipModal').classList.remove('hidden');
     }
 
@@ -3051,9 +3479,7 @@
       });
 
       const baseEarnings = sumBase + sumOT15 + sumOT20 + sumOT30 + sumShift + sumMeal + sumOTMeal;
-      const autoSocSec = (baseEarnings + hazardInfo.amount + diligenceInfo.amount) > 0
-        ? Math.min(Math.round((baseEarnings + hazardInfo.amount + diligenceInfo.amount) * 0.05), 200.00)
-        : 0.00;
+      const autoSocSec = calcSocialSecurityM33(allEmpRecords, startStr, endStr, latestRecordDate);
       const adj = getDefaultSlipAdj(autoSocSec, hazardInfo.amount, diligenceInfo.amount, prevYTD, forceFreshAuto);
 
       if (forceFreshAuto && localStorage.getItem(getSlipAdjKey())) {
@@ -3230,13 +3656,11 @@
       };
 
       playClick('confirm');
-      syncToGoogleSheets([], lineMsg, [], slipRecord).finally(() => {
+      sendBackendPayload({ sendLine: true, lineMessage: lineMsg, payslip: slipRecord }, true).finally(() => {
         showToast("ส่งสรุปสลิปเงินเดือน & บันทึกลงชีตสำเร็จ");
-        setTimeout(() => {
-          isLineSlipSending = false;
-          btn.disabled = false;
-          btn.innerHTML = originalHtml;
-        }, 800);
+        isLineSlipSending = false;
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
       });
     }
 
