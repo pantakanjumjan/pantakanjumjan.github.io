@@ -3,44 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#050403" />
+  <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>TG • PK บันทึกเวลาทำงาน & คำนวณเงินเดือน (TOYODA GOSEI)</title>
+  <title>TG • PJ APEX-V3 บันทึกเวลา & คำนวณเงินเดือน</title>
   <link rel="icon" type="image/png" href="tg_emblem.png" />
-  <link id="appleTouchIconPng" rel="apple-touch-icon" sizes="180x180" href="tg_emblem.png" />
+  <link id="appleTouchIconPng" rel="apple-touch-icon" sizes="175x175" href="tg_emblem.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Noto+Sans+Thai:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --obsidian-void: #030201;
-      --obsidian-panel: #080604;
-      --obsidian-elevated: #110d08;
-      --gold-deep: #78350f;
-      --gold-rich: #d97706;
-      --gold-bright: #f59e0b;
-      --gold-champagne: #fde68a;
-      --gold-ivory: #fffbeb;
-      --crimson-laser: #ef4444;
-      --neon-cyan: #22d3ee;
-      --neon-magenta: #f472b6;
-      --neon-emerald: #34d399;
-      --text-main: #fafaf9;
-      --text-muted: #a8a29e;
+      --bg-void: #030304;
+      --bg-card: #09090b;
+      --bg-raised: #111115;
+      --gold-1: #fffbeb;
+      --gold-2: #fbbf24;
+      --gold-3: #b45309;
+      --crimson: #ff003c;
+      --crimson-dark: #7f001e;
+      --cyan: #00f0ff;
+      --piston-speed: 0.55s;
       --safe-top: max(env(safe-area-inset-top, 36px), 36px);
       --safe-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
-    }
-
-    html:not(.dark) {
-      --obsidian-void: #0e0a06;
-      --obsidian-panel: #160f09;
-      --obsidian-elevated: #221a11;
     }
 
     * {
@@ -50,337 +40,263 @@
 
     body {
       font-family: 'Noto Sans Thai', sans-serif;
-      background-color: var(--obsidian-void);
-      color: var(--text-main);
+      background-color: var(--bg-void);
+      color: #f4f4f5;
       min-height: 100dvh;
       overflow-x: hidden;
-      padding-bottom: calc(var(--safe-bottom) + 92px);
+      padding-bottom: calc(var(--safe-bottom) + 112px);
       background-image:
-        radial-gradient(ellipse 120% 60% at 50% -8%, rgba(245, 158, 11, 0.28), transparent 55%),
-        radial-gradient(circle at 95% 15%, rgba(244, 114, 182, 0.12), transparent 40%),
-        radial-gradient(circle at 5% 80%, rgba(34, 211, 238, 0.09), transparent 45%),
-        radial-gradient(circle at 50% 100%, rgba(245, 158, 11, 0.08), transparent 50%),
-        repeating-linear-gradient(0deg, transparent 0, transparent 1px, rgba(245, 158, 11, 0.018) 1px, rgba(245, 158, 11, 0.018) 2px),
-        linear-gradient(180deg, #050302 0%, #020101 100%);
+        radial-gradient(ellipse 110% 42% at 50% -4%, rgba(255, 0, 60, 0.24), transparent 60%),
+        radial-gradient(ellipse 85% 35% at 50% 0%, rgba(251, 191, 36, 0.16), transparent 65%),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.018) 0px,
+          rgba(255, 255, 255, 0.018) 1px,
+          transparent 1px,
+          transparent 6px
+        ),
+        linear-gradient(180deg, #060507 0%, #020203 100%);
       background-attachment: fixed;
+      transition: filter 0.3s ease;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 3px,
-        rgba(0, 0, 0, 0.08) 3px,
-        rgba(0, 0, 0, 0.08) 4px
-      );
-      mix-blend-mode: overlay;
+    body.optics-nvg { filter: hue-rotate(85deg) saturate(1.45) contrast(1.15); }
+    body.optics-flir { filter: invert(0.92) hue-rotate(180deg) saturate(1.6) contrast(1.2); }
+    body.optics-jarvis { filter: hue-rotate(185deg) saturate(1.35) brightness(1.06); }
+
+    .strike-shake {
+      animation: strikeShakeAnim 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes strikeShakeAnim {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-3px, 2px); }
+      50% { transform: translate(3px, -2px); }
+      75% { transform: translate(-2px, -1px); }
     }
 
     header {
       padding-top: calc(var(--safe-top) + 6px);
     }
 
-    /* แถบเมนูด้านล่างลอยติดจอตลอดเวลา */
-    .floating-bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 40;
-      padding: 8px 14px calc(var(--safe-bottom) + 6px);
-      background: linear-gradient(180deg, rgba(3, 2, 1, 0) 0%, rgba(3, 2, 1, 0.85) 28%, rgba(3, 2, 1, 0.98) 100%);
-      pointer-events: none;
-    }
+    .font-hud { font-family: 'Cinzel', 'JetBrains Mono', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-    .floating-bottom-nav > div {
-      pointer-events: auto;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: rgba(12, 10, 7, 0.92);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.92), 0 0 20px rgba(245, 158, 11, 0.16);
-    }
-
-    .font-hud {
-      font-family: 'Cinzel', 'JetBrains Mono', sans-serif;
-    }
-
-    .font-mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .chamfer-box {
+    /* Sharp Aggressive Cut Corners */
+    .cut-panel {
       clip-path: polygon(
-        14px 0%, calc(100% - 14px) 0%,
-        100% 14px, 100% calc(100% - 14px),
-        calc(100% - 14px) 100%, 14px 100%,
-        0% calc(100% - 14px), 0% 14px
+        16px 0%, 100% 0%,
+        100% calc(100% - 16px),
+        calc(100% - 16px) 100%,
+        0% 100%, 0% 16px
       );
     }
 
-    .chamfer-sm {
+    .cut-btn {
       clip-path: polygon(
-        8px 0%, calc(100% - 8px) 0%,
-        100% 8px, 100% calc(100% - 8px),
-        calc(100% - 8px) 100%, 8px 100%,
-        0% calc(100% - 8px), 0% 8px
+        8px 0%, 100% 0%,
+        100% calc(100% - 8px),
+        calc(100% - 8px) 100%,
+        0% 100%, 0% 8px
       );
     }
 
-    .sovereign-frame {
+    /* Carbon + Crimson + Gold Chassis */
+    .apex-shell {
       position: relative;
-      background: linear-gradient(var(--sov-angle, 135deg), rgba(255, 251, 235, 0.92) 0%, rgba(245, 158, 11, 0.75) 22%, rgba(34, 211, 238, 0.3) 44%, rgba(220, 38, 38, 0.5) 62%, rgba(120, 53, 15, 0.9) 80%, rgba(253, 230, 138, 0.85) 100%);
+      background: linear-gradient(135deg,
+        rgba(255, 0, 60, 0.85) 0%,
+        rgba(251, 191, 36, 0.75) 35%,
+        rgba(39, 39, 42, 0.9) 70%,
+        rgba(255, 0, 60, 0.85) 100%
+      );
       padding: 1.5px;
       box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.96),
-        0 0 32px rgba(245, 158, 11, 0.18),
-        0 0 60px rgba(245, 158, 11, 0.06);
-      transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.25s ease;
-      animation: borderGlow 6s ease-in-out infinite alternate;
+        0 18px 45px rgba(0, 0, 0, 0.95),
+        0 0 24px rgba(255, 0, 60, 0.16);
     }
 
-    @keyframes borderGlow {
-      0% { --sov-angle: 135deg; box-shadow: 0 20px 50px rgba(0,0,0,0.96), 0 0 28px rgba(245,158,11,0.16); }
-      50% { box-shadow: 0 20px 50px rgba(0,0,0,0.96), 0 0 40px rgba(245,158,11,0.28), 0 0 8px rgba(34,211,238,0.12); }
-      100% { box-shadow: 0 20px 50px rgba(0,0,0,0.96), 0 0 28px rgba(245,158,11,0.16); }
-    }
-
-    .sovereign-inner {
+    .apex-core {
       position: relative;
       background:
-        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.14), transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(34, 211, 238, 0.04), transparent 50%),
+        linear-gradient(180deg, rgba(255, 0, 60, 0.08) 0%, transparent 38%),
         repeating-linear-gradient(
           45deg,
-          rgba(255, 251, 235, 0.018) 0px,
-          rgba(255, 251, 235, 0.018) 1px,
-          transparent 1px,
-          transparent 7px
-        ),
-        repeating-linear-gradient(
-          -45deg,
-          rgba(0, 0, 0, 0.5) 0px,
-          rgba(0, 0, 0, 0.5) 2px,
+          rgba(255, 255, 255, 0.015) 0px,
+          rgba(255, 255, 255, 0.015) 2px,
           transparent 2px,
-          transparent 7px
+          transparent 6px
         ),
-        var(--obsidian-panel);
+        #09090c;
       overflow: hidden;
-      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.92);
-      backdrop-filter: blur(1px);
     }
 
-    .cyber-bracket {
-      position: relative;
-    }
-    .cyber-bracket::before,
-    .cyber-bracket::after {
+    /* Corner Targeting Locks */
+    .target-locks::before,
+    .target-locks::after {
       content: "";
       position: absolute;
       width: 14px;
       height: 14px;
       pointer-events: none;
       z-index: 15;
-      border-color: rgba(245, 158, 11, 0.85);
-      transition: border-color 0.3s ease, filter 0.3s ease;
-      filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.5));
     }
-    .cyber-bracket::before {
-      top: 3px;
-      left: 3px;
-      border-top: 2px solid;
-      border-left: 2px solid;
+    .target-locks::before {
+      top: 4px;
+      left: 4px;
+      border-top: 2px solid #ff003c;
+      border-left: 2px solid #ff003c;
     }
-    .cyber-bracket::after {
-      bottom: 3px;
-      right: 3px;
-      border-bottom: 2px solid;
-      border-right: 2px solid;
+    .target-locks::after {
+      bottom: 4px;
+      right: 4px;
+      border-bottom: 2px solid #fbbf24;
+      border-right: 2px solid #fbbf24;
     }
 
-    .gold-ingot-btn {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, #fffbeb 0%, #fde68a 20%, #f59e0b 55%, #b45309 100%);
-      color: #100b04;
-      font-weight: 800;
-      border: 1px solid rgba(255, 251, 235, 0.9);
-      box-shadow:
-        0 8px 28px rgba(245, 158, 11, 0.5),
-        0 0 12px rgba(245, 158, 11, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95);
-      transition: box-shadow 0.2s ease, transform 0.15s ease;
-    }
-    .gold-ingot-btn:hover {
-      box-shadow:
-        0 8px 32px rgba(245, 158, 11, 0.65),
-        0 0 20px rgba(245, 158, 11, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95);
-    }
-
-    .gold-ingot-btn::after {
-      content: "";
+    /* Laser Slash Line */
+    .laser-slash {
       position: absolute;
       top: -40%;
-      left: -120%;
-      width: 50%;
-      height: 180%;
-      transform: rotate(24deg);
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
-      animation: ingotSweep 3.6s ease-in-out infinite;
+      left: -140%;
+      width: 240%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #ff003c, #ffffff, #fbbf24, transparent);
+      box-shadow: 0 0 16px #ff003c, 0 0 28px #fbbf24;
+      transform: rotate(-25deg);
       pointer-events: none;
+      z-index: 35;
+      opacity: 0;
+    }
+    .laser-slash.go {
+      animation: laserSlashAnim 0.48s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes laserSlashAnim {
+      0% { left: -140%; top: 15%; opacity: 1; }
+      60% { left: 15%; top: 65%; opacity: 1; }
+      100% { left: 120%; top: 90%; opacity: 0; }
     }
 
-    @keyframes ingotSweep {
-      0%, 65% { left: -120%; }
-      100% { left: 170%; }
-    }
-
-    .crimson-ingot-btn {
+    /* Metallic Gold & Crimson Buttons */
+    .gold-trigger {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #fee2e2 0%, #ef4444 36%, #b91c1c 72%, #7f1d1d 100%);
-      color: #ffffff;
+      background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 38%, #d97706 82%, #78350f 100%);
+      color: #09090b;
       font-weight: 800;
-      border: 1px solid rgba(254, 202, 202, 0.9);
-      box-shadow:
-        0 8px 28px rgba(239, 68, 68, 0.6),
-        0 0 14px rgba(239, 68, 68, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(254, 243, 199, 0.9);
+      box-shadow: 0 6px 22px rgba(245, 158, 11, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.85);
     }
 
-    .tactile-btn {
-      transition: transform 0.14s cubic-bezier(0.2, 0.9, 0.3, 1), filter 0.15s ease, box-shadow 0.15s ease;
+    .redline-trigger {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ff4d6d 0%, #ff003c 45%, #9f1239 100%);
+      color: #ffffff;
+      font-weight: 800;
+      border: 1px solid rgba(255, 180, 196, 0.85);
+      box-shadow: 0 6px 24px rgba(255, 0, 60, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.65);
     }
-    .tactile-btn:active {
-      transform: scale(0.96) translateY(0.5px);
-      filter: brightness(0.92);
+
+    .press-btn {
+      transition: transform 0.12s ease, filter 0.14s ease;
     }
-    .tactile-btn:hover {
+    .press-btn:active {
+      transform: scale(0.95);
+      filter: brightness(0.9);
+    }
+    .press-btn:hover {
       filter: brightness(1.08);
     }
 
-    .sovereign-field {
-      background: rgba(6, 5, 3, 0.95);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      color: #fffbeb;
-      border-radius: 10px;
+    .dark-input {
+      background: #050507;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      color: #fafafa;
+      border-radius: 8px;
       padding: 8px 10px;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .dark-input:focus {
+      outline: none;
+      border-color: #ff003c;
+      box-shadow: 0 0 0 2px rgba(255, 0, 60, 0.25);
     }
 
-    .sovereign-field:focus {
-      border-color: #fde68a;
-      box-shadow: 0 0 0 2.5px rgba(245, 158, 11, 0.22), 0 0 18px rgba(245, 158, 11, 0.18);
-      background: rgba(10, 8, 5, 0.98);
-    }
-
-    .sovereign-select {
+    .dark-select {
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fcd34d'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fbbf24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.65rem center;
       background-size: 0.9rem;
       padding-right: 2rem;
     }
 
-    .chrono-3d-wrap {
-      perspective: 1200px;
-    }
+    /* Dial Rotations */
+    @keyframes spinCW { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spinCCW { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    .dial-cw { transform-origin: 120px 120px; animation: spinCW 24s linear infinite; }
+    .dial-ccw { transform-origin: 120px 120px; animation: spinCCW 15s linear infinite; }
+    .dial-sweep { transform-origin: 120px 120px; animation: spinCW 4.5s linear infinite; }
 
-    .chrono-3d-card {
-      transform-style: preserve-3d;
-      transition: transform 0.28s ease-out;
-      will-change: transform;
+    /* Piston Bars */
+    @keyframes pistonMove {
+      0%, 100% { transform: translateY(-2.5px); }
+      50% { transform: translateY(2.5px); }
     }
+    .piston-a { animation: pistonMove var(--piston-speed) ease-in-out infinite; }
+    .piston-b { animation: pistonMove var(--piston-speed) ease-in-out infinite reverse; }
 
-    .sapphire-glare {
-      --gx: 50%;
-      --gy: 20%;
+    /* F-16 Safety Flap */
+    .safety-flap {
       position: absolute;
       inset: 0;
+      z-index: 25;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(225, 29, 72, 0.9),
+        rgba(225, 29, 72, 0.9) 7px,
+        rgba(10, 10, 14, 0.94) 7px,
+        rgba(10, 10, 14, 0.94) 14px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.22s ease;
+      transform-origin: top center;
+    }
+    .safety-flap.open {
+      transform: rotateX(85deg) translateY(-100%);
+      opacity: 0;
       pointer-events: none;
-      background:
-        radial-gradient(
-          circle at var(--gx) var(--gy),
-          rgba(255, 251, 235, 0.22),
-          rgba(253, 230, 138, 0.08) 25%,
-          rgba(34, 211, 238, 0.03) 50%,
-          transparent 65%
-        );
-      z-index: 20;
     }
 
-    .guilloche-dial {
-      background:
-        repeating-conic-gradient(
-          from 0deg at 120px 120px,
-          rgba(245, 158, 11, 0.09) 0deg 2.5deg,
-          transparent 2.5deg 10deg
-        ),
-        radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.16) 0%, #14100a 48%, #050302 100%);
-      box-shadow:
-        0 0 36px rgba(0, 0, 0, 0.98),
-        inset 0 0 22px rgba(0, 0, 0, 0.94),
-        inset 0 1px 1px rgba(255, 251, 235, 0.45),
-        0 0 8px rgba(245, 158, 11, 0.12);
+    .hazard-border {
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 0, 60, 0.28),
+        rgba(255, 0, 60, 0.28) 6px,
+        rgba(5, 5, 7, 0.92) 6px,
+        rgba(5, 5, 7, 0.92) 12px
+      );
     }
 
-    @keyframes slowSpin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes reverseSpin {
-      from { transform: rotate(360deg); }
-      to { transform: rotate(0deg); }
-    }
-
-    .ring-cw {
-      transform-origin: 120px 120px;
-      animation: slowSpin 32s linear infinite;
-    }
-
-    .ring-ccw {
-      transform-origin: 120px 120px;
-      animation: reverseSpin 20s linear infinite;
-    }
-
-    .ring-fast-cw {
-      transform-origin: 120px 120px;
-      animation: slowSpin 12s linear infinite;
-    }
-
-    @keyframes heartbeatPulse {
-      0%, 100% { opacity: 0.4; r: 96; }
-      15% { opacity: 0.9; r: 97.5; }
-      30% { opacity: 0.4; r: 96; }
-      45% { opacity: 0.75; r: 97; }
-      60% { opacity: 0.4; r: 96; }
-    }
-
-    .slide-track {
+    /* Slide Ignition */
+    .slide-rail {
       position: relative;
       height: 56px;
       overflow: hidden;
       touch-action: none;
-      border-radius: 12px;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      border-radius: 8px;
     }
-
-    .slide-fill {
+    .slide-bar {
       position: absolute;
       inset: 0 auto 0 0;
       width: 0%;
       pointer-events: none;
-      border-radius: 11px;
+      border-radius: 7px;
     }
-
-    .slide-thumb {
+    .slide-knob {
       position: absolute;
       top: 4px;
       left: 4px;
@@ -393,142 +309,82 @@
       z-index: 10;
       user-select: none;
       touch-action: none;
-      border-radius: 10px;
+      border-radius: 7px;
     }
+    .slide-knob:active { cursor: grabbing; }
 
-    .slide-thumb:active {
-      cursor: grabbing;
-    }
-
-    @keyframes chevronPulse {
-      0%, 100% { opacity: 0.3; transform: translateX(0); }
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.35; transform: translateX(0); }
       50% { opacity: 1; transform: translateX(6px); }
     }
+    .arrow-pulse { animation: arrowPulse 0.9s ease-in-out infinite; }
 
-    .chevron-anim {
-      animation: chevronPulse 1s ease-in-out infinite;
+    /* Switch Group */
+    .switch-rack {
+      background: #050507;
+      border: 1px solid rgba(251, 191, 36, 0.28);
     }
-
-    .cockpit-group {
-      background: rgba(6, 5, 3, 0.96);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.9);
-    }
-
-    .cockpit-btn {
-      transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
-      position: relative;
-    }
-    .cockpit-btn:active {
-      transform: scale(0.95) translateY(1px);
-    }
-    .cockpit-btn-active {
-      background: linear-gradient(135deg, #fffbeb 0%, #fde68a 22%, #f59e0b 58%, #b45309 100%) !important;
-      color: #100b04 !important;
+    .sw-on {
+      background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 45%, #d97706 100%) !important;
+      color: #09090b !important;
       font-weight: 800 !important;
-      border: 1px solid rgba(255, 251, 235, 0.9) !important;
-      box-shadow: 0 0 18px rgba(245, 158, 11, 0.55), 0 0 6px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.45) !important;
     }
-    .cockpit-btn-inactive {
+    .sw-off {
       background: transparent !important;
-      color: #78716c !important;
-      border: 1px solid transparent !important;
+      color: #71717a !important;
     }
-    .cockpit-btn-inactive:hover {
+    .sw-off:hover {
       color: #fde68a !important;
-      background: rgba(245, 158, 11, 0.1) !important;
-      border-color: rgba(245, 158, 11, 0.2) !important;
+      background: rgba(255, 255, 255, 0.04) !important;
     }
 
-    .hud-glow {
-      text-shadow: 0 0 14px rgba(245, 158, 11, 0.8), 0 0 28px rgba(245, 158, 11, 0.4), 0 0 56px rgba(245, 158, 11, 0.15);
-    }
-    .hud-red-glow {
-      text-shadow: 0 0 14px rgba(239, 68, 68, 0.9), 0 0 28px rgba(239, 68, 68, 0.5), 0 0 56px rgba(239, 68, 68, 0.2);
-    }
-    .telemetry-beacon {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      display: inline-block;
-      box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-      animation: beaconBlink 1.2s ease-in-out infinite;
-    }
-    @keyframes beaconBlink {
-      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
-      50% { opacity: 0.25; transform: scale(0.7); box-shadow: 0 0 4px currentColor; }
-    }
-
-    .text-gradient-gold {
-      background: linear-gradient(135deg, #fffbeb, #fde68a, #f59e0b, #fde68a, #fffbeb);
-      background-size: 300% 100%;
+    .title-metallic {
+      background: linear-gradient(90deg, #ffffff 0%, #fbbf24 45%, #ff003c 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: gradientShift 4s ease-in-out infinite;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .glow-gold { text-shadow: 0 0 14px rgba(251, 191, 36, 0.55); }
+    .glow-red { text-shadow: 0 0 14px rgba(255, 0, 60, 0.75); }
+
+    /* Bottom Dock */
+    .bottom-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      padding: 8px 14px calc(var(--safe-bottom) + 6px);
+      background: linear-gradient(180deg, rgba(3, 3, 4, 0) 0%, rgba(3, 3, 4, 0.95) 35%, #020203 100%);
+      pointer-events: none;
+    }
+    .bottom-dock > div {
+      pointer-events: auto;
+      background: rgba(10, 10, 14, 0.96);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.9), 0 0 18px rgba(255, 0, 60, 0.2);
     }
 
-    .tab-content {
-      animation: tabSlideIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
-    }
-    .tab-content.hidden { animation: none; }
-
-    @keyframes tabSlideIn {
-      from { opacity: 0; transform: translateY(8px); }
+    .tab-panel { animation: panelIn 0.22s ease-out; }
+    .tab-panel.hidden { animation: none; }
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .a5-payslip-sheet {
-      color: #000000;
-      font-family: 'Noto Sans Thai', sans-serif;
-    }
+    .a5-payslip-sheet { color: #000000; font-family: 'Noto Sans Thai', sans-serif; }
 
     @media print {
-      @page {
-        size: A5 landscape;
-        margin: 6mm;
-      }
-      body * {
-        visibility: hidden !important;
-      }
-      #payslipModal,
-      #payslipModal * {
-        visibility: visible !important;
-      }
-      #payslipModal {
-        position: fixed !important;
-        inset: 0 !important;
-        background: #ffffff !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      #printablePayslipArea {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        margin: 0 auto !important;
-        max-width: 100% !important;
-        width: 100% !important;
-      }
-      #payslipCaptureContent {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-      }
-      .overflow-x-auto {
-        overflow: visible !important;
-      }
-      .no-print {
-        display: none !important;
-      }
+      @page { size: A5 landscape; margin: 6mm; }
+      body * { visibility: hidden !important; }
+      #payslipModal, #payslipModal * { visibility: visible !important; }
+      #payslipModal { position: fixed !important; inset: 0 !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
+      #printablePayslipArea { box-shadow: none !important; border-radius: 0 !important; padding: 0 !important; margin: 0 auto !important; max-width: 100% !important; width: 100% !important; }
+      #payslipCaptureContent { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 auto !important; box-sizing: border-box !important; }
+      .overflow-x-auto { overflow: visible !important; }
+      .no-print { display: none !important; }
     }
   </style>
 </head>
@@ -536,221 +392,242 @@
 <body>
   <canvas id="constellationCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-75"></canvas>
 
-  <header class="relative z-20 px-3.5 pb-3 bg-[#030201]/90 backdrop-blur-xl border-b border-amber-400/30" style="box-shadow: 0 4px 30px rgba(0,0,0,0.8), 0 1px 0 rgba(245,158,11,0.15);">
-    <div class="max-w-md mx-auto space-y-2.5">
+  <!-- Header -->
+  <header class="relative z-20 px-3.5 pb-2.5 bg-[#030304]/92 backdrop-blur-xl border-b border-rose-500/35">
+    <div class="max-w-md mx-auto space-y-2">
       <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2 min-w-0 flex-1">
-          <div class="chamfer-sm w-9 h-9 gold-ingot-btn flex items-center justify-center shrink-0 p-1">
-            <img alt="TG" class="company-logo-slot w-full h-full object-contain drop-shadow" />
+        <div class="flex items-center gap-2.5 min-w-0 flex-1">
+          <div class="cut-btn w-9 h-9 gold-trigger flex items-center justify-center shrink-0 p-1">
+            <img alt="TG" class="company-logo-slot w-full h-full object-contain" />
           </div>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5 min-w-0">
-              <span class="font-hud font-extrabold text-xs tracking-wider text-gradient-gold truncate">TG • PK บันทึกเวลา</span>
-              <span id="cloudSyncPill" class="chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50 shrink-0">กำลังซิงค์...</span>
+              <span class="font-hud font-black text-xs tracking-wider title-metallic truncate">TG • PK APEX-V3</span>
+              <span id="cloudSyncPill" class="cut-btn text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-400/45 shrink-0">กำลังซิงค์...</span>
             </div>
-            <p class="text-[10px] text-amber-200/65 truncate">พันธกานต์ จ. MK-XII</p>
+            <p class="text-[10px] text-zinc-400 truncate font-mono">พันธกานต์ จ. // 50001024 // ระบบส่วนตัว</p>
           </div>
         </div>
 
         <div class="flex items-center gap-1 shrink-0">
-          <button onclick="cycleThemeMode()" class="tactile-btn chamfer-sm px-2 py-1.5 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center gap-1 text-[9px] font-mono font-bold">
-            <i id="themeIcon" class="fa-solid fa-crown text-[10px] text-amber-300"></i>
-            <span id="themeLabel">อัตโนมัติ</span>
+          <button onclick="cycleOpticsMode()" class="press-btn cut-btn px-2 py-1.5 bg-zinc-950 border border-zinc-700 text-amber-200 flex items-center gap-1 text-[9px] font-mono font-bold">
+            <i id="opticsIcon" class="fa-solid fa-eye text-[10px] text-rose-400"></i>
+            <span id="opticsLabel">APEX</span>
           </button>
-          <button id="audioToggleBtn" onclick="toggleAudio()" aria-label="เสียง" class="tactile-btn chamfer-sm w-8 h-8 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center justify-center">
+          <button id="audioToggleBtn" onclick="toggleAudio()" aria-label="เสียง" class="press-btn cut-btn w-8 h-8 bg-zinc-950 border border-zinc-700 text-amber-200 flex items-center justify-center">
             <i id="audioIcon" class="fa-solid fa-volume-high text-[11px]"></i>
           </button>
-          <button onclick="pullFromGoogleSheets(false)" aria-label="ซิงค์ข้อมูล" class="tactile-btn chamfer-sm w-8 h-8 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center justify-center">
+          <button onclick="pullFromGoogleSheets(false)" aria-label="ซิงค์ข้อมูล" class="press-btn cut-btn w-8 h-8 bg-zinc-950 border border-zinc-700 text-amber-200 flex items-center justify-center">
             <i id="topSyncIcon" class="fa-solid fa-rotate text-[11px]"></i>
           </button>
-          <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="tactile-btn chamfer-sm w-8 h-8 bg-zinc-950/90 border border-amber-400/40 text-amber-200 flex items-center justify-center">
+          <button onclick="openConfigModal()" aria-label="ตั้งค่า" class="press-btn cut-btn w-8 h-8 bg-zinc-950 border border-zinc-700 text-amber-200 flex items-center justify-center">
             <i class="fa-solid fa-gear text-[11px]"></i>
           </button>
         </div>
       </div>
 
       <div>
-        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="sovereign-field sovereign-select w-full text-xs font-bold outline-none">
+        <select id="globalEmployeeSelect" onchange="onEmployeeChange(this.value)" class="dark-input dark-select w-full text-xs font-bold">
         </select>
       </div>
     </div>
   </header>
 
-  <main class="relative z-10 max-w-md mx-auto px-3.5 pt-3 space-y-3.5">
+  <main id="apexMain" class="relative z-10 max-w-md mx-auto px-3.5 pt-3 space-y-3.5">
 
     <!-- TAB 1: บันทึกสด -->
-    <section id="tab-1" class="tab-content space-y-3.5">
-      <div class="chrono-3d-wrap">
-        <div id="chronoTiltCard" class="chrono-3d-card sovereign-frame chamfer-box">
-          <div class="sovereign-inner chamfer-box p-4 space-y-3.5">
-            <div id="sapphireGlare" class="sapphire-glare"></div>
+    <section id="tab-1" class="tab-panel space-y-3.5">
+      <div class="apex-shell cut-panel">
+        <div id="mainChronoCardInner" class="apex-core cut-panel target-locks p-4 space-y-3.5">
+          <div id="katanaSlashEffect" class="laser-slash"></div>
 
-            <div class="flex items-center justify-between text-[10px] font-mono relative z-10">
-              <div id="currentDateDisplay" class="flex items-center gap-1.5 text-amber-200/90 font-semibold">
-                <i class="fa-regular fa-calendar-check text-amber-300"></i>
-                <span></span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span id="reactorLiveBadge" class="px-2 py-0.5 rounded bg-black/90 border border-amber-500/40 text-[9px] font-mono font-bold text-zinc-400">0% เวลากะ</span>
-                <span id="lcdModeTag" class="chamfer-sm bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/50 tracking-wider">พร้อมทำงาน</span>
+          <div id="berserkWarningStrip" class="hidden hazard-border border border-rose-500/70 px-2.5 py-1 flex items-center justify-between text-[9px] font-mono font-extrabold text-rose-300 tracking-widest">
+            <span>⚠ REDLINE OT ACTIVE</span>
+            <span class="text-amber-300">OVERDRIVE</span>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] font-mono">
+            <div id="currentDateDisplay" class="flex items-center gap-1.5 text-zinc-300 font-semibold">
+              <i class="fa-regular fa-calendar-check text-rose-500"></i>
+              <span></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span id="reactorLiveBadge" class="px-2 py-0.5 rounded bg-black border border-zinc-700 text-[9px] font-mono font-bold text-zinc-400">0% เวลากะ</span>
+              <span id="lcdModeTag" class="cut-btn bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-400/50 tracking-wider">พร้อมทำงาน</span>
+            </div>
+          </div>
+
+          <!-- Left Gauge + Sharp Chronograph Dial + Right Gauge -->
+          <div class="relative flex items-center justify-center gap-2.5 py-1">
+            <div class="flex flex-col items-center gap-1" title="ระดับชั่วโมงทำงานกะ">
+              <span class="text-[7.5px] font-mono text-amber-400 font-extrabold">SHIFT</span>
+              <div class="w-2.5 h-36 rounded-sm bg-black border border-zinc-700 p-0.5 flex items-end overflow-hidden">
+                <div id="bioVialFill" class="w-full h-[15%] rounded-[1px] bg-gradient-to-t from-amber-600 via-amber-300 to-white transition-all duration-500"></div>
               </div>
             </div>
 
-            <div class="relative flex items-center justify-center py-1 z-10">
-              <div class="relative w-60 h-60 flex items-center justify-center">
-                <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_28px_rgba(245,158,11,0.32)]">
-                  <defs>
-                    <linearGradient id="goldRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#FFFBEB" />
-                      <stop offset="28%" stop-color="#FDE68A" />
-                      <stop offset="65%" stop-color="#F59E0B" />
-                      <stop offset="85%" stop-color="#D97706" />
-                      <stop offset="100%" stop-color="#FEF3C7" />
-                    </linearGradient>
-                    <linearGradient id="crimsonLaserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#FEE2E2" />
-                      <stop offset="35%" stop-color="#EF4444" />
-                      <stop offset="80%" stop-color="#DC2626" />
-                      <stop offset="100%" stop-color="#991B1B" />
-                    </linearGradient>
-                    <linearGradient id="reactorPlasmaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#FFFBEB" />
-                      <stop offset="35%" stop-color="#FDE68A" />
-                      <stop offset="65%" stop-color="#F59E0B" />
-                      <stop offset="90%" stop-color="#EF4444" />
-                      <stop offset="100%" stop-color="#DC2626" />
-                    </linearGradient>
-                    <filter id="laserNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
-                      <feGaussianBlur stdDeviation="2.2" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
+            <div class="relative w-56 h-56 flex items-center justify-center shrink-0">
+              <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-[0_0_26px_rgba(255,0,60,0.3)]">
+                <defs>
+                  <linearGradient id="goldRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFFBEB" />
+                    <stop offset="40%" stop-color="#FBBF24" />
+                    <stop offset="80%" stop-color="#FF003C" />
+                    <stop offset="100%" stop-color="#FEF3C7" />
+                  </linearGradient>
+                  <linearGradient id="crimsonLaserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FF4D6D" />
+                    <stop offset="50%" stop-color="#FF003C" />
+                    <stop offset="100%" stop-color="#881337" />
+                  </linearGradient>
+                  <linearGradient id="reactorPlasmaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FBBF24" />
+                    <stop offset="55%" stop-color="#FF5500" />
+                    <stop offset="100%" stop-color="#FF003C" />
+                  </linearGradient>
+                  <linearGradient id="radarConeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="rgba(255, 0, 60, 0.28)" />
+                    <stop offset="100%" stop-color="rgba(255, 0, 60, 0)" />
+                  </linearGradient>
+                  <filter id="laserNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="2.2" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
 
-                  <circle cx="120" cy="120" r="116" fill="none" stroke="url(#goldRimGrad)" stroke-width="2.2" />
-                  <circle cx="120" cy="120" r="110" fill="none" stroke="rgba(245,158,11,0.22)" stroke-width="1.2" stroke-dasharray="1.5 4" />
+                <circle cx="120" cy="120" r="116" fill="#07070a" stroke="url(#goldRimGrad)" stroke-width="2.2" />
+                <polygon points="120,7 217,63 217,177 120,233 23,177 23,63" fill="none" stroke="rgba(255,0,60,0.4)" stroke-width="1.2" />
+                <circle cx="120" cy="120" r="109" fill="none" stroke="rgba(251,191,36,0.2)" stroke-width="1" stroke-dasharray="2 4" />
 
-                  <path d="M 120 5 A 115 115 0 0 1 201 38" fill="none" stroke="url(#crimsonLaserGrad)" stroke-width="3" stroke-linecap="round" filter="url(#laserNeonGlow)" />
-                  <text x="168" y="22" font-family="'JetBrains Mono', sans-serif" font-size="6" font-weight="800" fill="#EF4444" letter-spacing="1">REDLINE</text>
+                <g class="dial-sweep">
+                  <path d="M 120 120 L 120 26 A 94 94 0 0 1 186 54 Z" fill="url(#radarConeGrad)" />
+                  <line x1="120" y1="120" x2="120" y2="26" stroke="rgba(255,0,60,0.65)" stroke-width="1.2" />
+                </g>
 
-                  <g class="ring-cw">
-                    <circle cx="120" cy="120" r="103" fill="none" stroke="rgba(245,158,11,0.38)" stroke-width="1.5" stroke-dasharray="16 7 4 7" />
-                    <circle cx="120" cy="17" r="3.2" fill="#FDE68A" filter="url(#laserNeonGlow)" />
-                    <circle cx="120" cy="223" r="3.2" fill="#EF4444" filter="url(#laserNeonGlow)" />
-                    <circle cx="17" cy="120" r="2.5" fill="#F59E0B" />
-                    <circle cx="223" cy="120" r="2.5" fill="#F59E0B" />
-                  </g>
+                <path d="M 120 5 A 115 115 0 0 1 201 38" fill="none" stroke="url(#crimsonLaserGrad)" stroke-width="3.5" stroke-linecap="round" filter="url(#laserNeonGlow)" />
+                <text x="163" y="21" font-family="'JetBrains Mono', sans-serif" font-size="6" font-weight="800" fill="#FF003C" letter-spacing="1">APEX • 9K RPM</text>
 
-                  <g class="ring-ccw">
-                    <circle cx="120" cy="120" r="88" fill="none" stroke="rgba(253,230,138,0.28)" stroke-width="1" stroke-dasharray="6 8" />
-                    <circle cx="120" cy="32" r="1.8" fill="#FFFBEB" />
-                    <circle cx="120" cy="208" r="1.8" fill="#FFFBEB" />
-                  </g>
+                <g class="dial-cw">
+                  <circle cx="120" cy="120" r="102" fill="none" stroke="rgba(251,191,36,0.35)" stroke-width="1.3" stroke-dasharray="14 8 3 8" />
+                  <circle cx="120" cy="15" r="2.6" fill="#FF003C" filter="url(#laserNeonGlow)" />
+                  <circle cx="120" cy="222" r="2.8" fill="#FBBF24" filter="url(#laserNeonGlow)" />
+                </g>
 
-                  <g id="chronoTicksGroup"></g>
+                <g class="dial-ccw">
+                  <circle cx="120" cy="120" r="88" fill="none" stroke="rgba(255,0,60,0.28)" stroke-width="1" stroke-dasharray="5 7" />
+                </g>
 
-                  <circle cx="120" cy="120" r="96" fill="none" stroke="rgba(34,211,238,0.35)" stroke-width="1" stroke-dasharray="3 6" style="animation: heartbeatPulse 1.6s ease-in-out infinite;" />
+                <g id="chronoTicksGroup"></g>
 
-                  <g class="ring-fast-cw">
-                    <circle cx="120" cy="24" r="1.5" fill="#22d3ee" opacity="0.6" />
-                    <circle cx="216" cy="120" r="1.2" fill="#f472b6" opacity="0.5" />
-                    <circle cx="120" cy="216" r="1.5" fill="#34d399" opacity="0.5" />
-                    <circle cx="24" cy="120" r="1.2" fill="#fde68a" opacity="0.4" />
-                  </g>
+                <circle cx="120" cy="120" r="94" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3.8" />
+                <circle
+                  id="reactorProgressArc"
+                  cx="120"
+                  cy="120"
+                  r="94"
+                  fill="none"
+                  stroke="url(#reactorPlasmaGrad)"
+                  stroke-width="4.2"
+                  stroke-linecap="round"
+                  stroke-dasharray="590.62"
+                  stroke-dashoffset="590.62"
+                  transform="rotate(-90 120 120)"
+                  filter="url(#laserNeonGlow)"
+                />
 
-                  <circle cx="120" cy="120" r="94" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3.5" />
-                  <circle
-                    id="reactorProgressArc"
-                    cx="120"
-                    cy="120"
-                    r="94"
-                    fill="none"
-                    stroke="url(#reactorPlasmaGrad)"
-                    stroke-width="3.8"
-                    stroke-linecap="round"
-                    stroke-dasharray="590.62"
-                    stroke-dashoffset="590.62"
-                    transform="rotate(-90 120 120)"
-                    filter="url(#laserNeonGlow)"
-                  />
+                <g id="chronoHourHand" transform="rotate(0 120 120)">
+                  <polygon points="115.5,126 124.5,126 122,66 120,58 118,66" fill="url(#goldRimGrad)" stroke="#78350F" stroke-width="0.75" />
+                  <polygon points="118,106 122,106 121,72 119,72" fill="#09090b" />
+                </g>
 
-                  <g id="chronoHourHand" transform="rotate(0 120 120)">
-                    <polygon points="115.5,126 124.5,126 122,66 120,58 118,66" fill="url(#goldRimGrad)" stroke="#78350F" stroke-width="0.75" />
-                    <polygon points="118,106 122,106 121,72 119,72" fill="#090705" />
-                    <line x1="120" y1="64" x2="120" y2="70" stroke="#FFFBEB" stroke-width="2" stroke-linecap="round" />
-                  </g>
+                <g id="chronoMinuteHand" transform="rotate(0 120 120)">
+                  <polygon points="116.5,128 123.5,128 121.5,42 120,34 118.5,42" fill="#FFFBEB" stroke="#FF003C" stroke-width="0.75" />
+                  <polygon points="118.5,108 121.5,108 120.8,48 119.2,48" fill="#09090b" />
+                </g>
 
-                  <g id="chronoMinuteHand" transform="rotate(0 120 120)">
-                    <polygon points="116.5,128 123.5,128 121.5,42 120,34 118.5,42" fill="#FFFBEB" stroke="#D97706" stroke-width="0.75" />
-                    <polygon points="118.5,108 121.5,108 120.8,48 119.2,48" fill="#090705" />
-                    <line x1="120" y1="40" x2="120" y2="46" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" />
-                  </g>
+                <g id="chronoSecondHand" transform="rotate(0 120 120)">
+                  <line x1="120" y1="144" x2="120" y2="18" stroke="#FF003C" stroke-width="2" stroke-linecap="round" filter="url(#laserNeonGlow)" />
+                  <circle cx="120" cy="26" r="3.2" fill="#FBBF24" stroke="#FF003C" stroke-width="1.2" />
+                  <circle cx="120" cy="132" r="4.5" fill="none" stroke="#FF003C" stroke-width="1.6" />
+                </g>
 
-                  <g id="chronoSecondHand" transform="rotate(0 120 120)">
-                    <line x1="120" y1="144" x2="120" y2="20" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" filter="url(#laserNeonGlow)" />
-                    <circle cx="120" cy="28" r="3.2" fill="#FDE68A" stroke="#EF4444" stroke-width="1" />
-                    <circle cx="120" cy="132" r="4.5" fill="none" stroke="#EF4444" stroke-width="1.6" />
-                  </g>
+                <circle cx="120" cy="120" r="7" fill="#09090b" stroke="url(#goldRimGrad)" stroke-width="2" />
+                <circle cx="120" cy="120" r="3" fill="#FF003C" />
+              </svg>
 
-                  <circle cx="120" cy="120" r="7" fill="#120E09" stroke="url(#goldRimGrad)" stroke-width="2" />
-                  <circle cx="120" cy="120" r="3" fill="#EF4444" />
-                </svg>
-
-                <div class="guilloche-dial chamfer-box absolute w-40 h-28 border border-amber-300/50 flex flex-col items-center justify-center px-2.5 py-1.5 shadow-[0_0_28px_rgba(0,0,0,0.95)]">
-                  <div class="flex items-center gap-1.5 mb-0.5">
-                    <span id="liveClockBeacon" class="telemetry-beacon text-emerald-400"></span>
-                    <span class="text-[7.5px] font-hud tracking-[0.24em] text-amber-300/85 uppercase font-bold">TG • CHRONO CORE</span>
-                  </div>
-                  <div id="liveClock" class="hud-glow font-mono text-xl font-extrabold text-amber-50 tracking-tight">00:00:00<span class="text-xs text-amber-300 font-bold">.0</span></div>
-                  <div class="flex items-center gap-1.5 mt-1">
-                    <span id="dutyBadge" class="chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-950 border border-amber-400/60 font-hud font-bold text-amber-200 tracking-wider">รอเข้างาน</span>
-                  </div>
+              <!-- Center Digital Readout + Twin Pistons -->
+              <div class="cut-btn absolute w-36 h-26 bg-[#07070a]/95 border border-rose-500/60 flex flex-col items-center justify-center px-2 py-2 shadow-[0_0_24px_rgba(0,0,0,0.95)]">
+                <div class="text-[7.5px] font-hud tracking-[0.18em] text-amber-400 uppercase font-extrabold">APEX-V3</div>
+                <div id="liveClock" class="glow-gold font-mono text-lg font-extrabold text-white tracking-tight">00:00:00<span class="text-[11px] text-rose-500 font-bold">.0</span></div>
+                <span id="dutyBadge" class="cut-btn mt-1 text-[8.5px] px-2 py-0.5 bg-zinc-900 border border-amber-400/55 font-hud font-bold text-amber-200 tracking-wider">รอเข้างาน</span>
+                <div class="flex items-center gap-1.5 mt-1.5" title="ลูกสูบเครื่องยนต์">
+                  <span class="w-2 h-2 rounded-[1px] bg-amber-400 piston-a"></span>
+                  <span class="w-2 h-2 rounded-[1px] bg-rose-500 piston-b"></span>
+                  <span class="w-2 h-2 rounded-[1px] bg-amber-400 piston-a"></span>
+                  <span class="w-2 h-2 rounded-[1px] bg-rose-500 piston-b"></span>
                 </div>
               </div>
             </div>
 
-            <div id="liveShiftElapsedBar" class="hidden chamfer-sm bg-black/85 border border-amber-400/45 px-3 py-2 flex items-center justify-between text-xs font-mono relative z-10">
-              <div class="flex items-center gap-1.5 text-amber-200">
-                <i class="fa-solid fa-hourglass-half text-amber-300 text-[11px]"></i>
-                <span>ทำงานแล้ว: <strong id="liveElapsedText" class="text-white">00h 00m</strong></span>
-              </div>
-              <div class="text-amber-300 font-extrabold">
-                สะสมวันนี้: <span id="liveAccruedPay">0.00 ฿</span>
+            <div class="flex flex-col items-center gap-1" title="เกจรอบเครื่องยนต์ RPM">
+              <span class="text-[7.5px] font-mono text-rose-500 font-extrabold">RPM</span>
+              <div class="w-2.5 h-36 rounded-sm bg-black border border-zinc-700 p-0.5 flex items-end overflow-hidden">
+                <div id="rpmVialFill" class="w-full h-[20%] rounded-[1px] bg-gradient-to-t from-amber-500 via-orange-600 to-rose-600 transition-all duration-500"></div>
               </div>
             </div>
+          </div>
 
-            <div class="grid grid-cols-2 gap-2.5 text-center font-mono relative z-10">
-              <div class="chamfer-sm bg-black/75 border border-amber-500/30 p-2.5">
-                <div class="text-[9.5px] text-zinc-400 flex items-center justify-center gap-1">
-                  <i class="fa-solid fa-right-to-bracket text-amber-300 text-[10px]"></i>
-                  <span>เข้างาน (<span id="checkInStatusText">เข้างาน</span>)</span>
-                </div>
-                <div id="displayCheckInTime" class="text-base font-extrabold text-amber-100 mt-0.5">--:--</div>
-              </div>
-              <div class="chamfer-sm bg-black/75 border border-amber-500/30 p-2.5">
-                <div class="text-[9.5px] text-zinc-400 flex items-center justify-center gap-1">
-                  <i class="fa-solid fa-right-from-bracket text-amber-300 text-[10px]"></i>
-                  <span>ออกงาน (<span id="checkOutStatusText">ออกงาน</span>)</span>
-                </div>
-                <div id="displayCheckOutTime" class="text-base font-extrabold text-amber-100 mt-0.5">--:--</div>
-              </div>
+          <div id="liveShiftElapsedBar" class="hidden cut-btn bg-black/90 border border-rose-500/50 px-3 py-2 flex items-center justify-between text-xs font-mono">
+            <div class="flex items-center gap-1.5 text-zinc-300">
+              <i class="fa-solid fa-hourglass-half text-rose-500 text-[11px]"></i>
+              <span>ทำงานแล้ว: <strong id="liveElapsedText" class="text-white">00h 00m</strong></span>
             </div>
+            <div class="text-amber-400 font-extrabold">
+              สะสมวันนี้: <span id="liveAccruedPay">0.00 ฿</span>
+            </div>
+          </div>
 
-            <div class="space-y-1.5 relative z-10">
-              <div class="flex justify-between items-center px-0.5">
-                <span class="font-hud text-[9px] text-amber-200/75 tracking-wider font-bold">// SYS.03 IGNITION CONTROL</span>
-                <span id="ignitionStatusHint" class="font-hud text-[9px] text-amber-300 font-bold tracking-wider">เลื่อนเพื่อลงเวลาเข้างาน</span>
+          <div class="grid grid-cols-2 gap-2.5 text-center font-mono">
+            <div class="cut-btn bg-black/85 border border-zinc-800 p-2.5">
+              <div class="text-[9.5px] text-zinc-400 flex items-center justify-center gap-1">
+                <i class="fa-solid fa-right-to-bracket text-amber-400 text-[10px]"></i>
+                <span>เข้างาน (<span id="checkInStatusText">เข้างาน</span>)</span>
               </div>
-              <div id="ignitionSlideTrack" class="slide-track chamfer-sm bg-[#060403] border border-amber-300/70 flex items-center justify-center select-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.95),0_0_16px_rgba(245,158,11,0.2)]">
-                <div id="ignitionSlideFill" class="slide-fill bg-gradient-to-r from-amber-700/60 via-amber-500/70 to-amber-300/90"></div>
-                <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8 hud-glow">
+              <div id="displayCheckInTime" class="text-base font-extrabold text-white mt-0.5">--:--</div>
+            </div>
+            <div class="cut-btn bg-black/85 border border-zinc-800 p-2.5">
+              <div class="text-[9.5px] text-zinc-400 flex items-center justify-center gap-1">
+                <i class="fa-solid fa-right-from-bracket text-rose-500 text-[10px]"></i>
+                <span>ออกงาน (<span id="checkOutStatusText">ออกงาน</span>)</span>
+              </div>
+              <div id="displayCheckOutTime" class="text-base font-extrabold text-white mt-0.5">--:--</div>
+            </div>
+          </div>
+
+          <!-- Safety Flap + Slide Trigger -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between items-center px-0.5">
+              <span class="font-hud text-[9px] text-zinc-400 tracking-wider font-bold">// IGNITION LOCK</span>
+              <span id="ignitionStatusHint" class="font-hud text-[9px] text-amber-400 font-bold tracking-wider">เปิดฝาครอบเพื่อลงเวลา</span>
+            </div>
+            <div class="hazard-border p-[3px] rounded-xl border border-rose-500/45 relative">
+              <div id="f16SafetyCover" onclick="unlockSafetyCover()" class="safety-flap cut-btn">
+                <span class="font-hud text-[10px] font-extrabold tracking-widest text-white bg-black/90 px-3 py-1.5 rounded border border-rose-500 shadow-lg flex items-center gap-1.5">
+                  <i class="fa-solid fa-lock-open text-rose-400"></i> แตะปลดฝาครอบนิรภัย
+                </span>
+              </div>
+
+              <div id="ignitionSlideTrack" class="slide-rail bg-[#050507] border border-amber-400/70 flex items-center justify-center select-none">
+                <div id="ignitionSlideFill" class="slide-bar bg-gradient-to-r from-amber-700/70 via-orange-500/80 to-amber-300/95"></div>
+                <div id="ignitionSlideLabel" class="relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8 glow-gold">
                   <span>◀◀ สไลด์เพื่อลงเวลาเข้างาน</span>
-                  <span class="chevron-anim text-xs">&gt;&gt;&gt;</span>
+                  <span class="arrow-pulse text-xs">&gt;&gt;&gt;</span>
                 </div>
-                <div id="ignitionSlideThumb" class="slide-thumb chamfer-sm gold-ingot-btn">
-                  <i class="fa-solid fa-bolt text-base text-zinc-950 drop-shadow"></i>
+                <div id="ignitionSlideThumb" class="slide-knob gold-trigger">
+                  <i class="fa-solid fa-bolt text-base text-zinc-950"></i>
                 </div>
               </div>
             </div>
@@ -758,41 +635,40 @@
         </div>
       </div>
 
-      <div class="sovereign-frame chamfer-box cyber-bracket">
-        <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
-          <div class="flex items-center justify-between border-b border-amber-500/25 pb-2">
+      <!-- Mode Switches & OT Simulator -->
+      <div class="apex-shell cut-panel">
+        <div class="apex-core cut-panel target-locks p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
             <div class="flex items-center gap-2">
-              <span class="font-hud font-bold text-xs tracking-wider text-amber-100">ตั้งค่ากะ & อัตรา OT</span>
-              <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/50">อัตโนมัติ</button>
+              <span class="font-hud font-bold text-xs tracking-wider text-white">ตั้งค่ากะ & อัตรา OT</span>
+              <button id="btnAutoShiftMode" onclick="enableAutoShiftMode()" class="text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-400/50">อัตโนมัติ</button>
             </div>
-            <span id="otRateGaugePill" class="chamfer-sm px-2.5 py-0.5 bg-amber-500/15 border border-amber-300/50 font-mono text-[10px] font-extrabold text-amber-200">1.5X</span>
+            <span id="otRateGaugePill" class="cut-btn px-2.5 py-0.5 bg-amber-500/15 border border-amber-400/50 font-mono text-[10px] font-extrabold text-amber-300">1.5X</span>
           </div>
 
           <div class="grid grid-cols-3 gap-2">
-            <div class="cockpit-group chamfer-sm p-1 grid grid-cols-2 gap-1">
+            <div class="switch-rack cut-btn p-1 grid grid-cols-2 gap-1">
               <button type="button" id="swShiftDay" onclick="setSwitchValue('shift', 'DAY')" class="py-1.5 font-hud font-bold text-[10px]">กะเช้า</button>
               <button type="button" id="swShiftNight" onclick="setSwitchValue('shift', 'NIGHT')" class="py-1.5 font-hud font-bold text-[10px]">กะดึก</button>
             </div>
-
-            <div class="cockpit-group chamfer-sm p-1 grid grid-cols-2 gap-1">
+            <div class="switch-rack cut-btn p-1 grid grid-cols-2 gap-1">
               <button type="button" id="swDayReg" onclick="setSwitchValue('dayType', 'REGULAR')" class="py-1.5 font-hud font-bold text-[10px]">วันปกติ</button>
               <button type="button" id="swDayHol" onclick="setSwitchValue('dayType', 'HOLIDAY')" class="py-1.5 font-hud font-bold text-[10px]">วันหยุด</button>
             </div>
-
-            <div class="cockpit-group chamfer-sm p-1 grid grid-cols-2 gap-1">
+            <div class="switch-rack cut-btn p-1 grid grid-cols-2 gap-1">
               <button type="button" id="swModeFull" onclick="setSwitchValue('workType', 'FULL')" class="py-1.5 font-hud font-bold text-[10px]">เต็มวัน</button>
               <button type="button" id="swModeHalf" onclick="setSwitchValue('workType', 'HALF')" class="py-1.5 font-hud font-bold text-[10px]">ครึ่งวัน</button>
             </div>
           </div>
 
-          <div class="bg-black/80 border border-amber-500/30 rounded-xl p-2.5 space-y-2">
+          <div class="bg-black/85 border border-zinc-800 rounded-lg p-2.5 space-y-2">
             <div class="flex justify-between items-center text-[10.5px]">
               <span class="text-zinc-300 font-semibold flex items-center gap-1.5">
-                <i class="fa-solid fa-sliders text-amber-300"></i> จำลองเวลาออก / OT
+                <i class="fa-solid fa-sliders text-rose-500"></i> จำลองเวลาออก / OT
               </span>
               <div class="flex items-center gap-2 font-mono">
-                <span id="simOutTimeLabel" class="text-amber-200 font-bold">16:50 (เลิกปกติ)</span>
-                <button type="button" onclick="resetSimScrubber()" class="text-[9px] text-amber-300/80 hover:text-amber-100 underline">รีเซ็ต</button>
+                <span id="simOutTimeLabel" class="text-amber-300 font-bold">16:50 (เลิกปกติ)</span>
+                <button type="button" onclick="resetSimScrubber()" class="text-[9px] text-zinc-400 hover:text-white underline">รีเซ็ต</button>
               </div>
             </div>
             <input
@@ -803,21 +679,21 @@
               step="10"
               value="0"
               oninput="onSimScrubberChange(this.value)"
-              class="w-full accent-amber-400 cursor-pointer h-1.5 bg-zinc-800 rounded-lg"
+              class="w-full accent-rose-500 cursor-pointer h-1.5 bg-zinc-800 rounded-lg"
             />
           </div>
 
-          <div class="grid grid-cols-3 gap-2 font-mono text-center pt-0.5">
-            <div class="chamfer-sm bg-black/85 border border-amber-500/30 p-2">
+          <div class="grid grid-cols-3 gap-2 font-mono text-center">
+            <div class="cut-btn bg-black/90 border border-zinc-800 p-2">
               <div id="estBaseLabel" class="text-[8.5px] text-zinc-400 uppercase">ค่าแรงปกติ</div>
-              <div id="estBasePay" class="text-xs font-extrabold text-amber-100 mt-0.5">400 ฿</div>
+              <div id="estBasePay" class="text-xs font-extrabold text-white mt-0.5">400 ฿</div>
             </div>
-            <div class="chamfer-sm bg-black/85 border border-amber-500/30 p-2">
+            <div class="cut-btn bg-black/90 border border-zinc-800 p-2">
               <div class="text-[8.5px] text-zinc-400 uppercase">ค่าอาหาร/กะ</div>
               <div id="estAllowanceVal" class="text-xs font-extrabold text-amber-200 mt-0.5">10 ฿</div>
             </div>
-            <div class="chamfer-sm bg-gradient-to-br from-amber-950/80 to-black border border-amber-300/60 p-2">
-              <div class="text-[8.5px] text-amber-200/85 uppercase">ประมาณการยอด</div>
+            <div class="cut-btn bg-gradient-to-br from-rose-950/80 to-black border border-rose-500/60 p-2">
+              <div class="text-[8.5px] text-rose-300 uppercase">ประมาณการยอด</div>
               <div id="estTotal" class="text-xs font-extrabold text-amber-300 mt-0.5">410 ฿</div>
             </div>
           </div>
@@ -825,33 +701,33 @@
       </div>
     </section>
 
-    <!-- TAB 2: Manual Override -->
-    <section id="tab-2" class="tab-content hidden space-y-3.5">
-      <div class="sovereign-frame chamfer-box cyber-bracket">
-        <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
-          <div class="border-b border-amber-500/25 pb-2.5 flex items-center justify-between gap-2">
+    <!-- TAB 2: บันทึกย้อนหลัง -->
+    <section id="tab-2" class="tab-panel hidden space-y-3.5">
+      <div class="apex-shell cut-panel">
+        <div class="apex-core cut-panel target-locks p-3.5 space-y-3">
+          <div class="border-b border-zinc-800 pb-2.5 flex items-center justify-between gap-2">
             <div class="flex items-center space-x-2.5">
-              <div class="chamfer-sm w-7 h-7 gold-ingot-btn flex items-center justify-center text-xs shrink-0">
+              <div class="cut-btn w-7 h-7 gold-trigger flex items-center justify-center text-xs shrink-0">
                 <i class="fa-solid fa-pen-to-square"></i>
               </div>
               <div>
-                <div class="text-[7.5px] font-mono tracking-widest text-amber-400/80 uppercase font-bold">// SYS.04 MANUAL LOGS</div>
-                <h2 class="font-hud font-bold text-xs tracking-wide text-amber-50">บันทึกเวลาย้อนหลัง</h2>
+                <div class="text-[7.5px] font-mono tracking-widest text-rose-500 uppercase font-bold">// MANUAL OVERRIDE</div>
+                <h2 class="font-hud font-bold text-xs tracking-wide text-white">บันทึกเวลาย้อนหลัง</h2>
                 <p class="text-[10px] text-zinc-400">กรอกเวลาทำงานย้อนหลัง (08:00-16:50 | OT 17:10-19:10)</p>
               </div>
             </div>
-            <span id="manualExistingBadge" class="hidden chamfer-sm text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-200 px-2 py-0.5 border border-amber-300/50 shadow-[0_0_8px_rgba(245,158,11,0.25)]">มีข้อมูลเดิม</span>
+            <span id="manualExistingBadge" class="hidden cut-btn text-[8.5px] font-mono font-bold bg-amber-500/20 text-amber-200 px-2 py-0.5 border border-amber-400/50">มีข้อมูลเดิม</span>
           </div>
 
           <form id="manualForm" onsubmit="handleManualSubmit(event)" class="space-y-3 text-xs">
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">วันที่ต้องการบันทึก</label>
-                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="sovereign-field w-full font-mono text-xs outline-none" />
+                <input type="date" id="manualDate" onchange="prefillManualByDate()" required class="dark-input w-full font-mono text-xs" />
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">สถานะการทำงาน</label>
-                <select id="manualWorkType" onchange="updateManualPreview()" class="sovereign-field sovereign-select w-full text-xs outline-none">
+                <select id="manualWorkType" onchange="updateManualPreview()" class="dark-input dark-select w-full text-xs">
                   <option value="FULL">เต็มวัน (8 ชม.)</option>
                   <option value="HALF">ลาครึ่งวัน (ครึ่งกะ)</option>
                 </select>
@@ -861,14 +737,14 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">กะการทำงาน</label>
-                <select id="manualShift" onchange="updateManualPreview()" class="sovereign-field sovereign-select w-full text-xs outline-none">
+                <select id="manualShift" onchange="updateManualPreview()" class="dark-input dark-select w-full text-xs">
                   <option value="DAY">กลางวัน (08:00-16:50)</option>
                   <option value="NIGHT">กลางคืน (20:00-04:50)</option>
                 </select>
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทวัน</label>
-                <select id="manualDayType" onchange="updateManualPreview()" class="sovereign-field sovereign-select w-full text-xs outline-none">
+                <select id="manualDayType" onchange="updateManualPreview()" class="dark-input dark-select w-full text-xs">
                   <option value="REGULAR">วันปกติ (OT 1.5)</option>
                   <option value="HOLIDAY">วันหยุด (OT 2.0)</option>
                 </select>
@@ -878,20 +754,20 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาเข้า</label>
-                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="sovereign-field w-full font-mono text-xs outline-none" />
+                <input type="time" id="manualCheckIn" oninput="updateManualPreview()" required class="dark-input w-full font-mono text-xs" />
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เวลาออก</label>
-                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="sovereign-field w-full font-mono text-xs outline-none" />
+                <input type="time" id="manualCheckOut" oninput="updateManualPreview()" required class="dark-input w-full font-mono text-xs" />
               </div>
             </div>
 
-            <div id="manualPreviewBox" class="hidden chamfer-sm bg-black/90 text-amber-200 font-mono px-3 py-2 border border-amber-300/55 flex justify-between items-center text-[11px]">
+            <div id="manualPreviewBox" class="hidden cut-btn bg-black text-amber-200 font-mono px-3 py-2 border border-amber-400/50 flex justify-between items-center text-[11px]">
               <span id="manPrevDetail">OT: 0h (0h)</span>
               <span class="font-extrabold text-xs text-white">สุทธิ <span id="manPrevTotal" class="text-amber-300">0</span> ฿</span>
             </div>
 
-            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 gold-ingot-btn hover:brightness-110 text-xs mt-1">
+            <button type="submit" class="press-btn cut-btn w-full py-2.5 gold-trigger text-xs mt-1">
               คำนวณ & บันทึกย้อนหลัง
             </button>
           </form>
@@ -899,17 +775,17 @@
       </div>
     </section>
 
-    <!-- TAB 3: Leave Form -->
-    <section id="tab-3" class="tab-content hidden space-y-3.5">
-      <div class="sovereign-frame chamfer-box cyber-bracket">
-        <div class="sovereign-inner chamfer-box p-3.5 space-y-3">
-          <div class="border-b border-amber-500/25 pb-2.5 flex items-center space-x-2.5">
-            <div class="chamfer-sm w-7 h-7 gold-ingot-btn flex items-center justify-center text-xs shrink-0">
+    <!-- TAB 3: วันลา -->
+    <section id="tab-3" class="tab-panel hidden space-y-3.5">
+      <div class="apex-shell cut-panel">
+        <div class="apex-core cut-panel target-locks p-3.5 space-y-3">
+          <div class="border-b border-zinc-800 pb-2.5 flex items-center space-x-2.5">
+            <div class="cut-btn w-7 h-7 gold-trigger flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-calendar-minus"></i>
             </div>
             <div>
-              <div class="text-[7.5px] font-mono tracking-widest text-amber-400/80 uppercase font-bold">// SYS.05 LEAVE DISPATCH</div>
-              <h2 class="font-hud font-bold text-xs tracking-wide text-amber-50">ส่งใบลาออนไลน์</h2>
+              <div class="text-[7.5px] font-mono tracking-widest text-rose-500 uppercase font-bold">// LEAVE DISPATCH</div>
+              <h2 class="font-hud font-bold text-xs tracking-wide text-white">ส่งใบลาออนไลน์</h2>
               <p class="text-[10px] text-zinc-400">บันทึกการลางานและส่งแจ้งเตือนเข้า LINE</p>
             </div>
           </div>
@@ -917,7 +793,7 @@
           <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="space-y-3 text-xs">
             <div>
               <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ประเภทการลา</label>
-              <select id="leaveType" required class="sovereign-field sovereign-select w-full text-xs outline-none">
+              <select id="leaveType" required class="dark-input dark-select w-full text-xs">
                 <option value="ลากิจ">ลากิจ (Personal Leave)</option>
                 <option value="ลาป่วย">ลาป่วย (Sick Leave)</option>
                 <option value="ลาพักร้อน">ลาพักร้อน (Annual Leave)</option>
@@ -927,18 +803,18 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ตั้งแต่วันที่</label>
-                <input type="date" id="leaveStartDate" required class="sovereign-field w-full font-mono text-xs outline-none" />
+                <input type="date" id="leaveStartDate" required class="dark-input w-full font-mono text-xs" />
               </div>
               <div>
                 <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">ถึงวันที่</label>
-                <input type="date" id="leaveEndDate" required class="sovereign-field w-full font-mono text-xs outline-none" />
+                <input type="date" id="leaveEndDate" required class="dark-input w-full font-mono text-xs" />
               </div>
             </div>
             <div>
               <label class="block text-[10.5px] font-semibold text-zinc-400 mb-1">เหตุผลการลา</label>
-              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="sovereign-field w-full text-xs outline-none" />
+              <input type="text" id="leaveReason" placeholder="ระบุเหตุผล..." class="dark-input w-full text-xs" />
             </div>
-            <button type="submit" class="tactile-btn chamfer-sm w-full py-2.5 gold-ingot-btn hover:brightness-110 text-xs mt-1">
+            <button type="submit" class="press-btn cut-btn w-full py-2.5 gold-trigger text-xs mt-1">
               ส่งใบลางาน
             </button>
           </form>
@@ -946,97 +822,96 @@
       </div>
 
       <div class="space-y-2">
-        <h3 class="text-[10.5px] font-mono font-bold text-amber-200/75 px-1">ประวัติการลาล่าสุด</h3>
+        <h3 class="text-[10.5px] font-mono font-bold text-zinc-400 px-1">ประวัติการลาล่าสุด</h3>
         <div id="leaveHistoryList" class="space-y-2"></div>
       </div>
     </section>
 
-    <!-- TAB 4: Telemetry Dashboard & Payslip -->
-    <section id="tab-4" class="tab-content hidden space-y-3">
-      <div class="sovereign-frame chamfer-sm">
-        <div class="sovereign-inner chamfer-sm p-3 space-y-2.5">
+    <!-- TAB 4: สรุปผล -->
+    <section id="tab-4" class="tab-panel hidden space-y-3">
+      <div class="apex-shell cut-btn">
+        <div class="apex-core cut-btn p-3 space-y-2.5">
           <div class="flex flex-wrap justify-between items-center gap-1.5">
-            <label class="text-[11px] font-bold text-amber-100 flex items-center gap-1.5">
-              <i class="fa-solid fa-filter text-amber-300"></i> รอบตัดยอด
+            <label class="text-[11px] font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-filter text-rose-500"></i> รอบตัดยอด
             </label>
             <div class="flex gap-1.5">
-              <button onclick="pullFromGoogleSheets(false)" class="tactile-btn chamfer-sm bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 text-[10px] font-bold flex items-center gap-1">
+              <button onclick="pullFromGoogleSheets(false)" class="press-btn cut-btn bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 text-[10px] font-bold flex items-center gap-1">
                 <i class="fa-solid fa-cloud-arrow-down"></i> ดึงข้อมูล
               </button>
-              <button onclick="exportCSV()" class="tactile-btn chamfer-sm bg-zinc-900 hover:bg-zinc-800 text-amber-100 border border-amber-500/45 px-2.5 py-1 text-[10px] font-mono font-bold flex items-center gap-1">
-                <i class="fa-solid fa-file-csv text-amber-300"></i> CSV
+              <button onclick="exportCSV()" class="press-btn cut-btn bg-zinc-900 hover:bg-zinc-800 text-amber-200 border border-zinc-700 px-2.5 py-1 text-[10px] font-mono font-bold flex items-center gap-1">
+                <i class="fa-solid fa-file-csv text-amber-400"></i> CSV
               </button>
-              <button onclick="openPayslipModal()" class="tactile-btn chamfer-sm gold-ingot-btn hover:brightness-110 px-2.5 py-1 text-[10px] flex items-center gap-1">
+              <button onclick="openPayslipModal()" class="press-btn cut-btn gold-trigger px-2.5 py-1 text-[10px] flex items-center gap-1">
                 <i class="fa-solid fa-file-invoice-dollar"></i> ออกสลิป
               </button>
             </div>
           </div>
-          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="sovereign-field sovereign-select w-full text-xs font-bold outline-none">
+          <select id="cutoffPeriodSelect" onchange="renderHistories()" class="dark-input dark-select w-full text-xs font-bold">
           </select>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2.5 font-mono">
-        <div class="col-span-2 sovereign-frame chamfer-box cyber-bracket">
-          <div class="sovereign-inner chamfer-box p-3.5 relative overflow-hidden space-y-2">
-            <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-28 h-20 opacity-20 pointer-events-none object-contain" />
+        <div class="col-span-2 apex-shell cut-panel">
+          <div class="apex-core cut-panel target-locks p-3.5 relative overflow-hidden space-y-2">
+            <img alt="" class="company-logo-slot absolute -right-3 -bottom-3 w-28 h-20 opacity-15 pointer-events-none object-contain" />
             <div class="flex justify-between items-center">
               <div>
-                <span class="text-[7.5px] font-mono tracking-widest text-amber-400/80 uppercase font-bold block">// SYS.06 TELEMETRY AGGREGATE</span>
+                <span class="text-[7.5px] font-mono tracking-widest text-rose-500 uppercase font-bold block">// TELEMETRY SUMMARY</span>
                 <span class="text-[10.5px] font-sans text-zinc-400">ยอดรวมค่าแรง + OT ในรอบนี้</span>
               </div>
-              <span class="text-[10px] font-sans bg-amber-500/20 border border-amber-300/50 px-2.5 py-0.5 rounded-full text-amber-200 font-bold shadow-[0_0_8px_rgba(245,158,11,0.25)]" id="summaryTotalRecords">0 รายการ</span>
+              <span class="text-[10px] font-sans bg-amber-500/20 border border-amber-400/50 px-2.5 py-0.5 rounded-full text-amber-200 font-bold" id="summaryTotalRecords">0 รายการ</span>
             </div>
-            <div class="text-2xl font-extrabold text-amber-200 tracking-tight relative z-10 hud-glow" id="summaryTotalSalary">0.00 ฿</div>
+            <div class="text-2xl font-extrabold text-amber-300 tracking-tight relative z-10 glow-gold" id="summaryTotalSalary">0.00 ฿</div>
             <div class="space-y-1 pt-1">
               <div class="flex justify-between text-[9px] text-zinc-400">
                 <span>เป้าหมายรายได้งวดนี้ (10,000 ฿)</span>
                 <span id="cycleTargetPct" class="text-amber-300 font-bold">0%</span>
               </div>
-              <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-amber-500/35">
-                <div id="cycleTargetBar" class="h-full bg-gradient-to-r from-amber-700 via-amber-400 to-amber-100 transition-all duration-500" style="width: 0%"></div>
+              <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-zinc-700">
+                <div id="cycleTargetBar" class="h-full bg-gradient-to-r from-rose-600 via-amber-400 to-amber-100 transition-all duration-500" style="width: 0%"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="sovereign-frame chamfer-sm">
-          <div class="sovereign-inner chamfer-sm p-3">
+        <div class="apex-shell cut-btn">
+          <div class="apex-core cut-btn p-3">
             <span class="text-[10px] font-sans text-zinc-400 block font-semibold">ชั่วโมง OT รวม</span>
             <span class="text-base font-extrabold text-amber-300" id="summaryTotalOT">0.0 ชม.</span>
           </div>
         </div>
-        <div class="sovereign-frame chamfer-sm">
-          <div class="sovereign-inner chamfer-sm p-3">
+        <div class="apex-shell cut-btn">
+          <div class="apex-core cut-btn p-3">
             <span class="text-[10px] font-sans text-zinc-400 block font-semibold">ค่าอาหารรวม</span>
-            <span class="text-base font-extrabold text-amber-100" id="summaryTotalMeals">0.00 ฿</span>
+            <span class="text-base font-extrabold text-white" id="summaryTotalMeals">0.00 ฿</span>
           </div>
         </div>
       </div>
 
-      <div id="dailyChartPanel" class="sovereign-frame chamfer-sm hidden">
-        <div class="sovereign-inner chamfer-sm p-3 space-y-2">
+      <div id="dailyChartPanel" class="apex-shell cut-btn hidden">
+        <div class="apex-core cut-btn p-3 space-y-2">
           <div class="flex justify-between items-center text-[9.5px] font-hud text-zinc-400">
-            <span><i class="fa-solid fa-chart-simple text-amber-300 mr-1"></i>กราฟรายได้รายวัน</span>
-            <span class="text-amber-200">แตะแท่งกราฟเพื่อดูรายละเอียด</span>
+            <span><i class="fa-solid fa-chart-simple text-rose-500 mr-1"></i>กราฟรายได้รายวัน</span>
+            <span class="text-amber-300">แตะแท่งกราฟเพื่อดูรายละเอียด</span>
           </div>
           <div id="dailyBarsContainer" class="flex items-end gap-1.5 h-20 pt-3 px-1 overflow-x-auto"></div>
         </div>
       </div>
 
-      <!-- Collapsible Dropdown ประวัติบันทึกเวลา -->
-      <div class="sovereign-frame chamfer-sm">
-        <div class="sovereign-inner chamfer-sm p-3 space-y-2.5">
+      <div class="apex-shell cut-btn">
+        <div class="apex-core cut-btn p-3 space-y-2.5">
           <button type="button" onclick="toggleHistoryDropdown()" class="w-full flex justify-between items-center text-left">
             <div class="flex items-center gap-2">
-              <i id="historyDropdownChevron" class="fa-solid fa-chevron-right text-amber-300 text-xs transition-transform duration-200"></i>
-              <span class="text-[11.5px] font-bold text-amber-100">ประวัติบันทึกเวลา</span>
+              <i id="historyDropdownChevron" class="fa-solid fa-chevron-right text-amber-400 text-xs transition-transform duration-200"></i>
+              <span class="text-[11.5px] font-bold text-white">ประวัติบันทึกเวลา</span>
               <span id="historyDropdownCount" class="text-[9.5px] font-mono bg-amber-500/20 text-amber-200 px-2 py-0.5 rounded border border-amber-400/40">0 รายการ</span>
             </div>
             <span id="historyDropdownHint" class="text-[10px] text-amber-300/80 font-semibold">แตะเพื่อเปิดดู</span>
           </button>
 
-          <div id="historyDropdownBody" class="hidden pt-2 border-t border-amber-500/25 space-y-2.5">
+          <div id="historyDropdownBody" class="hidden pt-2 border-t border-zinc-800 space-y-2.5">
             <div class="flex justify-end">
               <button type="button" onclick="clearLocalStorageData()" class="text-[10px] text-rose-400 hover:underline font-semibold">
                 <i class="fa-solid fa-trash-can mr-1"></i>ล้างประวัติในเครื่อง
@@ -1050,22 +925,22 @@
 
   </main>
 
-  <!-- Floating Bottom Navigation Bar -->
-  <nav class="floating-bottom-nav no-print">
-    <div class="max-w-md mx-auto chamfer-box border border-amber-300/70 p-1 flex justify-between">
-      <button onclick="switchTab(1)" id="nav-1" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn transition-all">
+  <!-- Floating Bottom Dock -->
+  <nav class="bottom-dock no-print">
+    <div class="max-w-md mx-auto cut-btn border border-rose-500/55 p-1 flex justify-between">
+      <button onclick="switchTab(1)" id="nav-1" class="press-btn cut-btn flex-1 flex flex-col items-center justify-center py-2 gold-trigger transition-all">
         <i class="fa-solid fa-gauge-high text-xs"></i>
         <span class="text-[10px] mt-0.5">บันทึกสด</span>
       </button>
-      <button onclick="switchTab(2)" id="nav-2" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
+      <button onclick="switchTab(2)" id="nav-2" class="press-btn cut-btn flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
         <i class="fa-solid fa-pen-to-square text-xs"></i>
         <span class="text-[10px] mt-0.5">ย้อนหลัง</span>
       </button>
-      <button onclick="switchTab(3)" id="nav-3" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
+      <button onclick="switchTab(3)" id="nav-3" class="press-btn cut-btn flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
         <i class="fa-solid fa-calendar-minus text-xs"></i>
         <span class="text-[10px] mt-0.5">วันลา</span>
       </button>
-      <button onclick="switchTab(4)" id="nav-4" class="tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
+      <button onclick="switchTab(4)" id="nav-4" class="press-btn cut-btn flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all">
         <i class="fa-solid fa-chart-pie text-xs"></i>
         <span class="text-[10px] mt-0.5">สรุปผล</span>
       </button>
@@ -1074,19 +949,19 @@
 
   <!-- Breakdown Modal -->
   <div id="breakdownModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
-    <div class="sovereign-frame chamfer-box w-full max-w-xs">
-      <div class="sovereign-inner chamfer-box p-4 space-y-3">
-        <div class="flex justify-between items-center border-b border-amber-400/30 pb-2">
-          <h3 class="font-hud font-bold text-xs text-amber-200">รายละเอียดรายได้รายวัน</h3>
-          <button onclick="closeBreakdownModal()" class="text-zinc-400 hover:text-amber-300 p-1"><i class="fa-solid fa-xmark"></i></button>
+    <div class="apex-shell cut-panel w-full max-w-xs">
+      <div class="apex-core cut-panel p-4 space-y-3">
+        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+          <h3 class="font-hud font-bold text-xs text-amber-300">รายละเอียดรายได้รายวัน</h3>
+          <button onclick="closeBreakdownModal()" class="text-zinc-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="modalContent" class="space-y-1.5 text-xs text-zinc-200"></div>
-        <button onclick="closeBreakdownModal()" class="chamfer-sm w-full gold-ingot-btn py-2 text-xs">ปิดหน้าต่าง</button>
+        <button onclick="closeBreakdownModal()" class="cut-btn w-full gold-trigger py-2 text-xs">ปิดหน้าต่าง</button>
       </div>
     </div>
   </div>
 
-  <!-- Payslip Printable & A5 Landscape Image Export Modal -->
+  <!-- Payslip Modal -->
   <div id="payslipModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-2 overflow-y-auto">
     <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl space-y-2.5 p-4 sm:p-5 my-auto relative text-slate-900 text-xs" id="printablePayslipArea">
       <div id="payslipToolbar" class="flex flex-wrap justify-between items-center border-b border-slate-200 pb-2.5 gap-2 no-print">
@@ -1276,47 +1151,46 @@
     </div>
   </div>
 
-  <!-- Settings Config Modal -->
+  <!-- Config Modal -->
   <div id="configModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
-    <div class="sovereign-frame chamfer-box w-full max-w-xs">
-      <div class="sovereign-inner chamfer-box p-4 space-y-3">
-        <div class="flex justify-between items-center border-b border-amber-400/30 pb-2">
-          <h3 class="font-hud font-bold text-xs text-amber-200">ตั้งค่าระบบ & การเชื่อมต่อ</h3>
-          <button onclick="closeConfigModal()" class="text-zinc-400 hover:text-amber-300 p-1"><i class="fa-solid fa-xmark"></i></button>
+    <div class="apex-shell cut-panel w-full max-w-xs">
+      <div class="apex-core cut-panel p-4 space-y-3">
+        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+          <h3 class="font-hud font-bold text-xs text-amber-300">ตั้งค่าระบบ & การเชื่อมต่อ</h3>
+          <button onclick="closeConfigModal()" class="text-zinc-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="space-y-2 text-xs">
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">Google Apps Script URL</label>
-            <input type="text" id="gasUrlInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
+            <input type="text" id="gasUrlInput" class="dark-input w-full text-[10px] font-mono" />
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE Channel Token (เว้นว่างได้ถ้าตั้งใน GAS)</label>
-            <input type="text" id="lineTokenInput" placeholder="ตั้งค่าใน GAS Script Properties จะปลอดภัยกว่า" class="sovereign-field w-full text-[10px] font-mono outline-none" />
+            <input type="text" id="lineTokenInput" placeholder="ตั้งค่าใน GAS Script Properties จะปลอดภัยกว่า" class="dark-input w-full text-[10px] font-mono" />
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">LINE User ID (เว้นว่างได้ถ้าตั้งใน GAS)</label>
-            <input type="text" id="lineUserIdInput" placeholder="ตั้งค่าใน GAS Script Properties จะปลอดภัยกว่า" class="sovereign-field w-full text-[10px] font-mono outline-none" />
+            <input type="text" id="lineUserIdInput" placeholder="ตั้งค่าใน GAS Script Properties จะปลอดภัยกว่า" class="dark-input w-full text-[10px] font-mono" />
           </div>
           <div>
             <label class="block text-[10px] font-mono font-bold text-zinc-400 mb-0.5">เรตค่าเสี่ยงภัย (บาท/วัน)</label>
-            <input type="number" step="0.01" id="hazardRateInput" class="sovereign-field w-full text-[10px] font-mono outline-none" />
+            <input type="number" step="0.01" id="hazardRateInput" class="dark-input w-full text-[10px] font-mono" />
           </div>
         </div>
-        <button onclick="saveConfigSettings()" class="tactile-btn chamfer-sm w-full gold-ingot-btn py-2 text-xs">
+        <button onclick="saveConfigSettings()" class="press-btn cut-btn w-full gold-trigger py-2 text-xs">
           บันทึกการตั้งค่า
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="chamfer-sm fixed left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 backdrop-blur-md text-amber-100 text-xs font-bold px-4 py-2.5 shadow-[0_0_24px_rgba(245,158,11,0.45)] hidden border border-amber-300/85" style="top: calc(max(env(safe-area-inset-top, 48px), 48px) + 1rem);">
+  <!-- Toast -->
+  <div id="toast" class="cut-btn fixed left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 backdrop-blur-md text-white text-xs font-bold px-4 py-2.5 shadow-[0_0_22px_rgba(255,0,60,0.45)] hidden border border-rose-500/80" style="top: calc(max(env(safe-area-inset-top, 48px), 48px) + 1rem);">
     <span id="toastMsg">แจ้งเตือนระบบ</span>
   </div>
-
-  <script>
+<script>
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbz9m1r1olY7mEnzNTEK9Ml3helG24iAJPzyvCEob1a9qO9JI0_G4LAdCsSloSZMivh9/exec";
-    const GAS_URL_VERSION = "v2026_12_20_sovereign_pk_full_sync";
+    const GAS_URL_VERSION = "v2026_12_20_apex_v3_clean";
 
     const DEFAULT_LINE_TOKEN = "";
     const DEFAULT_LINE_USER_ID = "";
@@ -1325,8 +1199,8 @@
 
     const FALLBACK_EMBLEM_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-        <polygon points="50,5 93,28 93,72 50,95 7,72 7,28" fill="#100b04" stroke="#f59e0b" stroke-width="5"/>
-        <text x="50" y="58" font-family="Arial, sans-serif" font-weight="900" font-size="30" fill="#fde68a" text-anchor="middle">TG</text>
+        <polygon points="50,5 93,28 93,72 50,95 7,72 7,28" fill="#09090b" stroke="#fbbf24" stroke-width="5"/>
+        <text x="50" y="58" font-family="Arial, sans-serif" font-weight="900" font-size="30" fill="#fbbf24" text-anchor="middle">TG</text>
       </svg>`
     );
 
@@ -1373,6 +1247,8 @@
     let currentWorkType = "FULL";
     let simExtraMinutes = 0;
     let lastDetentStep = 0;
+    let warpSurge = false;
+    let coverUnlocked = false;
 
     let soundEnabled = true;
     let sharedAudioCtx = null;
@@ -1403,27 +1279,98 @@
       if (link) link.href = 'tg_emblem.png';
     }
 
+    function cycleOpticsMode() {
+      const modes = ['apex', 'nvg', 'flir', 'jarvis'];
+      const labels = { apex: 'APEX', nvg: 'NVG', flir: 'FLIR', jarvis: 'JARVIS' };
+      const icons = {
+        apex: 'fa-solid fa-eye text-[10px] text-rose-400',
+        nvg: 'fa-solid fa-binoculars text-[10px] text-emerald-400',
+        flir: 'fa-solid fa-temperature-high text-[10px] text-orange-400',
+        jarvis: 'fa-solid fa-microchip text-[10px] text-cyan-400'
+      };
+      const cur = localStorage.getItem('optics_mode') || 'apex';
+      const next = modes[(modes.indexOf(cur) + 1) % modes.length];
+      localStorage.setItem('optics_mode', next);
+      applyOpticsMode(next);
+      showToast(`สลับโหมดภาพเป็น ${labels[next]}`);
+    }
+
+    function applyOpticsMode(mode) {
+      const m = mode || localStorage.getItem('optics_mode') || 'apex';
+      const labels = { apex: 'APEX', nvg: 'NVG', flir: 'FLIR', jarvis: 'JARVIS' };
+      const icons = {
+        apex: 'fa-solid fa-eye text-[10px] text-rose-400',
+        nvg: 'fa-solid fa-binoculars text-[10px] text-emerald-400',
+        flir: 'fa-solid fa-temperature-high text-[10px] text-orange-400',
+        jarvis: 'fa-solid fa-microchip text-[10px] text-cyan-400'
+      };
+      document.body.classList.remove('optics-nvg', 'optics-flir', 'optics-jarvis');
+      if (m === 'nvg') document.body.classList.add('optics-nvg');
+      if (m === 'flir') document.body.classList.add('optics-flir');
+      if (m === 'jarvis') document.body.classList.add('optics-jarvis');
+
+      const lbl = document.getElementById('opticsLabel');
+      const icn = document.getElementById('opticsIcon');
+      if (lbl) lbl.textContent = labels[m] || 'APEX';
+      if (icn) icn.className = icons[m] || icons.apex;
+    }
+
+    function unlockSafetyCover() {
+      coverUnlocked = true;
+      const cover = document.getElementById('f16SafetyCover');
+      const hint = document.getElementById('ignitionStatusHint');
+      if (cover) cover.classList.add('open');
+      if (hint) hint.textContent = "▶ สไลด์จุดระเบิดได้เลย!";
+      playClick('latch');
+    }
+
+    function lockSafetyCover() {
+      coverUnlocked = false;
+      const cover = document.getElementById('f16SafetyCover');
+      const hint = document.getElementById('ignitionStatusHint');
+      if (cover) cover.classList.remove('open');
+      if (hint) hint.textContent = "เปิดฝาครอบเพื่อลงเวลา";
+    }
+
+    function triggerApexStrike() {
+      const slash = document.getElementById('katanaSlashEffect');
+      const mainEl = document.getElementById('apexMain');
+      if (slash) {
+        slash.classList.remove('go');
+        void slash.offsetWidth;
+        slash.classList.add('go');
+      }
+      if (mainEl) {
+        mainEl.classList.remove('strike-shake');
+        void mainEl.offsetWidth;
+        mainEl.classList.add('strike-shake');
+      }
+      warpSurge = true;
+      setTimeout(() => { warpSurge = false; }, 1100);
+      setTimeout(() => { lockSafetyCover(); }, 1800);
+    }
+
     function setSyncPillStatus(state) {
       const pill = document.getElementById('cloudSyncPill');
       if (!pill) return;
       if (state === 'LINKED') {
         pill.textContent = "เชื่อมต่อแล้ว";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shrink-0";
+        pill.className = "cut-btn text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shrink-0";
       } else if (state === 'SYNCING') {
         pill.textContent = "กำลังซิงค์...";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-300/50 shrink-0";
+        pill.className = "cut-btn text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-amber-500/20 text-amber-200 border border-amber-400/50 shrink-0";
       } else {
         pill.textContent = "ออฟไลน์";
-        pill.className = "chamfer-sm text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-rose-500/20 text-rose-400 border border-rose-500/50 shrink-0";
+        pill.className = "cut-btn text-[8px] font-mono font-extrabold px-1.5 py-[1px] bg-rose-500/20 text-rose-400 border border-rose-500/50 shrink-0";
       }
     }
 
-    (function initConstellationNetwork() {
+    (function initSharpCanvas() {
       window.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('constellationCanvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        let w, h, nodes = [];
+        let w, h;
 
         function resize() {
           w = canvas.width = window.innerWidth;
@@ -1432,51 +1379,33 @@
         window.addEventListener('resize', resize);
         resize();
 
-        const nodeCount = Math.min(34, Math.floor(w / 36));
-        for (let i = 0; i < nodeCount; i++) {
-          nodes.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            vx: (Math.random() - 0.5) * 0.25,
-            vy: (Math.random() - 0.5) * 0.25,
-            colorType: i % 3 === 0 ? 'champagne' : (i % 2 === 0 ? 'gold' : 'white')
-          });
-        }
+        const sparks = Array.from({ length: 28 }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          len: 8 + Math.random() * 14,
+          vy: -(0.7 + Math.random() * 1.4),
+          vx: (Math.random() - 0.5) * 0.4,
+          alpha: 0.18 + Math.random() * 0.4,
+          isRed: Math.random() > 0.45
+        }));
 
         function draw() {
           ctx.clearRect(0, 0, w, h);
-          for (let i = 0; i < nodes.length; i++) {
-            const a = nodes[i];
-            a.x += a.vx;
-            a.y += a.vy;
-            if (a.x < 0 || a.x > w) a.vx *= -1;
-            if (a.y < 0 || a.y > h) a.vy *= -1;
-
-            for (let j = i + 1; j < nodes.length; j++) {
-              const b = nodes[j];
-              const dx = a.x - b.x;
-              const dy = a.y - b.y;
-              const dist = Math.hypot(dx, dy);
-              if (dist < 135) {
-                const alpha = (1 - dist / 135) * 0.25;
-                ctx.strokeStyle = a.colorType === 'champagne'
-                  ? `rgba(253, 230, 138, ${alpha})`
-                  : `rgba(245, 158, 11, ${alpha})`;
-                ctx.lineWidth = 0.8;
-                ctx.beginPath();
-                ctx.moveTo(a.x, a.y);
-                ctx.lineTo(b.x, b.y);
-                ctx.stroke();
-              }
+          const speedBoost = warpSurge ? 5 : 1;
+          sparks.forEach(s => {
+            s.x += s.vx * speedBoost;
+            s.y += s.vy * speedBoost;
+            if (s.y < -25) {
+              s.y = h + 20;
+              s.x = Math.random() * w;
             }
-
-            ctx.fillStyle = a.colorType === 'champagne'
-              ? 'rgba(253, 230, 138, 0.9)'
-              : (a.colorType === 'gold' ? 'rgba(245, 158, 11, 0.9)' : 'rgba(255, 251, 235, 0.55)');
             ctx.beginPath();
-            ctx.arc(a.x, a.y, a.colorType === 'white' ? 1.25 : 1.9, 0, Math.PI * 2);
-            ctx.fill();
-          }
+            ctx.moveTo(s.x, s.y);
+            ctx.lineTo(s.x - s.vx * 4, s.y + s.len * speedBoost * 0.4);
+            ctx.strokeStyle = s.isRed ? `rgba(255, 0, 60, ${s.alpha})` : `rgba(251, 191, 36, ${s.alpha})`;
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+          });
           requestAnimationFrame(draw);
         }
         draw();
@@ -1494,57 +1423,17 @@
         const isRedline = angle >= 270 && angle <= 360;
 
         if (isCardinal) {
-          const fillCol = isRedline ? '#FEE2E2' : '#FFFBEB';
-          const strokeCol = isRedline ? '#EF4444' : '#D97706';
-          html += `<polygon points="120,6 123.5,15 120,21 116.5,15" fill="${fillCol}" stroke="${strokeCol}" stroke-width="1.2" transform="rotate(${angle} 120 120)"/>`;
+          const fillCol = isRedline ? '#FF003C' : '#FBBF24';
+          html += `<polygon points="120,6 123,14 120,20 117,14" fill="${fillCol}" transform="rotate(${angle} 120 120)"/>`;
         } else {
           const y1 = isMajor ? 9 : 12;
-          const y2 = isMajor ? 19 : 16;
-          let stroke = '';
-          let width = '';
-          if (isRedline) {
-            stroke = isMajor ? '#EF4444' : 'rgba(239,68,68,0.7)';
-            width = isMajor ? '2.4' : '1.2';
-          } else {
-            stroke = isMajor ? 'rgba(245,158,11,0.95)' : 'rgba(253,230,138,0.3)';
-            width = isMajor ? '2.0' : '0.9';
-          }
-          html += `<line x1="120" y1="${y1}" x2="120" y2="${y2}" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" transform="rotate(${angle} 120 120)"/>`;
+          const y2 = isMajor ? 18 : 16;
+          const stroke = isRedline ? '#FF003C' : (isMajor ? 'rgba(251,191,36,0.9)' : 'rgba(255,255,255,0.22)');
+          const width = isMajor ? '2.0' : '1.0';
+          html += `<line x1="120" y1="${y1}" x2="120" y2="${y2}" stroke="${stroke}" stroke-width="${width}" transform="rotate(${angle} 120 120)"/>`;
         }
       }
       group.innerHTML = html;
-    }
-
-    function init3DTiltCard() {
-      const card = document.getElementById('chronoTiltCard');
-      const glare = document.getElementById('sapphireGlare');
-      if (!card) return;
-
-      const applyTilt = (rx, ry, gx, gy) => {
-        card.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
-        if (glare) {
-          glare.style.setProperty('--gx', `${gx}%`);
-          glare.style.setProperty('--gy', `${gy}%`);
-        }
-      };
-
-      card.addEventListener('pointermove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
-        const ry = (x - 0.5) * 10;
-        const rx = (0.5 - y) * 10;
-        applyTilt(rx, ry, Math.round(x * 100), Math.round(y * 100));
-      });
-
-      card.addEventListener('pointerleave', () => applyTilt(0, 0, 50, 20));
-
-      window.addEventListener('deviceorientation', (e) => {
-        if (e.gamma === null || e.beta === null) return;
-        const ry = Math.max(-6, Math.min(6, e.gamma * 0.18));
-        const rx = Math.max(-6, Math.min(6, (e.beta - 45) * 0.15));
-        applyTilt(rx, ry, Math.round(50 + ry * 6), Math.round(30 - rx * 6));
-      }, { passive: true });
     }
 
     function initSlideIgnition() {
@@ -1558,6 +1447,10 @@
       let currentX = 0;
 
       const onStart = (clientX) => {
+        if (!coverUnlocked) {
+          unlockSafetyCover();
+          return;
+        }
         dragging = true;
         startX = clientX - currentX;
         thumb.style.transition = 'none';
@@ -1579,13 +1472,14 @@
         const maxTravel = track.clientWidth - thumb.clientWidth - 8;
         const pct = maxTravel > 0 ? (currentX / maxTravel) : 0;
 
-        thumb.style.transition = 'transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1)';
-        fill.style.transition = 'width 0.25s ease';
+        thumb.style.transition = 'transform 0.22s ease';
+        fill.style.transition = 'width 0.22s ease';
         currentX = 0;
         thumb.style.transform = 'translateX(0px)';
         fill.style.width = '0%';
 
         if (pct >= 0.78) {
+          triggerApexStrike();
           const activeCheckins = JSON.parse(localStorage.getItem("active_checkins") || "{}");
           if (activeCheckins[currentEmpId]) {
             handleLiveCheckOut();
@@ -1711,52 +1605,6 @@
       return Array.isArray(raw) ? raw.map(normalizeRecordItem) : [];
     }
 
-    function getAutoThemeIsDark() {
-      const hour = new Date().getHours();
-      return (hour >= 18 || hour < 6);
-    }
-
-    function applyThemeMode(mode) {
-      const savedMode = mode || localStorage.getItem('theme_mode') || 'auto';
-      const html = document.documentElement;
-      const labelEl = document.getElementById('themeLabel');
-      const iconEl = document.getElementById('themeIcon');
-
-      let shouldBeDark = true;
-      if (savedMode === 'auto') {
-        shouldBeDark = getAutoThemeIsDark();
-        if (labelEl) labelEl.textContent = 'AUTO';
-      } else if (savedMode === 'dark') {
-        shouldBeDark = true;
-        if (labelEl) labelEl.textContent = 'OBSIDIAN';
-      } else {
-        shouldBeDark = false;
-        if (labelEl) labelEl.textContent = 'BRONZE';
-      }
-      if (iconEl) {
-        iconEl.className = shouldBeDark
-          ? 'fa-solid fa-crown text-[10px] text-amber-300'
-          : 'fa-solid fa-shield-halved text-[10px] text-amber-200';
-      }
-      html.classList.toggle('dark', shouldBeDark);
-      const metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (metaTheme) metaTheme.setAttribute('content', shouldBeDark ? '#050403' : '#120e0a');
-    }
-
-    function cycleThemeMode() {
-      const current = localStorage.getItem('theme_mode') || 'auto';
-      const order = ['auto', 'light', 'dark'];
-      const next = order[(order.indexOf(current) + 1) % order.length];
-      localStorage.setItem('theme_mode', next);
-      applyThemeMode(next);
-      const msgMap = {
-        auto: "โหมดธีมอัตโนมัติ (AUTO: 06:00 บรอนซ์โกลด์ / 18:00 ดำทอง)",
-        light: "ล็อกโหมดบรอนซ์แชมเปญ (BRONZE)",
-        dark: "ล็อกโหมดคาร์บอนดำทอง 24K (OBSIDIAN)"
-      };
-      showToast(msgMap[next]);
-    }
-
     function getAutoShiftByTime(dateObj = new Date()) {
       const hour = dateObj.getHours();
       return (hour >= 6 && hour < 18) ? 'DAY' : 'NIGHT';
@@ -1772,7 +1620,7 @@
       if (!badge) return;
       if (isShiftAutoMode()) {
         badge.textContent = "อัตโนมัติ";
-        badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/50";
+        badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-400/50";
       } else {
         badge.textContent = "ปรับเอง";
         badge.className = "text-[8px] font-hud font-bold px-1.5 py-[1px] rounded bg-zinc-800 text-zinc-400 border border-zinc-700";
@@ -1784,11 +1632,10 @@
       currentShift = getAutoShiftByTime();
       renderSwitchStates();
       updateLiveEstimator();
-      showToast(`เปิดสลับกะอัตโนมัติแล้ว (ขณะนี้กะ ${currentShift})`);
+      showToast(`เปิดสลับกะอัตโนมัติแล้ว (ขณะนี้กะ ${currentShift === 'DAY' ? 'เช้า' : 'ดึก'})`);
     }
 
     setInterval(() => {
-      if ((localStorage.getItem('theme_mode') || 'auto') === 'auto') applyThemeMode('auto');
       if (isShiftAutoMode()) {
         const autoS = getAutoShiftByTime();
         if (currentShift !== autoS) {
@@ -2141,7 +1988,7 @@
       soundEnabled = !soundEnabled;
       document.getElementById('audioIcon').className = soundEnabled ? "fa-solid fa-volume-high text-[11px]" : "fa-solid fa-volume-xmark text-[11px] text-zinc-500";
       if (soundEnabled) playClick('confirm');
-      showToast(soundEnabled ? "เปิดเสียงกลไกโครโนกราฟแล้ว" : "ปิดเสียงกลไกแล้ว");
+      showToast(soundEnabled ? "เปิดเสียงกลไกแล้ว" : "ปิดเสียงกลไกแล้ว");
     }
 
     function playClick(type = 'normal') {
@@ -2158,36 +2005,37 @@
         if (type === 'confirm') {
           const subOsc = sharedAudioCtx.createOscillator();
           const subGain = sharedAudioCtx.createGain();
-          subOsc.type = 'sine';
-          subOsc.frequency.setValueAtTime(140, now);
-          subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.11);
-          subGain.gain.setValueAtTime(0.35, now);
-          subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          subOsc.type = 'sawtooth';
+          subOsc.frequency.setValueAtTime(75, now);
+          subOsc.frequency.exponentialRampToValueAtTime(240, now + 0.14);
+          subOsc.frequency.exponentialRampToValueAtTime(55, now + 0.28);
+          subGain.gain.setValueAtTime(0.32, now);
+          subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
           subOsc.connect(subGain);
           subGain.connect(sharedAudioCtx.destination);
           subOsc.start(now);
-          subOsc.stop(now + 0.125);
-
-          const surgeOsc = sharedAudioCtx.createOscillator();
-          const surgeGain = sharedAudioCtx.createGain();
-          surgeOsc.type = 'sawtooth';
-          surgeOsc.frequency.setValueAtTime(420, now);
-          surgeOsc.frequency.exponentialRampToValueAtTime(1860, now + 0.085);
-          surgeGain.gain.setValueAtTime(0.18, now);
-          surgeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-          surgeOsc.connect(surgeGain);
-          surgeGain.connect(sharedAudioCtx.destination);
-          surgeOsc.start(now);
-          surgeOsc.stop(now + 0.095);
-
-          if (navigator.vibrate) navigator.vibrate([22, 28, 30]);
+          subOsc.stop(now + 0.31);
+          if (navigator.vibrate) navigator.vibrate([25, 20, 40]);
+        } else if (type === 'latch') {
+          const osc = sharedAudioCtx.createOscillator();
+          const gain = sharedAudioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(1400, now);
+          osc.frequency.exponentialRampToValueAtTime(420, now + 0.045);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.connect(gain);
+          gain.connect(sharedAudioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.055);
+          if (navigator.vibrate) navigator.vibrate([12, 12, 12]);
         } else if (type === 'detent') {
           const osc = sharedAudioCtx.createOscillator();
           const gain = sharedAudioCtx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(1850, now);
-          osc.frequency.exponentialRampToValueAtTime(680, now + 0.016);
-          gain.gain.setValueAtTime(0.16, now);
+          osc.frequency.setValueAtTime(1950, now);
+          osc.frequency.exponentialRampToValueAtTime(720, now + 0.016);
+          gain.gain.setValueAtTime(0.15, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
@@ -2198,9 +2046,9 @@
           const osc = sharedAudioCtx.createOscillator();
           const gain = sharedAudioCtx.createGain();
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(1150, now);
-          osc.frequency.exponentialRampToValueAtTime(220, now + 0.025);
-          gain.gain.setValueAtTime(0.22, now);
+          osc.frequency.setValueAtTime(1250, now);
+          osc.frequency.exponentialRampToValueAtTime(240, now + 0.025);
+          gain.gain.setValueAtTime(0.2, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.032);
           osc.connect(gain);
           gain.connect(sharedAudioCtx.destination);
@@ -2241,43 +2089,36 @@
     }
 
     function renderSwitchStates() {
-      const activeCls = "chamfer-sm cockpit-btn cockpit-btn-active text-[10px] py-1.5";
-      const inactiveCls = "chamfer-sm cockpit-btn cockpit-btn-inactive text-[10px] py-1.5";
-      const ledPip = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399] inline-block mr-1"></span>`;
+      const activeCls = "cut-btn sw-on text-[10px] py-1.5";
+      const inactiveCls = "cut-btn sw-off text-[10px] py-1.5";
 
       const swDay = document.getElementById('swShiftDay');
       const swNight = document.getElementById('swShiftNight');
       if (swDay && swNight) {
         swDay.className = currentShift === 'DAY' ? activeCls : inactiveCls;
-        swDay.innerHTML = `${currentShift === 'DAY' ? ledPip : ''}กะเช้า`;
         swNight.className = currentShift === 'NIGHT' ? activeCls : inactiveCls;
-        swNight.innerHTML = `${currentShift === 'NIGHT' ? ledPip : ''}กะดึก`;
       }
 
       const swReg = document.getElementById('swDayReg');
       const swHol = document.getElementById('swDayHol');
       if (swReg && swHol) {
         swReg.className = currentDayType === 'REGULAR' ? activeCls : inactiveCls;
-        swReg.innerHTML = `${currentDayType === 'REGULAR' ? ledPip : ''}วันปกติ`;
         swHol.className = currentDayType === 'HOLIDAY' ? activeCls : inactiveCls;
-        swHol.innerHTML = `${currentDayType === 'HOLIDAY' ? ledPip : ''}วันหยุด`;
       }
 
       const swFull = document.getElementById('swModeFull');
       const swHalf = document.getElementById('swModeHalf');
       if (swFull && swHalf) {
         swFull.className = currentWorkType === 'FULL' ? activeCls : inactiveCls;
-        swFull.innerHTML = `${currentWorkType === 'FULL' ? ledPip : ''}เต็มวัน`;
         swHalf.className = currentWorkType === 'HALF' ? activeCls : inactiveCls;
-        swHalf.innerHTML = `${currentWorkType === 'HALF' ? ledPip : ''}ครึ่งวัน`;
       }
 
       const ratePill = document.getElementById('otRateGaugePill');
       if (ratePill) {
         ratePill.textContent = currentDayType === 'HOLIDAY' ? '2.0X' : '1.5X';
         ratePill.className = currentDayType === 'HOLIDAY'
-          ? "chamfer-sm px-2.5 py-0.5 bg-rose-500/20 border border-rose-400/70 font-mono text-[10px] font-extrabold text-rose-300 shadow-[0_0_10px_rgba(239,68,68,0.3)]"
-          : "chamfer-sm px-2.5 py-0.5 bg-amber-500/20 border border-amber-300/60 font-mono text-[10px] font-extrabold text-amber-200 shadow-[0_0_10px_rgba(245,158,11,0.2)]";
+          ? "cut-btn px-2.5 py-0.5 bg-rose-500/20 border border-rose-500 font-mono text-[10px] font-extrabold text-rose-300"
+          : "cut-btn px-2.5 py-0.5 bg-amber-500/15 border border-amber-400/50 font-mono text-[10px] font-extrabold text-amber-300";
       }
 
       updateAutoShiftBadge();
@@ -2286,9 +2127,8 @@
     document.addEventListener("DOMContentLoaded", () => {
       applyCompanyLogos();
       generateGoldPkTouchIcon();
-      applyThemeMode();
+      applyOpticsMode();
       buildChronoBezelTicks();
-      init3DTiltCard();
       initSlideIgnition();
 
       if (localStorage.getItem("gas_url_ver") !== GAS_URL_VERSION || !localStorage.getItem("gas_url")) {
@@ -2340,15 +2180,16 @@
     }
 
     function switchTab(tabNum) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById(`tab-${tabNum}`).classList.remove('hidden');
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+      const targetTab = document.getElementById(`tab-${tabNum}`);
+      targetTab.classList.remove('hidden');
 
       for (let i = 1; i <= 4; i++) {
         const navBtn = document.getElementById(`nav-${i}`);
         if (i === tabNum) {
-          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 gold-ingot-btn shadow-[0_0_16px_rgba(245,158,11,0.55)] transition-all";
+          navBtn.className = "press-btn cut-btn flex-1 flex flex-col items-center justify-center py-2 gold-trigger transition-all";
         } else {
-          navBtn.className = "tactile-btn chamfer-sm flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 hover:bg-white/5 transition-all";
+          navBtn.className = "press-btn cut-btn flex-1 flex flex-col items-center justify-center py-2 text-zinc-400 hover:text-amber-200 transition-all";
         }
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2380,7 +2221,7 @@
         const now = new Date();
         const timeStr = now.toTimeString().split(' ')[0];
         const ms = Math.floor(now.getMilliseconds() / 100);
-        document.getElementById('liveClock').innerHTML = `${timeStr}<span class="text-xs text-amber-300 font-bold">.${ms}</span>`;
+        document.getElementById('liveClock').innerHTML = `${timeStr}<span class="text-[11px] text-rose-500 font-bold">.${ms}</span>`;
         document.querySelector('#currentDateDisplay span').textContent = now.toLocaleDateString('th-TH', {
           weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
         });
@@ -2402,13 +2243,14 @@
         const lcdTag = document.getElementById('lcdModeTag');
         const arcEl = document.getElementById('reactorProgressArc');
         const reactorBadge = document.getElementById('reactorLiveBadge');
-        const beacon = document.getElementById('liveClockBeacon');
+        const berserkStrip = document.getElementById('berserkWarningStrip');
+        const bioFill = document.getElementById('bioVialFill');
+        const rpmFill = document.getElementById('rpmVialFill');
 
         if (activeIn) {
-          if (beacon) beacon.className = "telemetry-beacon text-emerald-400";
           elapsedBar.classList.remove('hidden');
           lcdTag.textContent = "กำลังทำงาน";
-          lcdTag.className = "chamfer-sm bg-amber-400/25 text-amber-100 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/70 tracking-wider shadow-[0_0_12px_rgba(245,158,11,0.35)]";
+          lcdTag.className = "cut-btn bg-rose-500/20 text-rose-300 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-rose-500 tracking-wider";
 
           const inDateTime = new Date(`${activeIn.date}T${activeIn.time}:00`);
           const diffMs = Math.max(0, now - inDateTime);
@@ -2420,26 +2262,40 @@
           const progressRatio = Math.min(1, totalMins / 530);
           const pctInt = Math.min(100, Math.round(progressRatio * 100));
           if (arcEl) arcEl.style.strokeDashoffset = (ARC_CIRCUMFERENCE * (1 - progressRatio)).toFixed(1);
+          if (bioFill) bioFill.style.height = `${Math.max(12, pctInt)}%`;
+          if (rpmFill) rpmFill.style.height = `${Math.min(100, Math.max(25, Math.round((totalMins / 650) * 100)))}%`;
+
+          document.documentElement.style.setProperty('--piston-speed', totalMins > 550 ? '0.22s' : '0.38s');
 
           const nowTimeStr = getLocalTimeStr(now);
           const liveCalc = calculatePayroll(activeIn.shift, activeIn.dayType, activeIn.time, nowTimeStr, activeIn.workType);
           document.getElementById('liveAccruedPay').textContent = `${fmtNum(liveCalc.totalSalary)} ฿`;
 
-          if (reactorBadge) {
-            reactorBadge.textContent = totalMins > 550 ? "เกินเวลากะ +OT" : `${pctInt}% เวลากะ`;
-            reactorBadge.className = totalMins > 550
-              ? "px-2 py-0.5 rounded bg-rose-950/90 border border-rose-400 text-[9px] font-mono font-bold text-rose-200 shadow-[0_0_10px_rgba(239,68,68,0.5)]"
-              : "px-2 py-0.5 rounded bg-black/90 border border-amber-300/55 text-[9px] font-mono font-bold text-amber-100";
+          if (totalMins > 550) {
+            if (berserkStrip) berserkStrip.classList.remove('hidden');
+            if (reactorBadge) {
+              reactorBadge.textContent = "REDLINE +OT";
+              reactorBadge.className = "px-2 py-0.5 rounded bg-rose-950 border border-rose-500 text-[9px] font-mono font-bold text-rose-200";
+            }
+          } else {
+            if (berserkStrip) berserkStrip.classList.add('hidden');
+            if (reactorBadge) {
+              reactorBadge.textContent = `${pctInt}% เวลากะ`;
+              reactorBadge.className = "px-2 py-0.5 rounded bg-black border border-amber-400/50 text-[9px] font-mono font-bold text-amber-200";
+            }
           }
         } else {
-          if (beacon) beacon.className = "telemetry-beacon text-amber-400";
+          document.documentElement.style.setProperty('--piston-speed', '0.75s');
+          if (bioFill) bioFill.style.height = "15%";
+          if (rpmFill) rpmFill.style.height = "20%";
+          if (berserkStrip) berserkStrip.classList.add('hidden');
           elapsedBar.classList.add('hidden');
           lcdTag.textContent = "พร้อมทำงาน";
-          lcdTag.className = "chamfer-sm bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-300/50 tracking-wider";
+          lcdTag.className = "cut-btn bg-amber-500/15 text-amber-200 px-2.5 py-0.5 text-[9px] font-hud font-bold border border-amber-400/50 tracking-wider";
           if (arcEl) arcEl.style.strokeDashoffset = ARC_CIRCUMFERENCE;
           if (reactorBadge) {
             reactorBadge.textContent = "0% เวลากะ";
-            reactorBadge.className = "px-2 py-0.5 rounded bg-black/90 border border-amber-500/35 text-[9px] font-mono font-bold text-zinc-400";
+            reactorBadge.className = "px-2 py-0.5 rounded bg-black border border-zinc-700 text-[9px] font-mono font-bold text-zinc-400";
           }
         }
       };
@@ -2653,25 +2509,23 @@
         inText.textContent = activeIn.time;
         outText.textContent = 'กดออก';
         badge.textContent = "กำลังทำงาน";
-        badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-amber-400/25 border border-amber-300/70 font-hud font-bold text-amber-100 tracking-wider shadow-[0_0_12px_rgba(245,158,11,0.35)]";
+        badge.className = "cut-btn mt-1 text-[8.5px] px-2 py-0.5 bg-rose-500/20 border border-rose-500 font-hud font-bold text-rose-300 tracking-wider";
 
-        track.className = "slide-track chamfer-sm bg-[#060403] border border-rose-500/80 flex items-center justify-center select-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.95),0_0_20px_rgba(239,68,68,0.3)]";
-        fill.className = "slide-fill bg-gradient-to-r from-rose-800/70 via-rose-600/80 to-amber-400/90";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-rose-200 pointer-events-none pl-8 hud-red-glow";
-        label.innerHTML = `<span>◀◀ สไลด์เพื่อลงเวลาออกงาน</span><span class="chevron-anim text-xs text-rose-300">&gt;&gt;&gt;</span>`;
-        thumb.className = "slide-thumb chamfer-sm crimson-ingot-btn text-white";
-        thumb.innerHTML = `<i class="fa-solid fa-power-off text-base text-white drop-shadow"></i>`;
-        hint.textContent = "▶ เลื่อนตัดรอบออกงาน";
-        hint.className = "font-hud text-[9px] text-rose-400 font-bold tracking-wider";
+        track.className = "slide-rail bg-[#050507] border border-rose-500 flex items-center justify-center select-none";
+        fill.className = "slide-bar bg-gradient-to-r from-rose-900/75 via-rose-600/85 to-amber-400/95";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-rose-300 pointer-events-none pl-8 glow-red";
+        label.innerHTML = `<span>◀◀ สไลด์เพื่อลงเวลาออกงาน</span><span class="arrow-pulse text-xs text-rose-400">&gt;&gt;&gt;</span>`;
+        thumb.className = "slide-knob redline-trigger text-white";
+        thumb.innerHTML = `<i class="fa-solid fa-power-off text-base text-white"></i>`;
+        if (coverUnlocked && hint) hint.textContent = "▶ เลื่อนตัดรอบออกงาน";
       } else {
-        track.className = "slide-track chamfer-sm bg-[#060403] border border-amber-400/70 flex items-center justify-center select-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.95),0_0_18px_rgba(245,158,11,0.22)]";
-        fill.className = "slide-fill bg-gradient-to-r from-amber-700/60 via-amber-500/75 to-amber-300/90";
-        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8 hud-glow";
-        label.innerHTML = `<span>◀◀ สไลด์เพื่อลงเวลาเข้างาน</span><span class="chevron-anim text-xs text-amber-300">&gt;&gt;&gt;</span>`;
-        thumb.className = "slide-thumb chamfer-sm gold-ingot-btn";
-        thumb.innerHTML = `<i class="fa-solid fa-bolt text-base text-zinc-950 drop-shadow"></i>`;
-        hint.textContent = "▶ เลื่อนจุดระเบิดเข้างาน";
-        hint.className = "font-hud text-[9px] text-amber-300 font-bold tracking-wider";
+        track.className = "slide-rail bg-[#050507] border border-amber-400/70 flex items-center justify-center select-none";
+        fill.className = "slide-bar bg-gradient-to-r from-amber-700/70 via-orange-500/80 to-amber-300/95";
+        label.className = "relative z-0 flex items-center gap-2 font-hud text-[11px] font-extrabold tracking-widest text-amber-200 pointer-events-none pl-8 glow-gold";
+        label.innerHTML = `<span>◀◀ สไลด์เพื่อลงเวลาเข้างาน</span><span class="arrow-pulse text-xs text-amber-300">&gt;&gt;&gt;</span>`;
+        thumb.className = "slide-knob gold-trigger";
+        thumb.innerHTML = `<i class="fa-solid fa-bolt text-base text-zinc-950"></i>`;
+        if (coverUnlocked && hint) hint.textContent = "▶ เลื่อนจุดระเบิดเข้างาน";
 
         if (todayRecord) {
           inEl.textContent = todayRecord.checkIn || '--:--';
@@ -2679,14 +2533,14 @@
           inText.textContent = todayRecord.checkIn || '-';
           outText.textContent = todayRecord.checkOut || '-';
           badge.textContent = "ออกงานแล้ว";
-          badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-emerald-500/20 border border-emerald-400/55 font-hud font-bold text-emerald-300 tracking-wider";
+          badge.className = "cut-btn mt-1 text-[8.5px] px-2 py-0.5 bg-emerald-500/20 border border-emerald-400/60 font-hud font-bold text-emerald-300 tracking-wider";
         } else {
           inEl.textContent = '--:--';
           outEl.textContent = '--:--';
           inText.textContent = 'เข้างาน';
           outText.textContent = 'ออกงาน';
           badge.textContent = "รอเข้างาน";
-          badge.className = "chamfer-sm text-[9px] px-2.5 py-0.5 bg-zinc-900 border border-amber-400/50 font-hud font-bold text-amber-200 tracking-wider";
+          badge.className = "cut-btn mt-1 text-[8.5px] px-2 py-0.5 bg-zinc-900 border border-amber-400/55 font-hud font-bold text-amber-200 tracking-wider";
         }
       }
     }
@@ -3124,7 +2978,7 @@
       let totalSalarySum = 0, totalOTSum = 0, totalMealsSum = 0;
 
       if (empRecords.length === 0) {
-        listEl.innerHTML = `<p class="chamfer-sm text-center text-xs text-zinc-400 py-6 bg-zinc-900/60 border border-amber-500/20">ไม่พบประวัติในรอบตัดยอดนี้</p>`;
+        listEl.innerHTML = `<p class="cut-btn text-center text-xs text-zinc-400 py-6 bg-zinc-900/60 border border-zinc-800">ไม่พบประวัติในรอบตัดยอดนี้</p>`;
         if (chartPanel) chartPanel.classList.add('hidden');
       } else {
         const chronoRecords = [...empRecords].reverse().slice(-15);
@@ -3135,10 +2989,10 @@
             const hPct = Math.max(18, Math.round((r.totalSalary / maxDayPay) * 100));
             const dayNum = r.date.split('-')[2];
             const barColor = r.dayType === 'HOLIDAY'
-              ? 'from-amber-600 via-amber-400 to-amber-100'
+              ? 'from-rose-600 via-amber-400 to-amber-100'
               : (r.otHours > 0 ? 'from-amber-700 to-amber-300' : 'from-zinc-600 to-zinc-400');
             return `
-              <button onclick="openBreakdownByDate('${r.id}', '${r.date}')" title="${formatThaiBE(r.date)}: ${fmtNum(r.totalSalary)} ฿" class="tactile-btn flex-1 min-w-[20px] h-full flex flex-col items-center justify-end gap-1 group">
+              <button onclick="openBreakdownByDate('${r.id}', '${r.date}')" title="${formatThaiBE(r.date)}: ${fmtNum(r.totalSalary)} ฿" class="press-btn flex-1 min-w-[20px] h-full flex flex-col items-center justify-end gap-1 group">
                 <div class="w-full rounded-t bg-gradient-to-t ${barColor} group-hover:brightness-125 transition-all" style="height: ${hPct}%"></div>
                 <span class="text-[8.5px] font-mono text-zinc-400 group-hover:text-amber-200">${dayNum}</span>
               </button>
@@ -3156,20 +3010,20 @@
             : `<span class="text-[9px] px-1.5 py-[1px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 font-bold">กะเช้า</span>`;
 
           const holBadge = r.dayType === 'HOLIDAY'
-            ? `<span class="text-[9px] px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-300/45 font-bold">วันหยุด</span>`
+            ? `<span class="text-[9px] px-1.5 py-[1px] rounded bg-amber-500/20 text-amber-200 border border-amber-400/45 font-bold">วันหยุด</span>`
             : '';
 
           const otTag = r.otHours > 0
-            ? `<span class="text-[9.5px] font-mono font-bold text-amber-300">+OT ${r.otHours}h</span>`
+            ? `<span class="text-[9.5px] font-mono font-bold text-rose-400">+OT ${r.otHours}h</span>`
             : '';
 
           const hrsWorkedText = `(${r.workedHours} ชม.)`;
 
           return `
-            <div class="sovereign-frame chamfer-sm">
-              <div class="sovereign-inner chamfer-sm p-3 flex justify-between items-center text-xs hover:bg-zinc-900/90 transition">
+            <div class="apex-shell cut-btn">
+              <div class="apex-core cut-btn p-3 flex justify-between items-center text-xs hover:bg-zinc-900/90 transition">
                 <div onclick="openBreakdownByDate('${r.id}', '${r.date}')" class="cursor-pointer flex-1 min-w-0">
-                  <div class="font-mono font-bold text-amber-50 flex items-center gap-1.5 flex-wrap">
+                  <div class="font-mono font-bold text-white flex items-center gap-1.5 flex-wrap">
                     <span class="text-sm">${formatThaiBE(r.date)}</span>
                     ${shiftBadge}
                     ${holBadge}
@@ -3179,10 +3033,10 @@
                 </div>
                 <div class="flex items-center gap-2.5 shrink-0">
                   <div onclick="openBreakdownByDate('${r.id}', '${r.date}')" class="cursor-pointer text-right">
-                    <div class="font-mono font-extrabold text-amber-200 text-sm">${fmtNum(r.totalSalary)} ฿</div>
+                    <div class="font-mono font-extrabold text-amber-300 text-sm">${fmtNum(r.totalSalary)} ฿</div>
                     <span class="text-[9.5px] text-amber-400/85 font-bold hover:underline">ดูบิล</span>
                   </div>
-                  <button onclick="deleteRecord('${r.id}', '${r.date}')" aria-label="ลบรายการ" class="tactile-btn chamfer-sm w-7 h-7 bg-rose-950/75 hover:bg-rose-600 border border-rose-500/40 text-rose-400 hover:text-white flex items-center justify-center transition">
+                  <button onclick="deleteRecord('${r.id}', '${r.date}')" aria-label="ลบรายการ" class="press-btn cut-btn w-7 h-7 bg-rose-950/75 hover:bg-rose-600 border border-rose-500/40 text-rose-400 hover:text-white flex items-center justify-center transition">
                     <i class="fa-solid fa-trash-can text-[11px]"></i>
                   </button>
                 </div>
@@ -3211,16 +3065,16 @@
         .sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''));
       const leaveListEl = document.getElementById('leaveHistoryList');
       leaveListEl.innerHTML = leaves.length ? leaves.map(l => `
-        <div class="sovereign-frame chamfer-sm">
-          <div class="sovereign-inner chamfer-sm p-2.5 text-xs flex justify-between items-center gap-2">
+        <div class="apex-shell cut-btn">
+          <div class="apex-core cut-btn p-2.5 text-xs flex justify-between items-center gap-2">
             <div class="min-w-0 flex-1">
-              <div class="flex justify-between font-bold text-amber-50 gap-2">
+              <div class="flex justify-between font-bold text-white gap-2">
                 <span>${l.leaveType}</span>
                 <span class="text-amber-300 font-mono text-[11px]">${formatThaiBE(l.startDate)}${l.endDate && l.endDate !== l.startDate ? ' - ' + formatThaiBE(l.endDate) : ''}</span>
               </div>
               <div class="text-[10.5px] text-zinc-400 mt-0.5 truncate">เหตุผล: ${l.reason || '-'}</div>
             </div>
-            <button onclick="deleteLeaveRecord('${l.id}', '${l.startDate}', '${l.leaveType}')" aria-label="ลบใบลา" class="tactile-btn chamfer-sm w-7 h-7 bg-rose-950/75 hover:bg-rose-600 border border-rose-500/40 text-rose-400 hover:text-white flex items-center justify-center shrink-0 transition">
+            <button onclick="deleteLeaveRecord('${l.id}', '${l.startDate}', '${l.leaveType}')" aria-label="ลบใบลา" class="press-btn cut-btn w-7 h-7 bg-rose-950/75 hover:bg-rose-600 border border-rose-500/40 text-rose-400 hover:text-white flex items-center justify-center shrink-0 transition">
               <i class="fa-solid fa-trash-can text-[10px]"></i>
             </button>
           </div>
@@ -3277,8 +3131,8 @@
 
       const content = document.getElementById('modalContent');
       content.innerHTML = `
-        <div class="chamfer-sm bg-black/75 p-2.5 space-y-1 border border-amber-400/30">
-          <div class="font-bold text-amber-100">${item.employeeName} (${formatThaiBE(item.date)})</div>
+        <div class="cut-btn bg-black/80 p-2.5 space-y-1 border border-zinc-800">
+          <div class="font-bold text-white">${item.employeeName} (${formatThaiBE(item.date)})</div>
           <div>กะการทำงาน: <span class="font-bold">${item.shift === 'DAY' ? 'กลางวัน (08:00-16:50)' : 'กลางคืน (20:00-04:50)'}</span></div>
           <div>ประเภทวัน: <span class="font-bold">${item.dayType === 'REGULAR' ? 'วันปกติ' : 'วันหยุด (OT 2.0)'}</span></div>
           <div>เวลาจริง: <span class="font-mono font-bold text-amber-300">${item.checkIn} - ${item.checkOut} (${item.workedHours} ชม.)</span></div>
@@ -3288,7 +3142,7 @@
           ${otBreakdownHtml}
           <div class="flex justify-between"><span>ค่ากะกลางคืน:</span> <span class="font-bold font-mono">+${fmtNum(item.shiftAllowance)} ฿</span></div>
           <div class="flex justify-between"><span>ค่าอาหารรวม:</span> <span class="font-bold font-mono">+${fmtNum(item.totalMealAllowance)} ฿</span></div>
-          <div class="border-t border-amber-400/30 pt-2 flex justify-between font-bold text-sm text-amber-300">
+          <div class="border-t border-zinc-800 pt-2 flex justify-between font-bold text-sm text-amber-300">
             <span>รวมรายได้สุทธิ:</span> <span class="font-mono">${fmtNum(item.totalSalary)} ฿</span>
           </div>
         </div>
